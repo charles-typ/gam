@@ -649,11 +649,13 @@ int main(int argc, char* argv[]) {
   conf.worker_port = port_worker;
   long size = ((long) BLOCK_SIZE) * STEPS * no_thread * 4;
   conf.size = size < conf.size ? conf.size : size;
+  printf("This size!!!!!! %d\n", conf.size);
 
   conf.cache_th = cache_th;
 
   GAlloc* alloc = GAllocFactory::CreateAllocator(&conf);
 
+  printf("here 1\n");
   sleep(1);
 
   //sync with all the other workers
@@ -666,15 +668,18 @@ int main(int argc, char* argv[]) {
     epicAssert(id == i);
   }
 
+  printf("here 2\n");
 #ifdef PERF_GET
   int it = 1000000;
   alloc->Put(UINT_MAX, &it, sizeof(int));
+  printf("here 3\n");
   long start = get_time();
   int ib;
   for (int i = 0; i < it; i++) {
     alloc->Get(UINT_MAX, &ib);
     epicAssert(ib == it);
   }
+  printf("here 4\n");
   long end = get_time();
   long duration = end - start;
   epicLog(LOG_WARNING, "GET: throughput = %lf op/s, latency = %ld ns",
@@ -686,6 +691,7 @@ int main(int argc, char* argv[]) {
   for (int i = 0; i < no_thread; i++) {
     ths[i] = new thread(Benchmark, i);
   }
+  printf("here 5\n");
   for (int i = 0; i < no_thread; i++) {
     ths[i]->join();
   }

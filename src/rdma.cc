@@ -18,6 +18,37 @@
 static int page_size = 4096;
 int MAX_RDMA_INLINE_SIZE = 256;
 
+void wire_gid_to_gid(const char *wgid, union ibv_gid *gid)
+{
+	char tmp[9];
+	uint32_t v32;
+	int i;
+	uint32_t tmp_gid[4];
+
+	for (tmp[8] = 0, i = 0; i < 4; ++i) {
+		memcpy(tmp, wgid + i * 8, 8);
+		sscanf(tmp, "%x", &v32);
+		tmp_gid[i] = be32toh(v32);
+	}
+	memcpy(gid, tmp_gid, sizeof(*gid));
+}
+
+void gid_to_wire_gid(const union ibv_gid *gid, char wgid[])
+{
+	uint32_t tmp_gid[4];
+	int i;
+	printf("Here!\n");
+
+	memcpy(tmp_gid, gid, sizeof(tmp_gid));
+	for (i = 0; i < 4; ++i) {
+		printf("Step %d : %ld\n", i, tmp_gid[i]);
+		sprintf(&wgid[i * 8], "%08x", htobe32(tmp_gid[i]));
+	}
+	//for (i = 0; i < 32;i++)
+
+	printf("After transforming the length is: %d\n", strlen(wgid));
+}
+
 RdmaResource::RdmaResource(ibv_device *dev, bool master)
     : device(dev),
       isForMaster(master),
@@ -459,17 +490,19 @@ int RdmaContext::SetRemoteConnParam(const char *conn) {
   int ret;
   uint32_t rlid, rpsn, rqpn, rrkey;
   uint64_t rvaddr;
+  char gid_str[32];
 
   if (IsMaster()) {
     /* conn should be of the format "lid:qpn:psn" */
-    sscanf(conn, "%x:%x:%x", &rlid, &rqpn, &rpsn);
+    sscanf(conn, "%x:%x:%x:%s", &rlid, &rqpn, &rpsn, gid_str);
   } else {
     /* conn should be of the format "lid:qpn:psn:rkey:vaddr" */
-    sscanf(conn, "%x:%x:%x:%x:%lx", &rlid, &rqpn, &rpsn, &rrkey, &rvaddr);
+    sscanf(conn, "%x:%x:%x:%x:%lx:%s", &rlid, &rqpn, &rpsn, &rrkey, &rvaddr, gid_str);
     this->rkey = rrkey;
     this->vaddr = rvaddr;
   }
-
+  union ibv_gid gid;
+  wire_gid_to_gid(gid_str, &gid);
   /* modify qp to RTR state */
   {
     ibv_qp_attr attr = { };  //zero init the POD value (DON'T FORGET!!!!)
@@ -484,6 +517,10 @@ int RdmaContext::SetRemoteConnParam(const char *conn) {
     attr.ah_attr.src_path_bits = 0;
     //attr.ah_attr.sl = 1;
     attr.ah_attr.port_num = resource->ibport;
+    attr.ah_attr.is_global = 1;
+    attr.ah_attr.grh.hop_limit = 1;
+    attr.ah_attr.grh.dgid = gid;
+    attr.ah_attr.grh.sgid_index = 2; // FIXME
 
     ret = ibv_modify_qp(
         this->qp,
@@ -523,12 +560,15 @@ int RdmaContext::SetRemoteConnParam(const char *conn) {
 }
 
 const char* RdmaContext::GetRdmaConnString() {
+  int rc;
+  char gid[32];
   if (!msg) {
     if (IsMaster())
       msg = (char *) zmalloc(MASTER_RDMA_CONN_STRLEN + 1);  //1 for \0
     else
       msg = (char *) zmalloc(WORKER_RDMA_CONN_STRLEN + 1);
   }
+  printf("%d\n", MASTER_RDMA_CONN_STRLEN);
 
   if (unlikely(!msg)) {
     epicLog(LOG_WARNING, "Unable to allocate memory\n");
@@ -539,15 +579,28 @@ const char* RdmaContext::GetRdmaConnString() {
    * we use RDMA send/recv to do communication
    * for communication among workers, we also allow direct access to the whole memory space so that we expose the base addr and rkey
    */
+  rc = ibv_query_gid(this->resource->context, this->resource->ibport, 3, &(this->resource->gid));
+  printf("Print GID here!!!!!!!!!!!!! %d, %d\n", this->resource->gid.global.subnet_prefix, this->resource->gid.global.interface_id); 
+  printf("Start 16 values\n");
+  for(int i = 0; i < 16;i++) {
+    printf("%d\n", this->resource->gid.raw[i]);
+  }
+  gid_to_wire_gid(&(this->resource->gid), gid);
+  if (rc) {
+    fprintf(stderr, "Error, failed to query GID index %d of port %d in device '%s'\n",
+            2, 1, ibv_get_device_name(this->resource->device));
+  }
+  printf("&&&&&&&&&&&&& %s\n", gid);
   if (IsMaster()) {
-    sprintf(msg, "%04x:%08x:%08x", this->resource->portAttribute.lid,
-            this->qp->qp_num, this->resource->psn);
+    sprintf(msg, "%04x:%08x:%08x:%s", this->resource->portAttribute.lid,
+            this->qp->qp_num, this->resource->psn, gid);
   } else {
-    sprintf(msg, "%04x:%08x:%08x:%08x:%016lx",
+    sprintf(msg, "%04x:%08x:%08x:%08x:%016lx:%s",
             this->resource->portAttribute.lid, this->qp->qp_num,
             this->resource->psn, this->resource->bmr->rkey,
-            (uintptr_t) this->resource->base);
+            (uintptr_t) this->resource->base, gid);
   }
+  printf("&&&&&&&&&&&&&&& %s\n", msg);
   out:
   epicLog(LOG_DEBUG, "msg = %s\n", msg);
   return msg;

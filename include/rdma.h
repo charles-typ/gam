@@ -22,8 +22,8 @@ class RdmaContext;
 
 typedef void* raddr;  //raddr means registered addr
 
-#define MASTER_RDMA_CONN_STRLEN 22 /** 4 bytes for lid + 8 bytes qpn
-                                    * + 8 bytes for psn
+#define MASTER_RDMA_CONN_STRLEN 54 /** 4 bytes for lid + 8 bytes qpn
+                                    * + 8 bytes for psn + 32 bytes gid
                                     * seperated by 2 colons */
 
 #define WORKER_RDMA_CONN_STRLEN (MASTER_RDMA_CONN_STRLEN + 8 + 16 + 2)
@@ -55,6 +55,7 @@ class RdmaResource {
   ibv_srq *srq; /* share receive queue */
   const char *devName = NULL;
   ibv_port_attr portAttribute;
+  union ibv_gid gid;
   int ibport = 1; /* TODO: dual-port support */
   uint32_t psn;bool isForMaster;
   friend class RdmaContext;
