@@ -13,6 +13,17 @@
 #include <cassert>
 #include <map>
 
+#include <thread>
+#include <atomic>
+#include <iostream>
+#include <cstring>
+#include <mutex>
+
+#include "../include/lockwrapper.h"
+#include "zmalloc.h"
+#include "util.h"
+#include "gallocator.h"
+
 #define TEST_ALLOC_FLAG MAP_PRIVATE|MAP_ANONYMOUS	// default: 0xef
 #define TEST_INIT_ALLOC_SIZE (unsigned long)9 * 1024 * 1024 * 1024 // default: 16 GB
 #define TEST_METADATA_SIZE 16
@@ -23,6 +34,10 @@
 #define MAX_NUM_THREAD 4
 #define SLEEP_THRES_NANOS 10
 #define TIMEWINDOW_US 10000000
+#define DEBUG_LEVEL LOG_WARNING
+#define SYNC_KEY 204800
+
+int addr_size = sizeof(GAddr);
 
 // Test configuration
 // #define single_thread_test
@@ -87,13 +102,14 @@ struct trace_t {
 	*/
 	char *logs;
 	unsigned long len;
-	char *meta_buf;
-	char *data_buf;
 	int node_idx;
 	int num_nodes;
 	int master_thread;
 	int tid;
 	unsigned long time;
+	unsigned long benchmark_size;
+	int remote_ratio;
+	bool is_master;
 };
 struct trace_t args[MAX_NUM_THREAD];
 
@@ -149,7 +165,31 @@ inline void interval_between_access(long delta_time_usec) {
 
 void do_log(void *arg)
 {
+
 	struct trace_t *trace = (struct trace_t*) arg;
+	size_t current_size = trace->benchmark_size / trace->num_nodes;
+	int remote_step = current_size / BLOCK_SIZE;
+
+ 	GAlloc* alloc = GAllocFactory::CreateAllocator();
+
+    GAddr *remote = (GAddr*) malloc(sizeof(GAddr) * remote_step);
+
+ 	if (trace->is_master && trace->tid == 0) {
+		for (int i = 0; i < remote_step; i++) {
+			remote[i] = alloc->AlignedMalloc(BLOCK_SIZE, REMOTE);
+			alloc->Put(i, &remote[i], addr_size);
+ 		}
+	} else {
+    	for (int i = 0; i < remote_step; i++) {
+    	    GAddr addr;
+    	    int ret = alloc->Get(i, &addr);
+    	    epicAssert(ret == addr_size);
+    	    remote[i] = addr;
+    	  }
+   	}
+
+	int ret;
+
 
 	//pin to core first
 	pin_to_core(trace->tid);
@@ -157,65 +197,65 @@ void do_log(void *arg)
 	unsigned len = trace->len;
 
 #ifndef meta_data_test
-	multimap<unsigned int, void *> len2addr;
+	multimap<unsigned int, GAddr> len2addr;
 	unsigned long old_ts = 0;
 	unsigned long i = 0;
 
 	struct timeval ts;
 	gettimeofday(&ts, NULL);
 	char *cur;
+
+
 	for (i = 0; i < trace->len ; ++i) {
 		volatile char op = trace->logs[i * sizeof(RWlog)];
 		cur = &(trace->logs[i * sizeof(RWlog)]);
 		if (op == 'R') {
 			struct RWlog *log = (struct RWlog *)cur;
 			interval_between_access(log->usec - old_ts);
-			//assert((log->addr & MMAP_ADDR_MASK) < TEST_INIT_ALLOC_SIZE);
-			//char val = trace->data_buf[log->addr & MMAP_ADDR_MASK];
-			char *data_buf = trace->data_buf;
-			unsigned long addr = log->addr & MMAP_ADDR_MASK;
-			char val = data_buf[addr];
-
+			char buf;
+			size_t cache_line_block = (log->addr & MMAP_ADDR_MASK) / BLOCK_SIZE;
+			size_t cache_line_offset = (log->addr & MMAP_ADDR_MASK) % BLOCK_SIZE;
+			ret = alloc->Read(remote[cache_line_block] + cache_line_offset, &buf, 1);
+			assert(ret == 1);
 			old_ts = log->usec;
+
 		} else if (op == 'W') {
 			struct RWlog *log = (struct RWlog *)cur;
 			interval_between_access(log->usec - old_ts);
-			//assert((log->addr & MMAP_ADDR_MASK) < TEST_INIT_ALLOC_SIZE);
-			//trace->data_buf[log->addr & MMAP_ADDR_MASK] = 0;
-			char *data_buf = trace->data_buf;
+			char buf = '0';
 			unsigned long addr = log->addr & MMAP_ADDR_MASK;
-			data_buf[addr] = 0;
-
+			size_t cache_line_block = (log->addr & MMAP_ADDR_MASK) / BLOCK_SIZE;
+			size_t cache_line_offset = (log->addr & MMAP_ADDR_MASK) % BLOCK_SIZE;
+			ret = alloc->Write(remote[cache_line_block] + cache_line_offset, &buf, 1);
+			assert(ret == 1);
 			old_ts = log->usec;
+
 		} else if (op == 'M') {
 			struct Mlog *log = (struct Mlog *)cur;
 			interval_between_access(log->hdr.usec);
-			void *ret_addr = mmap((void *)(log->start & MMAP_ADDR_MASK), log->len, PROT_READ|PROT_WRITE, TEST_ALLOC_FLAG, -1, 0);
 			unsigned int len = log->len;
-			len2addr.insert(pair<unsigned int, void *>(len, ret_addr));
+			GAddr ret_addr = alloc->Malloc(len, REMOTE);
+			len2addr.insert(pair<unsigned int, GAddr>(len, ret_addr));
 			old_ts += log->hdr.usec;
 		} else if (op == 'B') {
 			struct Blog *log = (struct Blog *)cur;
 			interval_between_access(log->usec - old_ts);
-			brk((void *)(log->addr & MMAP_ADDR_MASK));
 			old_ts = log->usec;
 		} else if (op == 'U') {
 			struct Ulog *log = (struct Ulog *)cur;
 			interval_between_access(log->hdr.usec);
 			auto itr = len2addr.find(log->len);
-			if (itr == len2addr.end())
-//				printf("no mapping to unmap\n");
-				;
+			if (itr == len2addr.end()) {
+				printf("no memory to free\n");
+			}
 			else {
-				munmap(itr->second, log->len);
+				alloc->Free(itr->second);
 				len2addr.erase(itr);
 			}
 			old_ts += log->hdr.usec;
 		} else {
 			printf("unexpected log: %c at line: %lu\n", op, i);
 		}
-		//if (i % 1000000 == 0)
-		//	printf("%lu\n", i);
 	}
 
 /*
@@ -225,7 +265,7 @@ void do_log(void *arg)
 	unsigned long old_t = ts.tv_sec * 1000000 + ts.tv_usec;
 	gettimeofday(&ts, NULL);
 	unsigned long dt = ts.tv_sec * 1000000 + ts.tv_usec - old_t;
-	
+
 #endif
 	printf("done in %lu us\n", dt);
 	trace->time += dt;
@@ -237,7 +277,7 @@ int load_trace(int fd, struct trace_t *arg, unsigned long ts_limit) {
 	assert(sizeof(RWlog) == sizeof(Mlog));
 	assert(sizeof(RWlog) == sizeof(Blog));
 	assert(sizeof(RWlog) == sizeof(Ulog));
-/*	
+/*
 	char *chunk = (char *)malloc(LOG_NUM_TOTAL * sizeof(RWlog));
 	char *buf;
 	if (!chunk) {
@@ -262,7 +302,7 @@ int load_trace(int fd, struct trace_t *arg, unsigned long ts_limit) {
 		if (dsize % sizeof(RWlog) != 0)
 			printf("dsize is :%lu\n", dsize);
 		size += dsize;
-		
+
 		char *tail = buf + dsize - sizeof(RWlog);
 		unsigned long last_ts = 0;
 		while (tail - buf >= 0) {
@@ -325,15 +365,20 @@ void print_res(char *trace_name, struct trace_t *trace) {
 enum
 {
 	arg_node_cnt = 1,
-	arg_node_id = 2,
-	arg_num_threads = 3,
-	arg_log1 = 4,
+	arg_num_threads = 2,
+    arg_cache_th = 3,
+    arg_ip_master = 4,
+    arg_ip_worker = 5,
+    arg_port_master = 6,
+    arg_port_worker = 7,
+    arg_is_master = 8,
+    arg_remote_ratio = 9,
+	arg_benchmark_size = 10,
+	arg_log1 = 11,
 };
 
 int main(int argc, char **argv)
 {
-	// const int ALLOC_SIZE = 9999 * 4096;
-	//starts from few pages, dense access
    	int ret;
 	char *buf_test = NULL;
 	if (argc < arg_log1)
@@ -341,14 +386,76 @@ int main(int argc, char **argv)
 		fprintf(stderr, "Incomplete args\n");
 		return 1;
 	}
+
 	num_nodes = atoi(argv[arg_node_cnt]);
-	node_id = atoi(argv[arg_node_id]);
 	num_threads = atoi(argv[arg_num_threads]);
+	string ip_master = string(argv[arg_ip_master]);
+	string ip_worker = string(argv[arg_ip_worker]);
+	int port_master = atoi(argv[arg_port_master]);
+	int port_worker = atoi(argv[arg_port_worker]);
+	//FIXME check this is failed
+	bool is_master = atoi(argv[arg_is_master]);
+	int remote_ratio = atoi(argv[arg_remote_ratio]);
+	unsigned long benchmark_size = atoi(argv[arg_benchmark_size]);
+
 	printf("Num Nodes: %d, Num Threads: %d\n", num_nodes, num_threads);
 	if (argc != arg_log1 + num_threads) {
 		fprintf(stderr, "thread number and log files provided not match\n");
                 return 1;
 	}
+    /**
+     *	struct Conf {
+	 * 	bool is_master = true;  //mark whether current process is the master (obtained from conf and the current ip)
+	 * 	int master_port = 12345;
+	 * 	std::string master_ip = "localhost";
+	 * 	std::string master_bindaddr;
+	 * 	int worker_port = 12346;
+	 * 	std::string worker_bindaddr;
+	 * 	std::string worker_ip = "localhost";
+	 * 	Size size = 1024 * 1024L * 512;  //per-server size of memory pre-allocated
+	 * 	Size ghost_th = 1024 * 1024;
+	 * 	double cache_th = 0.15;  //if free mem is below this threshold, we start to allocate memory from remote nodes
+	 * 	int unsynced_th = 1;
+	 * 	double factor = 1.25;
+	 * 	int maxclients = 1024;
+	 * 	int maxthreads = 10;
+	 * 	int backlog = TCP_BACKLOG;
+	 * 	int loglevel = LOG_WARNING;
+	 * 	std::string* logfile = nullptr;
+	 * 	int timeout = 10;  //ms
+	 * 	int eviction_period = 100;  //ms
+	 *	};
+	**/
+
+    // Global configuration here
+	// FIXME check this
+	double cache_th = 0.15;
+    Conf conf;
+    conf.loglevel = DEBUG_LEVEL;
+    conf.is_master = is_master;
+    conf.master_ip = ip_master;
+    conf.master_port = port_master;
+    conf.worker_ip = ip_worker;
+    conf.worker_port = port_worker;
+    // FIXME check what this is
+    //long size = ((long) BLOCK_SIZE) * STEPS * no_thread * 4;
+	long size = TEST_INIT_ALLOC_SIZE;
+    conf.size = benchmark_size / num_nodes;
+    conf.cache_th = cache_th;
+
+    // Global memory allocator
+    GAlloc* alloc = GAllocFactory::CreateAllocator(&conf);
+    sleep(1);
+
+    //sync with all the other workers
+    //check all the workers are started
+    int id;
+    node_id = alloc->GetID();
+    alloc->Put(SYNC_KEY + node_id, &node_id, sizeof(int));
+    for (int i = 1; i <= num_nodes; i++) {
+      alloc->Get(SYNC_KEY + i, &id);
+      epicAssert(id == i);
+    }
 
 	//open files
 	int *fd = new int[num_threads];
@@ -359,57 +466,28 @@ int main(int argc, char **argv)
 			return 1;
 		}
 	}
-	
+
 	//get start ts
 	struct RWlog first_log;
 	unsigned long start_ts = -1;
 	for (int i = 0; i < num_threads; ++i) {
-                int size = read(fd[i], &first_log, sizeof(RWlog));
-		start_ts = min(start_ts, first_log.usec);
-        }
-	printf("start ts is: %lu\n", start_ts);
+        int size = read(fd[i], &first_log, sizeof(RWlog));
+        start_ts = min(start_ts, first_log.usec);
+    }
+    printf("start ts is: %lu\n", start_ts);
 
-	// init traces
-	// ====== NOTE =====
-        // If we make access to the memory ranges other than this size with TEST_ALLOC_FLAG flag,
-        // it will generate segmentation fault
-        // =================
-        char *meta_buf = (char *)mmap(NULL, TEST_INIT_ALLOC_SIZE, PROT_READ | PROT_WRITE, TEST_ALLOC_FLAG, -1, 0);
-        if (!meta_buf) {
-                printf("can not allocate test buff\n");
-                //return 1;
-        } else {
-                printf("meta buf: %p\n", meta_buf);
-        }
-//	for(int i = 0; i < 10; ++i) {
-//		printf("sleeping %d, please run the same executable on other machines now...\n", i);
-//		sleep(1);
-//	}
-
-
-	/* put this back when run with switch */
-	/*
-	buf_test = (char *)mmap(NULL, TEST_INIT_ALLOC_SIZE, PROT_READ | PROT_WRITE, TEST_ALLOC_FLAG, -1, 0);
-	// arg1.buf = arg2.buf = (char *)mmap(NULL, ALLOC_SIZE, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0);
-	//memset(arg.buf, -1, ALLOC_SIZE);
-	printf("protocol testing buf addr is: %p\n", arg1.meta_buf);
-	if (buf_test != arg1.meta_buf)
-	{
-		fprintf(stderr, "Protocol testing buf verification failed: %p <-> %p\n", arg1.meta_buf, buf_test);
-		return 1;
-	}
-	*/
-        for (int i = 0; i < num_threads; ++i) {
-                args[i].node_idx = node_id;
-                args[i].meta_buf = meta_buf;
-                args[i].data_buf = meta_buf + TEST_METADATA_SIZE;
-                args[i].num_nodes = num_nodes;
-                args[i].master_thread = (i == 0);
-                args[i].tid = i;
-		args[i].logs = (char *)malloc(LOG_NUM_TOTAL * sizeof(RWlog));
-        	if (!args[i].logs)
-                	printf("fail to alloc buf to hold logs\n");
-        }
+    for (int i = 0; i < num_threads; ++i) {
+            args[i].node_idx = node_id;
+            args[i].num_nodes = num_nodes;
+            args[i].master_thread = (i == 0);
+			args[i].is_master = is_master;
+            args[i].tid = i;
+            args[i].logs = (char *)malloc(LOG_NUM_TOTAL * sizeof(RWlog)); // This should be allocated locally
+			args[i].benchmark_size = benchmark_size;
+			args[i].remote_ratio = remote_ratio;
+            if (!args[i].logs)
+                printf("fail to alloc buf to hold logs\n");
+    }
 
 	//start load and run logs in time window
 	unsigned long pass = 0;
@@ -422,10 +500,10 @@ int main(int argc, char **argv)
 			printf("Thread[%d]: loading log...\n", i);
 			ret = load_trace(fd[i], &args[i], ts_limit);
 			if (ret) {
-    				printf("fail to load trace\n");
+    			printf("fail to load trace\n");
 			}
 		}
-			
+
 		pthread_t thread[MAX_NUM_THREAD];
 		//printf("running trace...\n");
 
@@ -441,19 +519,18 @@ int main(int argc, char **argv)
         			}
 			}
 		}
-	
+
 		for (int i = 0; i < num_threads; ++i) {
 			if (args[i].len) {
 				if (pthread_join(thread[i], NULL)) {
-    					printf("Error joining thread %d\n", i);
-    					return 2;
+    				printf("Error joining thread %d\n", i);
+    				return 2;
 				}
 			}
 		}
 
 		//sync on the end of the time window
 		++pass;
-		fini((metadata_t *)meta_buf, num_nodes, node_id, pass);
 
 		bool all_done = true;
 		for (int i = 0; i < num_threads; ++i)
