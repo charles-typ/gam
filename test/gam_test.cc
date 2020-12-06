@@ -110,6 +110,7 @@ struct trace_t {
 	unsigned long benchmark_size;
 	int remote_ratio;
 	bool is_master;
+	bool is_compute;
 };
 struct trace_t args[MAX_NUM_THREAD];
 
@@ -372,9 +373,10 @@ enum
     arg_port_master = 6,
     arg_port_worker = 7,
     arg_is_master = 8,
-    arg_remote_ratio = 9,
-	arg_benchmark_size = 10,
-	arg_log1 = 11,
+    arg_is_compute = 9,
+    arg_remote_ratio = 10,
+	arg_benchmark_size = 11,
+	arg_log1 = 12,
 };
 
 int main(int argc, char **argv)
@@ -395,6 +397,7 @@ int main(int argc, char **argv)
 	int port_worker = atoi(argv[arg_port_worker]);
 	//FIXME check this is failed
 	bool is_master = atoi(argv[arg_is_master]);
+	bool is_compute = atoi(argv[arg_is_compute]);
 	int remote_ratio = atoi(argv[arg_remote_ratio]);
 	unsigned long benchmark_size = atoi(argv[arg_benchmark_size]);
 
@@ -429,7 +432,14 @@ int main(int argc, char **argv)
 
     // Global configuration here
 	// FIXME check this
-	double cache_th = 0.15;
+	double cache_th = 1.0;
+
+  printf("Currently configuration is: ");
+  printf(
+      "master: %s:%d, worker: %s:%d, is_master: %s, size to allocate: %d, cache_th: %f\n",
+      ip_master.c_str(), port_master, ip_worker.c_str(), port_worker,
+      is_master == 1 ? "true" : "false", benchmark_size / num_nodes, cache_th);
+
     Conf conf;
     conf.loglevel = DEBUG_LEVEL;
     conf.is_master = is_master;
@@ -439,12 +449,14 @@ int main(int argc, char **argv)
     conf.worker_port = port_worker;
     // FIXME check what this is
     //long size = ((long) BLOCK_SIZE) * STEPS * no_thread * 4;
-	long size = TEST_INIT_ALLOC_SIZE;
-    conf.size = benchmark_size / num_nodes;
+	//long size = TEST_INIT_ALLOC_SIZE;
+    long size = benchmark_size / num_nodes;
+    conf.size = size < conf.size ? conf.size : size;
     conf.cache_th = cache_th;
 
     // Global memory allocator
     GAlloc* alloc = GAllocFactory::CreateAllocator(&conf);
+    printf("Here !!!!!!!!!");
     sleep(1);
 
     //sync with all the other workers
