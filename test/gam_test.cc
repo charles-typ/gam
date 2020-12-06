@@ -167,7 +167,7 @@ void do_log(void *arg) {
   size_t current_size = trace->benchmark_size / trace->num_nodes;
   printf("Current size to be %d\n", current_size);
   int remote_step = current_size / BLOCK_SIZE;
-  printf("Remote step to be %d\n", current_size);
+  printf("Remote step to be %d\n", remote_step);
 
   printf("Creating the Allocator in node: %d, in thread: %d\n", trace->node_idx, trace->num_threads);
   GAlloc *alloc = GAllocFactory::CreateAllocator();
