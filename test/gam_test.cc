@@ -162,27 +162,36 @@ inline void interval_between_access(long delta_time_usec) {
 }
 
 void do_log(void *arg) {
-
+  printf("Show the start of do_log\n");
   struct trace_t *trace = (struct trace_t *) arg;
   size_t current_size = trace->benchmark_size / trace->num_nodes;
+  printf("Current size to be %d\n", current_size);
   int remote_step = current_size / BLOCK_SIZE;
+  printf("Remote step to be %d\n", current_size);
 
+  printf("Creating the Allocator in node: %d, in thread: %d\n", trace->node_idx, trace->num_threads);
   GAlloc *alloc = GAllocFactory::CreateAllocator();
+  printf("Finish creating the Allocator in node: %d, in thread: %d\n", trace->node_idx, trace->num_threads);
 
   GAddr *remote = (GAddr *) malloc(sizeof(GAddr) * remote_step);
 
+
   if (trace->is_master && trace->tid == 0) {
+    printf("Master malloc the remote memory in slices node: %d, in thread: %d\n", trace->node_idx, trace->num_threads);
     for (int i = 0; i < remote_step; i++) {
       remote[i] = alloc->AlignedMalloc(BLOCK_SIZE, REMOTE);
       alloc->Put(i, &remote[i], addr_size);
     }
+    printf("Finish malloc the remote memory in slices node: %d, in thread: %d\n", trace->node_idx, trace->num_threads);
   } else {
+    printf("Worker malloc the remote memory in slices node: %d, in thread: %d\n", trace->node_idx, trace->num_threads);
     for (int i = 0; i < remote_step; i++) {
       GAddr addr;
       int ret = alloc->Get(i, &addr);
       epicAssert(ret == addr_size);
       remote[i] = addr;
     }
+    printf("Finish worker malloc the remote memory in slices node: %d, in thread: %d\n", trace->node_idx, trace->num_threads);
   }
 
   int ret;
@@ -202,6 +211,7 @@ void do_log(void *arg) {
   char *cur;
 
   if (trace->is_compute) {
+    printf("This is a compute node, run everything here!\n");
     for (i = 0; i < trace->len; ++i) {
       volatile char op = trace->logs[i * sizeof(RWlog)];
       cur = &(trace->logs[i * sizeof(RWlog)]);
