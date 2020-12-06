@@ -111,6 +111,7 @@ struct trace_t {
   int remote_ratio;
   bool is_master;
   bool is_compute;
+  int num_threads;
 };
 struct trace_t args[MAX_NUM_THREAD];
 
@@ -268,13 +269,13 @@ void do_log(void *arg) {
   alloc->WLock(remote[0], BLOCK_SIZE);
   alloc->UnLock(remote[0], BLOCK_SIZE);
   uint64_t SYNC_RUN_BASE = SYNC_KEY + trace->num_nodes * 2;
-  int sync_id = SYNC_RUN_BASE + trace_node * node_id + id;
+  int sync_id = SYNC_RUN_BASE + trace->num_nodes * node_id + trace->tid;
   alloc->Put(sync_id, &sync_id, sizeof(int));
-  for (int i = 1; i <= no_node; i++) {
-    for (int j = 0; j < no_thread; j++) {
+  for (int i = 1; i <= trace->num_nodes; i++) {
+    for (int j = 0; j < trace->num_threads; j++) {
       epicLog(LOG_WARNING, "waiting for node %d, thread %d", i, j);
-      alloc->Get(SYNC_RUN_BASE + no_node * i + j, &sync_id);
-      epicAssert(sync_id == SYNC_RUN_BASE + no_node * i + j);
+      alloc->Get(SYNC_RUN_BASE + trace->num_nodes * i + j, &sync_id);
+      epicAssert(sync_id == SYNC_RUN_BASE + trace->num_nodes * i + j);
       epicLog(LOG_WARNING, "get sync_id %d from node %d, thread %d", sync_id, i,
               j);
     }
@@ -406,7 +407,7 @@ int main(int argc, char **argv) {
 
   printf("Currently configuration is: ");
   printf(
-      "master: %s:%d, worker: %s:%d, is_master: %s, size to allocate: %d, cache_th: %f\n",
+      "master: %s:%d, worker: %s:%d, is_master: %s, size to allocate: %ld, cache_th: %f\n",
       ip_master.c_str(), port_master, ip_worker.c_str(), port_worker,
       is_master == 1 ? "true" : "false", benchmark_size / num_nodes, cache_th);
 
@@ -425,19 +426,23 @@ int main(int argc, char **argv) {
   conf.cache_th = cache_th;
 
   // Global memory allocator
-  printf("Start the allocator here !!!!!!!!!");
+  printf("Start the allocator here !!!!!!!!!\n");
   GAlloc *alloc = GAllocFactory::CreateAllocator(&conf);
-  printf("End the allocator here !!!!!!!!!");
+  printf("End the allocator here !!!!!!!!!\n");
   sleep(1);
 
   //sync with all the other workers
   //check all the workers are started
   int id;
   node_id = alloc->GetID();
-  printf("Waiting for all the nodes !!!!!!!!!");
+  printf("Waiting for all the nodes !!!!!!!!!\n");
+  printf("Putting %d, %d\n", SYNC_KEY + node_id, node_id);
   alloc->Put(SYNC_KEY + node_id, &node_id, sizeof(int));
+  printf("Put done\n");
   for (int i = 1; i <= num_nodes; i++) {
+    printf("Gettting %d", SYNC_KEY + i);
     alloc->Get(SYNC_KEY + i, &id);
+    printf("Get done \n");
     epicAssert(id == i);
   }
 
@@ -461,6 +466,7 @@ int main(int argc, char **argv) {
   printf("start ts is: %lu\n", start_ts);
 
   for (int i = 0; i < num_threads; ++i) {
+    args[i].num_threads = num_threads;
     args[i].node_idx = node_id;
     args[i].num_nodes = num_nodes;
     args[i].master_thread = (i == 0);
