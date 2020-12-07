@@ -160,6 +160,7 @@ inline void interval_between_access(long delta_time_usec) {
 void do_log(void *arg) {
   printf("Show the start of do_log\n");
   struct trace_t *trace = (struct trace_t *) arg;
+
   size_t current_size = trace->benchmark_size / trace->num_nodes;
   printf("Current size to be %d\n", current_size);
   int remote_step = current_size / BLOCK_SIZE;
@@ -219,29 +220,29 @@ void do_log(void *arg) {
         struct RWlog *log = (struct RWlog *) cur;
         interval_between_access(log->usec - old_ts);
         char buf;
-//        size_t cache_line_block = (log->addr & MMAP_ADDR_MASK) / BLOCK_SIZE;
-//        size_t cache_line_offset = (log->addr & MMAP_ADDR_MASK) % BLOCK_SIZE;
-//        ret = alloc->Read(remote[cache_line_block] + cache_line_offset, &buf, 1);
-//        assert(ret == 1);
+        size_t cache_line_block = (log->addr & MMAP_ADDR_MASK) / BLOCK_SIZE;
+        size_t cache_line_offset = (log->addr & MMAP_ADDR_MASK) % BLOCK_SIZE;
+        ret = alloc->Read(remote[cache_line_block] + cache_line_offset, &buf, 1);
+        assert(ret == 1);
         old_ts = log->usec;
 
       } else if (op == 'W') {
         struct RWlog *log = (struct RWlog *) cur;
         interval_between_access(log->usec - old_ts);
         char buf = '0';
-//        unsigned long addr = log->addr & MMAP_ADDR_MASK;
-//        size_t cache_line_block = (log->addr & MMAP_ADDR_MASK) / BLOCK_SIZE;
-//        size_t cache_line_offset = (log->addr & MMAP_ADDR_MASK) % BLOCK_SIZE;
-//        ret = alloc->Write(remote[cache_line_block] + cache_line_offset, &buf, 1);
- //       assert(ret == 1);
+        unsigned long addr = log->addr & MMAP_ADDR_MASK;
+        size_t cache_line_block = (log->addr & MMAP_ADDR_MASK) / BLOCK_SIZE;
+        size_t cache_line_offset = (log->addr & MMAP_ADDR_MASK) % BLOCK_SIZE;
+        ret = alloc->Write(remote[cache_line_block] + cache_line_offset, &buf, 1);
+        assert(ret == 1);
         old_ts = log->usec;
 
       } else if (op == 'M') {
         struct Mlog *log = (struct Mlog *) cur;
         interval_between_access(log->hdr.usec);
         unsigned int len = log->len;
-//        GAddr ret_addr = alloc->Malloc(len, REMOTE);
-  //      len2addr.insert(pair<unsigned int, GAddr>(len, ret_addr));
+        GAddr ret_addr = alloc->Malloc(len, REMOTE);
+        len2addr.insert(pair<unsigned int, GAddr>(len, ret_addr));
         old_ts += log->hdr.usec;
       } else if (op == 'B') {
         struct Blog *log = (struct Blog *) cur;
@@ -250,13 +251,13 @@ void do_log(void *arg) {
       } else if (op == 'U') {
         struct Ulog *log = (struct Ulog *) cur;
         interval_between_access(log->hdr.usec);
-        //auto itr = len2addr.find(log->len);
-        //if (itr == len2addr.end()) {
-        //  printf("no memory to free\n");
-        //} else {
-        //  alloc->Free(itr->second);
-        //  len2addr.erase(itr);
-        //}
+        auto itr = len2addr.find(log->len);
+        if (itr == len2addr.end()) {
+          printf("no memory to free\n");
+        } else {
+          alloc->Free(itr->second);
+          len2addr.erase(itr);
+        }
         old_ts += log->hdr.usec;
       } else {
         printf("unexpected log: %c at line: %lu\n", op, i);
@@ -275,9 +276,9 @@ void do_log(void *arg) {
   //FIXME warm up here?
 
   //make sure all the requests are complete
-  //alloc->MFence();
-  //alloc->WLock(remote[0], BLOCK_SIZE);
-  //alloc->UnLock(remote[0], BLOCK_SIZE);
+  alloc->MFence();
+  alloc->WLock(remote[0], BLOCK_SIZE);
+  alloc->UnLock(remote[0], BLOCK_SIZE);
   uint64_t SYNC_RUN_BASE = SYNC_KEY + trace->num_nodes * 2;
   int sync_id = SYNC_RUN_BASE + trace->num_nodes * node_id + trace->tid;
   alloc->Put(sync_id, &sync_id, sizeof(int));
