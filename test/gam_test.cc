@@ -108,6 +108,7 @@ struct trace_t {
   int tid;
   unsigned long time;
   unsigned long benchmark_size;
+  unsigned long test_size;
   int remote_ratio;
   bool is_master;
   bool is_compute;
@@ -167,20 +168,24 @@ void do_log(void *arg) {
   size_t current_size = trace->benchmark_size / trace->num_nodes;
   printf("Current size to be %d\n", current_size);
   int remote_step = current_size / BLOCK_SIZE;
+  //FIXME remove this
+  //remote_step = trace->test_size / 2 / BLOCK_SIZE;
+  remote_step = 1024 * 4;
   printf("Remote step to be %d\n", remote_step);
 
-  printf("Creating the Allocator in node: %d, in thread: %d\n", trace->node_idx, trace->num_threads);
+  printf("Creating the Allocator in node: %d, in thread: %d\n", trace->node_idx, trace->tid);
   GAlloc *alloc = GAllocFactory::CreateAllocator();
-  printf("Finish creating the Allocator in node: %d, in thread: %d\n", trace->node_idx, trace->num_threads);
+  printf("Finish creating the Allocator in node: %d, in thread: %d\n", trace->node_idx, trace->tid);
 
   GAddr *remote = (GAddr *) malloc(sizeof(GAddr) * remote_step);
 
 
   if (trace->is_master && trace->tid == 0) {
-    printf("Master malloc the remote memory in slices node: %d, in thread: %d\n", trace->node_idx, trace->num_threads);
+    printf("Master malloc the remote memory in slices: %d, node: %d, in thread: %d\n", remote_step, trace->node_idx, trace->num_threads);
     for (int i = 0; i < remote_step; i++) {
       remote[i] = alloc->AlignedMalloc(BLOCK_SIZE, REMOTE);
       alloc->Put(i, &remote[i], addr_size);
+      printf("The address is: %d\n", remote[i]);
     }
     printf("Finish malloc the remote memory in slices node: %d, in thread: %d\n", trace->node_idx, trace->num_threads);
   } else {
@@ -219,29 +224,29 @@ void do_log(void *arg) {
         struct RWlog *log = (struct RWlog *) cur;
         interval_between_access(log->usec - old_ts);
         char buf;
-        size_t cache_line_block = (log->addr & MMAP_ADDR_MASK) / BLOCK_SIZE;
-        size_t cache_line_offset = (log->addr & MMAP_ADDR_MASK) % BLOCK_SIZE;
-        ret = alloc->Read(remote[cache_line_block] + cache_line_offset, &buf, 1);
-        assert(ret == 1);
+//        size_t cache_line_block = (log->addr & MMAP_ADDR_MASK) / BLOCK_SIZE;
+//        size_t cache_line_offset = (log->addr & MMAP_ADDR_MASK) % BLOCK_SIZE;
+//        ret = alloc->Read(remote[cache_line_block] + cache_line_offset, &buf, 1);
+//        assert(ret == 1);
         old_ts = log->usec;
 
       } else if (op == 'W') {
         struct RWlog *log = (struct RWlog *) cur;
         interval_between_access(log->usec - old_ts);
         char buf = '0';
-        unsigned long addr = log->addr & MMAP_ADDR_MASK;
-        size_t cache_line_block = (log->addr & MMAP_ADDR_MASK) / BLOCK_SIZE;
-        size_t cache_line_offset = (log->addr & MMAP_ADDR_MASK) % BLOCK_SIZE;
-        ret = alloc->Write(remote[cache_line_block] + cache_line_offset, &buf, 1);
-        assert(ret == 1);
+//        unsigned long addr = log->addr & MMAP_ADDR_MASK;
+//        size_t cache_line_block = (log->addr & MMAP_ADDR_MASK) / BLOCK_SIZE;
+//        size_t cache_line_offset = (log->addr & MMAP_ADDR_MASK) % BLOCK_SIZE;
+//        ret = alloc->Write(remote[cache_line_block] + cache_line_offset, &buf, 1);
+ //       assert(ret == 1);
         old_ts = log->usec;
 
       } else if (op == 'M') {
         struct Mlog *log = (struct Mlog *) cur;
         interval_between_access(log->hdr.usec);
         unsigned int len = log->len;
-        GAddr ret_addr = alloc->Malloc(len, REMOTE);
-        len2addr.insert(pair<unsigned int, GAddr>(len, ret_addr));
+//        GAddr ret_addr = alloc->Malloc(len, REMOTE);
+  //      len2addr.insert(pair<unsigned int, GAddr>(len, ret_addr));
         old_ts += log->hdr.usec;
       } else if (op == 'B') {
         struct Blog *log = (struct Blog *) cur;
@@ -250,13 +255,13 @@ void do_log(void *arg) {
       } else if (op == 'U') {
         struct Ulog *log = (struct Ulog *) cur;
         interval_between_access(log->hdr.usec);
-        auto itr = len2addr.find(log->len);
-        if (itr == len2addr.end()) {
-          printf("no memory to free\n");
-        } else {
-          alloc->Free(itr->second);
-          len2addr.erase(itr);
-        }
+        //auto itr = len2addr.find(log->len);
+        //if (itr == len2addr.end()) {
+        //  printf("no memory to free\n");
+        //} else {
+        //  alloc->Free(itr->second);
+        //  len2addr.erase(itr);
+        //}
         old_ts += log->hdr.usec;
       } else {
         printf("unexpected log: %c at line: %lu\n", op, i);
@@ -275,9 +280,9 @@ void do_log(void *arg) {
   //FIXME warm up here?
 
   //make sure all the requests are complete
-  alloc->MFence();
-  alloc->WLock(remote[0], BLOCK_SIZE);
-  alloc->UnLock(remote[0], BLOCK_SIZE);
+  //alloc->MFence();
+  //alloc->WLock(remote[0], BLOCK_SIZE);
+  //alloc->UnLock(remote[0], BLOCK_SIZE);
   uint64_t SYNC_RUN_BASE = SYNC_KEY + trace->num_nodes * 2;
   int sync_id = SYNC_RUN_BASE + trace->num_nodes * node_id + trace->tid;
   alloc->Put(sync_id, &sync_id, sizeof(int));
@@ -413,7 +418,7 @@ int main(int argc, char **argv) {
 
   // Global configuration here
   // FIXME check this
-  double cache_th = 1.0;
+  double cache_th = 0.0;
 
   printf("Currently configuration is: ");
   printf(
@@ -432,6 +437,7 @@ int main(int argc, char **argv) {
   //long size = ((long) BLOCK_SIZE) * STEPS * no_thread * 4;
   //long size = TEST_INIT_ALLOC_SIZE;
   long size = benchmark_size / num_nodes;
+  size = 1024 * 1024 * 1024 * 1;
   conf.size = size < conf.size ? conf.size : size;
   conf.cache_th = cache_th;
 
@@ -486,6 +492,7 @@ int main(int argc, char **argv) {
     args[i].logs = (char *) malloc(LOG_NUM_TOTAL * sizeof(RWlog)); // This should be allocated locally
     args[i].benchmark_size = benchmark_size;
     args[i].remote_ratio = remote_ratio;
+    args[i].test_size = conf.size;
     if (!args[i].logs)
       printf("fail to alloc buf to hold logs\n");
   }
@@ -533,20 +540,24 @@ int main(int argc, char **argv) {
     ++pass;
 
     bool all_done = true;
-    for (int i = 0; i < num_threads; ++i)
-      if (args[i].len)
+    for (int i = 0; i < num_threads; ++i) {
+	   printf("This pass the length is %ld\n", args[i].len);
+	   printf("This pass the length is %ld\n", args[i].len == 0);
+      if (args[i].len != 0) {
         all_done = false;
-    if (all_done)
+	printf("Setting all done to false\n");
+      }
+    }
+    if (all_done) {
+	    printf("All done here\n");
       break;
+    }
   }
 
   for (int i = 0; i < num_threads; ++i) {
     close(fd[i]);
   }
   delete[] fd;
-
-  while (1)
-    sleep(30);
 
   return 0;
 }
