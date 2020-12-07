@@ -538,11 +538,8 @@ int main(int argc, char **argv) {
 
     bool all_done = true;
     for (int i = 0; i < num_threads; ++i) {
-	   printf("This pass the length is %ld\n", args[i].len);
-	   printf("This pass the length is %ld\n", args[i].len == 0);
       if (args[i].len != 0) {
         all_done = false;
-	printf("Setting all done to false\n");
       }
     }
     if (all_done) {
