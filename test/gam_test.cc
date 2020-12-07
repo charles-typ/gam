@@ -36,6 +36,9 @@
 #define TIMEWINDOW_US 10000000
 #define DEBUG_LEVEL LOG_WARNING
 #define SYNC_KEY 204800
+#define PASS_KEY 40960000
+#define NUM_COMP_NODES 4
+#define NUM_MEM_NODES 2
 
 int addr_size = sizeof(GAddr);
 
@@ -108,6 +111,7 @@ struct trace_t {
   bool is_master;
   bool is_compute;
   int num_threads;
+  int pass;
 };
 struct trace_t args[MAX_NUM_THREAD];
 
@@ -160,39 +164,45 @@ inline void interval_between_access(long delta_time_usec) {
 void do_log(void *arg) {
   printf("Show the start of do_log\n");
   struct trace_t *trace = (struct trace_t *) arg;
+  int ratio = 4;
+  int remote_step = trace->benchmark_size / BLOCK_SIZE / ratio;
 
-  size_t current_size = trace->benchmark_size / trace->num_nodes;
-  printf("Current size to be %d\n", current_size);
-  int remote_step = current_size / BLOCK_SIZE;
-  //FIXME remove this
-  //remote_step = trace->test_size / 2 / BLOCK_SIZE;
-  remote_step = 1024 * 4;
   printf("Remote step to be %d\n", remote_step);
 
   printf("Creating the Allocator in node: %d, in thread: %d\n", trace->node_idx, trace->tid);
   GAlloc *alloc = GAllocFactory::CreateAllocator();
   printf("Finish creating the Allocator in node: %d, in thread: %d\n", trace->node_idx, trace->tid);
 
-  GAddr *remote = (GAddr *) malloc(sizeof(GAddr) * remote_step);
-
-
-  if (trace->is_master && trace->tid == 0) {
-    printf("Master malloc the remote memory in slices: %d, node: %d, in thread: %d\n", remote_step, trace->node_idx, trace->num_threads);
-    for (int i = 0; i < remote_step; i++) {
-      remote[i] = alloc->AlignedMalloc(BLOCK_SIZE, REMOTE);
-      alloc->Put(i, &remote[i], addr_size);
-      printf("The address is: %d\n", remote[i]);
+  GAddr *remote;
+  if(trace->is_compute) {
+    remote = (GAddr *) malloc(sizeof(GAddr) * remote_step);
+    if (trace->is_master && trace->tid == 0 && trace->pass == 0) {
+      printf("Master malloc the remote memory in slices: %d, node: %d, in thread: %d\n",
+             remote_step,
+             trace->node_idx,
+             trace->num_threads);
+      for (int i = 0; i < remote_step; i++) {
+        remote[i] = alloc->AlignedMalloc(BLOCK_SIZE * ratio, REMOTE);
+        alloc->Put(i, &remote[i], addr_size);
+      }
+      printf("Finish malloc the remote memory in slices node: %d, in thread: %d\n",
+             trace->node_idx,
+             trace->num_threads);
+    } else {
+      printf("Worker malloc the remote memory in slices node: %d, in thread: %d\n",
+             trace->node_idx,
+             trace->num_threads);
+      for (int i = 0; i < remote_step; i++) {
+        GAddr addr;
+        // FIXME does this use global or local memory??
+        int ret = alloc->Get(i, &addr);
+        epicAssert(ret == addr_size);
+        remote[i] = addr;
+      }
+      printf("Finish worker malloc the remote memory in slices node: %d, in thread: %d\n",
+             trace->node_idx,
+             trace->num_threads);
     }
-    printf("Finish malloc the remote memory in slices node: %d, in thread: %d\n", trace->node_idx, trace->num_threads);
-  } else {
-    printf("Worker malloc the remote memory in slices node: %d, in thread: %d\n", trace->node_idx, trace->num_threads);
-    for (int i = 0; i < remote_step; i++) {
-      GAddr addr;
-      int ret = alloc->Get(i, &addr);
-      epicAssert(ret == addr_size);
-      remote[i] = addr;
-    }
-    printf("Finish worker malloc the remote memory in slices node: %d, in thread: %d\n", trace->node_idx, trace->num_threads);
   }
 
   int ret;
@@ -220,8 +230,8 @@ void do_log(void *arg) {
         struct RWlog *log = (struct RWlog *) cur;
         interval_between_access(log->usec - old_ts);
         char buf;
-        size_t cache_line_block = (log->addr & MMAP_ADDR_MASK) / BLOCK_SIZE;
-        size_t cache_line_offset = (log->addr & MMAP_ADDR_MASK) % BLOCK_SIZE;
+        size_t cache_line_block = (log->addr & MMAP_ADDR_MASK) / (BLOCK_SIZE * ratio);
+        size_t cache_line_offset = (log->addr & MMAP_ADDR_MASK) % (BLOCK_SIZE * ratio);
         ret = alloc->Read(remote[cache_line_block] + cache_line_offset, &buf, 1);
         assert(ret == 1);
         old_ts = log->usec;
@@ -231,8 +241,8 @@ void do_log(void *arg) {
         interval_between_access(log->usec - old_ts);
         char buf = '0';
         unsigned long addr = log->addr & MMAP_ADDR_MASK;
-        size_t cache_line_block = (log->addr & MMAP_ADDR_MASK) / BLOCK_SIZE;
-        size_t cache_line_offset = (log->addr & MMAP_ADDR_MASK) % BLOCK_SIZE;
+        size_t cache_line_block = (log->addr & MMAP_ADDR_MASK) / (BLOCK_SIZE * ratio);
+        size_t cache_line_offset = (log->addr & MMAP_ADDR_MASK) % (BLOCK_SIZE * ratio);
         ret = alloc->Write(remote[cache_line_block] + cache_line_offset, &buf, 1);
         assert(ret == 1);
         old_ts = log->usec;
@@ -276,17 +286,19 @@ void do_log(void *arg) {
   //FIXME warm up here?
 
   //make sure all the requests are complete
-  alloc->MFence();
-  alloc->WLock(remote[0], BLOCK_SIZE);
-  alloc->UnLock(remote[0], BLOCK_SIZE);
+  if(trace->is_compute) {
+    alloc->MFence();
+    alloc->WLock(remote[0], BLOCK_SIZE * ratio);
+    alloc->UnLock(remote[0], BLOCK_SIZE * ratio);
+  }
   uint64_t SYNC_RUN_BASE = SYNC_KEY + trace->num_nodes * 2;
-  int sync_id = SYNC_RUN_BASE + trace->num_nodes * node_id + trace->tid;
+  int sync_id = SYNC_RUN_BASE + trace->num_nodes * node_id + trace->tid + PASS_KEY * trace->pass;
   alloc->Put(sync_id, &sync_id, sizeof(int));
   for (int i = 1; i <= trace->num_nodes; i++) {
     for (int j = 0; j < trace->num_threads; j++) {
       epicLog(LOG_WARNING, "waiting for node %d, thread %d", i, j);
-      alloc->Get(SYNC_RUN_BASE + trace->num_nodes * i + j, &sync_id);
-      epicAssert(sync_id == SYNC_RUN_BASE + trace->num_nodes * i + j);
+      alloc->Get(SYNC_RUN_BASE + trace->num_nodes * i + j + PASS_KEY * trace->pass, &sync_id);
+      epicAssert(sync_id == SYNC_RUN_BASE + trace->num_nodes * i + j + PASS_KEY * trace->pass);
       epicLog(LOG_WARNING, "get sync_id %d from node %d, thread %d", sync_id, i,
               j);
     }
@@ -426,16 +438,17 @@ int main(int argc, char **argv) {
   conf.master_port = port_master;
   conf.worker_ip = ip_worker;
   conf.worker_port = port_worker;
-  // FIXME check what this is
-  //long size = ((long) BLOCK_SIZE) * STEPS * no_thread * 4;
-  //long size = TEST_INIT_ALLOC_SIZE;
-  long size = benchmark_size / num_nodes;
-  size = 1024 * 1024 * 1024 * 1;
-  conf.size = size < conf.size ? conf.size : size;
+
   if(is_compute) {
     conf.cache_th = 1.0;
+    long size = benchmark_size / NUM_COMP_NODES * remote_ratio;
+    //FIXME might be too small for tf?
+    conf.size = size < conf.size ? conf.size : size;
+
   } else {
     conf.cache_th = 0.0;
+    conf.size = 1024 * 1024 * 1024 * 10L;
+
   }
 
   // Global memory allocator
@@ -516,6 +529,7 @@ int main(int argc, char **argv) {
     num_threads = 1;
 #endif
     for (int i = 0; i < num_threads; ++i) {
+      args[i].pass = pass;
       if (args[i].len) {
         if (pthread_create(&thread[i], NULL, (void *(*)(void *)) do_log, &args[i])) {
           printf("Error creating thread %d\n", i);
