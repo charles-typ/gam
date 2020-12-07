@@ -95,11 +95,6 @@ struct Ulog {
 }__attribute__((__packed__));
 
 struct trace_t {
-  /*
-  char *access_type;
-  unsigned long *addr;
-  unsigned long *ts;
-  */
   char *logs;
   unsigned long len;
   int node_idx;
@@ -355,16 +350,15 @@ int load_trace(int fd, struct trace_t *arg, unsigned long ts_limit) {
 enum {
   arg_node_cnt = 1,
   arg_num_threads = 2,
-  arg_cache_th = 3,
-  arg_ip_master = 4,
-  arg_ip_worker = 5,
-  arg_port_master = 6,
-  arg_port_worker = 7,
-  arg_is_master = 8,
-  arg_is_compute = 9,
-  arg_remote_ratio = 10,
-  arg_benchmark_size = 11,
-  arg_log1 = 12,
+  arg_ip_master = 3,
+  arg_ip_worker = 4,
+  arg_port_master = 5,
+  arg_port_worker = 6,
+  arg_is_master = 7,
+  arg_is_compute = 8,
+  arg_remote_ratio = 9,
+  arg_benchmark_size = 10,
+  arg_log1 = 11,
 };
 
 int main(int argc, char **argv) {
@@ -417,14 +411,12 @@ int main(int argc, char **argv) {
   **/
 
   // Global configuration here
-  // FIXME check this
-  double cache_th = 0.0;
 
   printf("Currently configuration is: ");
   printf(
-      "master: %s:%d, worker: %s:%d, is_master: %s, size to allocate: %ld, cache_th: %f\n",
+      "master: %s:%d, worker: %s:%d, is_master: %s, size to allocate: %ld\n",
       ip_master.c_str(), port_master, ip_worker.c_str(), port_worker,
-      is_master == 1 ? "true" : "false", benchmark_size / num_nodes, cache_th);
+      is_master == 1 ? "true" : "false", benchmark_size / num_nodes);
 
   Conf conf;
   conf.loglevel = DEBUG_LEVEL;
@@ -439,7 +431,11 @@ int main(int argc, char **argv) {
   long size = benchmark_size / num_nodes;
   size = 1024 * 1024 * 1024 * 1;
   conf.size = size < conf.size ? conf.size : size;
-  conf.cache_th = cache_th;
+  if(is_compute) {
+    conf.cache_th = 1.0;
+  } else {
+    conf.cache_th = 0.0;
+  }
 
   // Global memory allocator
   printf("Start the allocator here !!!!!!!!!\n");
