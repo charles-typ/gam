@@ -32,11 +32,6 @@ int Client::ExchConnParam(const char* ip, int port, Server* server) {
   const char* conn_str = GetConnString(server->GetWorkerId());
   int conn_len = strlen(conn_str);
   //int conn_len = MAX_CONN_STRLEN + 1;
-  printf("Writing length: %d\n", conn_len);
-  for (int i = 0; i < conn_len; i++) {
-    printf("%d ", (int)conn_str[i]); 
-  }
-  printf("\n");
   if (write(sockfd, conn_str, conn_len) != conn_len) {
     return -1;
   }
@@ -44,7 +39,6 @@ int Client::ExchConnParam(const char* ip, int port, Server* server) {
   char msg[conn_len + 1];
   /* waiting for server's response */
   int n = read(sockfd, msg, conn_len);
-  printf("############### %s\n", msg);
   if (n != conn_len) {
     epicLog(LOG_WARNING,
             "Failed to read conn param from server (%s; read %d bytes)\n",
