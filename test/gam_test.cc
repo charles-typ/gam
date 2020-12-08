@@ -107,7 +107,7 @@ struct trace_t {
   unsigned long time;
   unsigned long benchmark_size;
   unsigned long test_size;
-  int remote_ratio;
+  double remote_ratio;
   bool is_master;
   bool is_compute;
   int num_threads;
@@ -391,7 +391,7 @@ int main(int argc, char **argv) {
   //FIXME check this is failed
   bool is_master = atoi(argv[arg_is_master]);
   bool is_compute = atoi(argv[arg_is_compute]);
-  int remote_ratio = atoi(argv[arg_remote_ratio]);
+  double remote_ratio = atof(argv[arg_remote_ratio]);
   unsigned long benchmark_size = atoi(argv[arg_benchmark_size]);
 
   printf("Num Nodes: %d, Num Threads: %d\n", num_nodes, num_threads);
