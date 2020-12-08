@@ -37,7 +37,7 @@
 #define DEBUG_LEVEL LOG_WARNING
 #define SYNC_KEY 204800
 #define PASS_KEY 40960000
-#define NUM_COMP_NODES 4
+//#define num_comp_node 4
 #define NUM_MEM_NODES 2
 
 int addr_size = sizeof(GAddr);
@@ -382,6 +382,8 @@ int main(int argc, char **argv) {
     return 1;
   }
 
+  //int num_comp_node = 4;
+  int num_comp_node = 4;
   num_nodes = atoi(argv[arg_node_cnt]);
   num_threads = atoi(argv[arg_num_threads]);
   string ip_master = string(argv[arg_ip_master]);
@@ -392,8 +394,8 @@ int main(int argc, char **argv) {
   bool is_master = atoi(argv[arg_is_master]);
   bool is_compute = atoi(argv[arg_is_compute]);
   double remote_ratio = atof(argv[arg_remote_ratio]);
-  unsigned long benchmark_size = atoi(argv[arg_benchmark_size]);
-
+  unsigned long benchmark_size = atol(argv[arg_benchmark_size]);
+  printf("%ld %d %f %d %d\n", benchmark_size, num_comp_node, remote_ratio, is_master, is_compute);
   printf("Num Nodes: %d, Num Threads: %d\n", num_nodes, num_threads);
   if (argc != arg_log1 + num_threads) {
     fprintf(stderr, "thread number and log files provided not match\n");
@@ -440,10 +442,11 @@ int main(int argc, char **argv) {
   conf.worker_port = port_worker;
 
   if(is_compute) {
-    conf.cache_th = 1.0;
-    long size = benchmark_size / NUM_COMP_NODES * remote_ratio;
+    conf.cache_th = 0.15;
+    long size = (int)((double)benchmark_size / (double)num_comp_node * (double)remote_ratio);
     //FIXME might be too small for tf?
-    conf.size = size < conf.size ? conf.size : size;
+    //conf.size = size < conf.size ? conf.size : size;
+    printf("Size to allocate: %ld\n", conf.size);
 
   } else {
     conf.cache_th = 0.0;
@@ -466,12 +469,13 @@ int main(int argc, char **argv) {
   alloc->Put(SYNC_KEY + node_id, &node_id, sizeof(int));
   printf("Put done\n");
   for (int i = 1; i <= num_nodes; i++) {
-    printf("Gettting %d", SYNC_KEY + i);
+    printf("Gettting %d\n", SYNC_KEY + i);
     alloc->Get(SYNC_KEY + i, &id);
     printf("Get done \n");
     epicAssert(id == i);
   }
 
+  printf("Heading to here");
   //open files
   int *fd = new int[num_threads];
   for (int i = 0; i < num_threads; ++i) {
