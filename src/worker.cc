@@ -535,6 +535,7 @@ unsigned long long Worker::SubmitRequest(Client* cli, WorkRequest* wr, int flag,
     RDMASendData* data = new RDMASendData(cli, sbuf, len);
     rdma_queue->push(data);
 #else
+    epicLog(LOG_WARNING, "Start get free slot");
     char* sbuf = cli->GetFreeSlot();
     bool busy = false;
     if (sbuf == nullptr) {
@@ -544,12 +545,14 @@ unsigned long long Worker::SubmitRequest(Client* cli, WorkRequest* wr, int flag,
           "We don't have enough slot buf, we use local buf instead");
     }
     int len;
+    epicLog(LOG_WARNING, "Start serialize");
     int ret = wr->Ser(sbuf, len);
     epicAssert(!ret);
     if ((ret = cli->Send(sbuf, len)) != len) {
       epicAssert(ret == -1);
       epicLog(LOG_INFO, "sent failed: slots are busy");
     }
+    epicLog(LOG_WARNING, "Finish sending");
 #endif
   } else {
     epicLog(LOG_WARNING, "unrecognized request type");
