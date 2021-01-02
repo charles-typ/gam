@@ -37,16 +37,13 @@ void gid_to_wire_gid(const union ibv_gid *gid, char wgid[])
 {
 	uint32_t tmp_gid[4];
 	int i;
-	printf("Here!\n");
 
 	memcpy(tmp_gid, gid, sizeof(tmp_gid));
 	for (i = 0; i < 4; ++i) {
-		printf("Step %d : %ld\n", i, tmp_gid[i]);
 		sprintf(&wgid[i * 8], "%08x", htobe32(tmp_gid[i]));
 	}
 	//for (i = 0; i < 32;i++)
 
-	printf("After transforming the length is: %d\n", strlen(wgid));
 }
 
 RdmaResource::RdmaResource(ibv_device *dev, bool master)
@@ -568,7 +565,6 @@ const char* RdmaContext::GetRdmaConnString() {
     else
       msg = (char *) zmalloc(WORKER_RDMA_CONN_STRLEN + 1);
   }
-  printf("%d\n", MASTER_RDMA_CONN_STRLEN);
 
   if (unlikely(!msg)) {
     epicLog(LOG_WARNING, "Unable to allocate memory\n");
@@ -580,17 +576,11 @@ const char* RdmaContext::GetRdmaConnString() {
    * for communication among workers, we also allow direct access to the whole memory space so that we expose the base addr and rkey
    */
   rc = ibv_query_gid(this->resource->context, this->resource->ibport, 3, &(this->resource->gid));
-  printf("Print GID here!!!!!!!!!!!!! %d, %d\n", this->resource->gid.global.subnet_prefix, this->resource->gid.global.interface_id); 
-  printf("Start 16 values\n");
-  for(int i = 0; i < 16;i++) {
-    printf("%d\n", this->resource->gid.raw[i]);
-  }
   gid_to_wire_gid(&(this->resource->gid), gid);
   if (rc) {
     fprintf(stderr, "Error, failed to query GID index %d of port %d in device '%s'\n",
             2, 1, ibv_get_device_name(this->resource->device));
   }
-  printf("&&&&&&&&&&&&& %s\n", gid);
   if (IsMaster()) {
     sprintf(msg, "%04x:%08x:%08x:%s", this->resource->portAttribute.lid,
             this->qp->qp_num, this->resource->psn, gid);
@@ -600,7 +590,6 @@ const char* RdmaContext::GetRdmaConnString() {
             this->resource->psn, this->resource->bmr->rkey,
             (uintptr_t) this->resource->base, gid);
   }
-  printf("&&&&&&&&&&&&&&& %s\n", msg);
   out:
   epicLog(LOG_DEBUG, "msg = %s\n", msg);
   return msg;
