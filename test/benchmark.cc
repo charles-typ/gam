@@ -75,10 +75,6 @@ bool TrueOrFalse(double probability, unsigned int* seedp) {
   return (rand_r(seedp) % 100) < probability;
 }
 
-//int GetRandom(int min, int max, unsigned int* seedp) {
-//	int ret = (rand_r(seedp) % (max-min)) + min;
-//	return ret;
-//}
 
 int CyclingIncr(int a, int cycle_size) {
   return ++a == cycle_size ? 0 : a;
@@ -126,8 +122,6 @@ void PopulateOneBlock(GAlloc* alloc, GAddr data[], GAddr* ldata[], int i,
 #ifdef LOCAL_MEMORY
     *((GAddr*)data[i] + j) = next;
 #else
-//		int ret = alloc->Write(data[i], j*item_size, &next, item_size);
-//		epicAssert(ret == item_size);
     ldata[i][j] = next;
 #endif
 
@@ -451,16 +445,6 @@ void Benchmark(int id) {
       (double )it / ((double )duration / 1000 / 1000 / 1000),
       duration / it);
 
-//	start = get_time();
-//	for (int i = 0; i < it; i++) {
-//		alloc->Free(addrs[i]);
-//	}
-//	end = get_time();
-//	duration = end - start;
-//	epicLog(LOG_WARNING, "Free (local): throughput = %lf op/s, latency = %ld ns",
-//			(double )it / ((double )duration / 1000 / 1000 / 1000),
-//			duration / it);
-
   start = get_time();
   for (int i = 0; i < it; i++) {
     len = GetRandom(1, 1048576, &seedp);
@@ -473,24 +457,11 @@ void Benchmark(int id) {
       (double )it / ((double )duration / 1000 / 1000 / 1000),
       duration / it);
 
-//	start = get_time();
-//	for (int i = 0; i < it; i++) {
-//		alloc->Free(addrs[i]);
-//	}
-//	end = get_time();
-//	duration = end - start;
-//	epicLog(LOG_WARNING, "Free (remote): throughput = %lf op/s, latency = %ld ns",
-//			(double )it / ((double )duration / 1000 / 1000 / 1000),
-//			duration / it);
 #endif
 
   GAddr *data = (GAddr*) malloc(sizeof(GAddr) * STEPS);
   unordered_map<GAddr, int> addr_to_pos;
-//	GAddr** ldata =(GAddr**)malloc(sizeof(GAddr*)*STEPS);
-//	//init local data arrays
-//	for(int i = 0; i < STEPS; i++) {
-//		ldata[i] = (GAddr*)malloc(BLOCK_SIZE);
-//	}
+
   GAddr* access = (GAddr*) malloc(sizeof(GAddr) * ITERATION);
 
   //bool shared[STEPS];
@@ -502,23 +473,6 @@ void Benchmark(int id) {
   for (int i = 0; i < STEPS; i++) {
     addr_to_pos[data[i]] = i;
   }
-
-//	//localize the shared data access part
-//	for(int i = 0; i < STEPS; i++) {
-//		for(int j = 0; j < items_per_block; j++) {
-//			if(addr_to_pos.count(TOBLOCK(ldata[i][j])) == 0) {
-//				//FIXME:remove
-//				epicAssert(!(id == 0 && is_master)); //cannot be the master process
-//				epicAssert(ldata[i][j] == TOBLOCK(ldata[i][j])); //should be the starting addr of the next block in the master access trace
-//				//ldata[i][j] = data[GetRandom(0, STEPS, &seedp)]; //data[CyclingIncr(i, STEPS)];  //update to the starting addr of the next block in its private access trace
-//				GAddr n = GADD(data[GetRandom(0, STEPS, &seedp)], GetRandom(0, items_per_block, &seedp)*item_size);
-//				while(TOBLOCK(n) == TOBLOCK(data[i])) { //data[CyclingIncr(i, STEPS)];
-//					n = GADD(data[GetRandom(0, STEPS, &seedp)], GetRandom(0, items_per_block, &seedp)*item_size);
-//				}
-//				ldata[i][j] = n;
-//			}
-//		}
-//	}
 
   epicLog(LOG_WARNING, "start warmup the benchmark on thread %d", id);
 
@@ -756,9 +710,6 @@ int main(int argc, char* argv[]) {
       real_accesses.size(), gen_accesses.size());
 #endif
 
-//	long time = no_thread*no_node*(double)(100-read_ratio)/100+1;
-//	time /= 2;
-//	if(time < 2) time += 1;
   long time = 1;
   epicLog(LOG_WARNING, "sleep for %ld s\n\n", time);
   sleep(time);
