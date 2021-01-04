@@ -18,6 +18,7 @@
 #include "zmalloc.h"
 #include "kernel.h"
 #include "chars.h"
+#include "time.h"
 
 #ifdef DHT
 #include "../dht/kv.h"
@@ -47,6 +48,7 @@ Worker::Worker(const Conf& conf, RdmaResource* res)
   } else {
     resource = RdmaResourceFactory::getWorkerRdmaResource();
   }
+    epicLog(LOG_WARNING, "Worker created RDMA resources");
 
   //create the event loop
   el = aeCreateEventLoop(
@@ -78,10 +80,12 @@ Worker::Worker(const Conf& conf, RdmaResource* res)
   }
 #endif
 
+  epicLog(LOG_WARNING, "Worker TCP connection created");
   //register the local memory space used for allocation
   void* addr = sb.slabs_init(conf.size, conf.factor, true);
   epicAssert((ptr_t)addr == TOBLOCK(addr));
   RegisterMemory(addr, conf.size);
+  epicLog(LOG_WARNING, "Local memory registered");
 
   this->log = new Log(addr);
 
@@ -95,8 +99,10 @@ Worker::Worker(const Conf& conf, RdmaResource* res)
   //connect to the master
   master = this->NewClient(true);
   master->ExchConnParam(conf.master_ip.c_str(), conf.master_port, this);
+  epicLog(LOG_WARNING, "Worker connected to the master");
   SyncMaster();  //send the local stats to master
   SyncMaster(FETCH_MEM_STATS);  //fetch the mem states of other workers from master
+  epicLog(LOG_WARNING, "Worker fetched the memory states of all workers from master");
 
 #ifdef USE_LOCAL_TIME_EVENT
   if(aeCreateTimeEvent(el, conf.timeout, LocalRequestChecker, this, NULL)) {
@@ -163,6 +169,8 @@ void Worker::AsyncRdmaSendThread(Worker* w) {
 #endif
 
 void Worker::StartService(Worker* w) {
+  epicLog(LOG_WARNING, "Worker Start service!!!");
+  //sleep(20);
   aeEventLoop *eventLoop = w->el;
   //start epoll
   eventLoop->stop = 0;

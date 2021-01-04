@@ -23,7 +23,7 @@
 //#define LOCAL_MEMORY
 
 #define STEPS 204800 //100M much larger than 10M L3 cache
-#define DEBUG_LEVEL LOG_WARNING
+#define DEBUG_LEVEL LOG_FATAL
 
 #define SYNC_KEY STEPS
 
@@ -563,6 +563,7 @@ void Benchmark(int id) {
 }
 
 int main(int argc, char* argv[]) {
+//  epicLog(LOG_WARNING, "start main!!!");
   //the first argument should be the program name
   for (int i = 1; i < argc; i++) {
     if (strcmp(argv[i], "--ip_master") == 0) {
@@ -656,13 +657,17 @@ int main(int argc, char* argv[]) {
   GAlloc* alloc = GAllocFactory::CreateAllocator(&conf);
 
   printf("here 1\n");
+  //sleep(20);
   sleep(1);
 
   //sync with all the other workers
   //check all the workers are started
   int id;
   node_id = alloc->GetID();
+  //sleep(20);
   alloc->Put(SYNC_KEY + node_id, &node_id, sizeof(int));
+  printf("here 11\n");
+  //sleep(20);
   for (int i = 1; i <= no_node; i++) {
     alloc->Get(SYNC_KEY + i, &id);
     epicAssert(id == i);

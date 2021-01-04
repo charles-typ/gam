@@ -7,6 +7,7 @@
 #include <cstring>
 #include <climits>
 #include <arpa/inet.h>
+#include <stdexcept>
 
 #include "rdma.h"
 #include "settings.h"
@@ -517,7 +518,7 @@ int RdmaContext::SetRemoteConnParam(const char *conn) {
     attr.ah_attr.is_global = 1;
     attr.ah_attr.grh.hop_limit = 1;
     attr.ah_attr.grh.dgid = gid;
-    attr.ah_attr.grh.sgid_index = 2; // FIXME
+    attr.ah_attr.grh.sgid_index = 3; // FIXME
 
     ret = ibv_modify_qp(
         this->qp,
@@ -633,6 +634,7 @@ ssize_t RdmaContext::Rdma(ibv_wr_opcode op, const void* src, size_t len,
   epicLog(LOG_DEBUG, "op = %d, src = %lx, len = %d, id = %d, signaled = %d, dest = %lx, imm = %u, oldval = %lu, newval = %lu\nsrc = %s",
       op, src, len, id, signaled, dest, imm, oldval, newval, src);
 
+
   int ret = len;
   struct ibv_sge sge_list = { };
   struct ibv_send_wr wr = { };
@@ -711,9 +713,9 @@ ssize_t RdmaContext::Rdma(ibv_wr_opcode op, const void* src, size_t len,
           || signaled)) {  //we signal msg for every max_unsignaled_msg
     wr.send_flags |= IBV_SEND_SIGNALED;
     if (wr.opcode == IBV_WR_SEND) {
-      epicLog(LOG_INFO, "signaled %s\n", (char* )sge_list.addr);
+      epicLog(LOG_WARNING, "signaled %s\n", (char* )sge_list.addr);
     } else {
-      epicLog(LOG_INFO, "signaled, op = %d", wr.opcode);
+      epicLog(LOG_WARNING, "signaled, op = %d", wr.opcode);
     }
 
     to_signaled_send_msg += curr_to_signaled_send_msg;
@@ -734,8 +736,11 @@ ssize_t RdmaContext::Rdma(ibv_wr_opcode op, const void* src, size_t len,
         + ((uint64_t) (curr_to_signaled_send_msg & QUARTER_BITS) << 48)
         + ((uint64_t) (curr_to_signaled_w_r_msg & QUARTER_BITS) << 32);
   }
-
+  epicLog(LOG_WARNING,
+          "Detail of this send command: wr_id = %d, num_sge = %d, op = %d, flags = %d, imm_date = %d\n",
+          wr.wr_id, wr.num_sge, wr.opcode, wr.send_flags, wr.imm_data);
   struct ibv_send_wr *bad_wr;
+  epicLog(LOG_WARNING, "Worker connected to the master");
   if (ibv_post_send(qp, &wr, &bad_wr)) {
     epicLog(LOG_WARNING, "ibv_post_send failed (%d:%s)\n", errno, strerror(errno));
     return -2;
