@@ -42,7 +42,7 @@ void Server::ProcessRdmaRequest(ibv_wc& wc) {
     return;
   }
 
-  printf("THe client is: %d %d %d\n", cli->GetWorkerId(), cli->GetFreeMem(), cli->GetTotalMem());
+  epicLog(LOG_DEBUG, "THe client is: %d %d %d\n", cli->GetWorkerId(), cli->GetFreeMem(), cli->GetTotalMem());
   if (wc.status != IBV_WC_SUCCESS) {
     epicLog(LOG_WARNING, "Completion with error, wr_id = %d (%d:%s:%d:%d)", wc.wr_id,
             wc.status, ibv_wc_status_str(wc.status), wc.vendor_err, wc.qp_num);
