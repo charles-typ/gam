@@ -1,0 +1,6 @@
+git pull origin master
+cd ../src/
+make -j 8
+cd ../test/
+rm benchmark
+make -j 8
