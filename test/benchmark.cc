@@ -609,31 +609,29 @@ int main(int argc, char* argv[]) {
 
   GAlloc* alloc = GAllocFactory::CreateAllocator(&conf);
 
-  printf("here 1\n");
   sleep(1);
 
   //sync with all the other workers
   //check all the workers are started
   int id;
   node_id = alloc->GetID();
+  //sleep(20);
   alloc->Put(SYNC_KEY + node_id, &node_id, sizeof(int));
+  //sleep(20);
   for (int i = 1; i <= no_node; i++) {
     alloc->Get(SYNC_KEY + i, &id);
     epicAssert(id == i);
   }
 
-  printf("here 2\n");
 #ifdef PERF_GET
   int it = 1000000;
   alloc->Put(UINT_MAX, &it, sizeof(int));
-  printf("here 3\n");
   long start = get_time();
   int ib;
   for (int i = 0; i < it; i++) {
     alloc->Get(UINT_MAX, &ib);
     epicAssert(ib == it);
   }
-  printf("here 4\n");
   long end = get_time();
   long duration = end - start;
   epicLog(LOG_WARNING, "GET: throughput = %lf op/s, latency = %ld ns",
@@ -645,7 +643,6 @@ int main(int argc, char* argv[]) {
   for (int i = 0; i < no_thread; i++) {
     ths[i] = new thread(Benchmark, i);
   }
-  printf("here 5\n");
   for (int i = 0; i < no_thread; i++) {
     ths[i]->join();
   }

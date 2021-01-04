@@ -449,8 +449,9 @@ int main(int argc, char **argv) {
     printf("Size to allocate: %ld\n", conf.size);
 
   } else {
-    conf.cache_th = 0.0;
-    conf.size = 1024 * 1024 * 1024 * 10L;
+    conf.cache_th = 0.15;
+    //conf.size = 1024 * 1024 * 1024 * 10L;
+    //conf.size = 1024 * 1024 * 1024 * 4L;
 
   }
 
@@ -514,6 +515,13 @@ int main(int argc, char **argv) {
   //start load and run logs in time window
   unsigned long pass = 0;
   unsigned long ts_limit = start_ts;
+  for (int i = 0; i < num_threads; ++i) {
+    printf("Thread[%d]: loading log...\n", i);
+    ret = load_trace(fd[i], &args[i], ts_limit);
+    if (ret) {
+      printf("fail to load trace\n");
+    }
+  }
   while (1) {
     ts_limit += TIMEWINDOW_US;
 

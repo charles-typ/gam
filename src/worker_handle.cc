@@ -110,6 +110,7 @@ int WorkerHandle::SendRequest(WorkRequest* wr) {
       int ret = pthread_cond_wait(&cond, &cond_lock);
       epicAssert(!ret);
 #else
+      epicLog(LOG_DEBUG, "Waiting for remote reply");
       while (*notify_buf != 2);
       epicLog(LOG_DEBUG, "get notified via buf");
 #endif

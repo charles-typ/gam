@@ -47,6 +47,7 @@ Worker::Worker(const Conf& conf, RdmaResource* res)
   } else {
     resource = RdmaResourceFactory::getWorkerRdmaResource();
   }
+  epicLog(LOG_DEBUG, "Worker created RDMA resources");
 
   //create the event loop
   el = aeCreateEventLoop(
@@ -78,10 +79,12 @@ Worker::Worker(const Conf& conf, RdmaResource* res)
   }
 #endif
 
+  epicLog(LOG_DEBUG, "Worker TCP connection created");
   //register the local memory space used for allocation
   void* addr = sb.slabs_init(conf.size, conf.factor, true);
   epicAssert((ptr_t)addr == TOBLOCK(addr));
   RegisterMemory(addr, conf.size);
+  epicLog(LOG_DEBUG, "Local memory registered");
 
   this->log = new Log(addr);
 
@@ -95,8 +98,10 @@ Worker::Worker(const Conf& conf, RdmaResource* res)
   //connect to the master
   master = this->NewClient(true);
   master->ExchConnParam(conf.master_ip.c_str(), conf.master_port, this);
+  epicLog(LOG_DEBUG, "Worker connected to the master");
   SyncMaster();  //send the local stats to master
   SyncMaster(FETCH_MEM_STATS);  //fetch the mem states of other workers from master
+  epicLog(LOG_DEBUG, "Worker fetched the memory states of all workers from master");
 
 #ifdef USE_LOCAL_TIME_EVENT
   if(aeCreateTimeEvent(el, conf.timeout, LocalRequestChecker, this, NULL)) {
@@ -163,6 +168,7 @@ void Worker::AsyncRdmaSendThread(Worker* w) {
 #endif
 
 void Worker::StartService(Worker* w) {
+  epicLog(LOG_DEBUG, "Worker Start service!!!");
   aeEventLoop *eventLoop = w->el;
   //start epoll
   eventLoop->stop = 0;
@@ -535,6 +541,7 @@ unsigned long long Worker::SubmitRequest(Client* cli, WorkRequest* wr, int flag,
     RDMASendData* data = new RDMASendData(cli, sbuf, len);
     rdma_queue->push(data);
 #else
+    epicLog(LOG_DEBUG, "Start get free slot");
     char* sbuf = cli->GetFreeSlot();
     bool busy = false;
     if (sbuf == nullptr) {
@@ -544,12 +551,14 @@ unsigned long long Worker::SubmitRequest(Client* cli, WorkRequest* wr, int flag,
           "We don't have enough slot buf, we use local buf instead");
     }
     int len;
+    epicLog(LOG_DEBUG, "Start serialize");
     int ret = wr->Ser(sbuf, len);
     epicAssert(!ret);
     if ((ret = cli->Send(sbuf, len)) != len) {
       epicAssert(ret == -1);
       epicLog(LOG_INFO, "sent failed: slots are busy");
     }
+    epicLog(LOG_DEBUG, "Finish sending");
 #endif
   } else {
     epicLog(LOG_WARNING, "unrecognized request type");

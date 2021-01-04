@@ -284,6 +284,7 @@ int Worker::ProcessLocalRequest(WorkRequest* wr) {
     SubmitRequest(master, wr, ADD_TO_PENDING | REQUEST_SEND);
     ret = REMOTE_REQUEST;
   } else if (PUT == wr->op) {
+    epicLog(LOG_DEBUG, "Submit this put request");
     SubmitRequest(master, wr);
 #ifdef MULTITHREAD
     if (wr->flag & TO_SERVE || wr->flag & FENCE) {
@@ -305,7 +306,7 @@ int Worker::ProcessLocalRequest(WorkRequest* wr) {
   } else if (GET_HTABLE == wr->op) {
     ret = this->ProcessLocalHTable(wr);
 #endif
-
+    epicLog(LOG_DEBUG, "Put request finish submission");
   } else {
     wr->status = UNRECOGNIZED_OP;
     epicLog(LOG_WARNING, "unrecognized op %d from local thread %d", wr->op,
