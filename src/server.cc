@@ -48,7 +48,7 @@ void Server::ProcessRdmaRequest(ibv_wc& wc) {
     epicAssert(false);
     return;
   }
-  epicLog(LOG_WARNING, "Completion without error, wr_id = %d op = %d (%d:%s:%d:%d)", wc.opcode, wc.wr_id,
+  epicLog(LOG_DEBUG, "Completion without error, wr_id = %d op = %d (%d:%s:%d:%d)", wc.opcode, wc.wr_id,
             wc.status, ibv_wc_status_str(wc.status), wc.vendor_err, wc.qp_num);
 
   epicLog(LOG_DEBUG, "transferred %d (qp_num %d, src_qp %d)", wc.byte_len,

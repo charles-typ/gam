@@ -23,7 +23,7 @@
 //#define LOCAL_MEMORY
 
 #define STEPS 204800 //100M much larger than 10M L3 cache
-#define DEBUG_LEVEL LOG_FATAL
+#define DEBUG_LEVEL LOG_WARNING
 
 #define SYNC_KEY STEPS
 
@@ -563,7 +563,6 @@ void Benchmark(int id) {
 }
 
 int main(int argc, char* argv[]) {
-//  epicLog(LOG_WARNING, "start main!!!");
   //the first argument should be the program name
   for (int i = 1; i < argc; i++) {
     if (strcmp(argv[i], "--ip_master") == 0) {
@@ -656,8 +655,6 @@ int main(int argc, char* argv[]) {
 
   GAlloc* alloc = GAllocFactory::CreateAllocator(&conf);
 
-  printf("here 1\n");
-  //sleep(20);
   sleep(1);
 
   //sync with all the other workers
@@ -666,25 +663,21 @@ int main(int argc, char* argv[]) {
   node_id = alloc->GetID();
   //sleep(20);
   alloc->Put(SYNC_KEY + node_id, &node_id, sizeof(int));
-  printf("here 11\n");
   //sleep(20);
   for (int i = 1; i <= no_node; i++) {
     alloc->Get(SYNC_KEY + i, &id);
     epicAssert(id == i);
   }
 
-  printf("here 2\n");
 #ifdef PERF_GET
   int it = 1000000;
   alloc->Put(UINT_MAX, &it, sizeof(int));
-  printf("here 3\n");
   long start = get_time();
   int ib;
   for (int i = 0; i < it; i++) {
     alloc->Get(UINT_MAX, &ib);
     epicAssert(ib == it);
   }
-  printf("here 4\n");
   long end = get_time();
   long duration = end - start;
   epicLog(LOG_WARNING, "GET: throughput = %lf op/s, latency = %ld ns",
@@ -696,7 +689,6 @@ int main(int argc, char* argv[]) {
   for (int i = 0; i < no_thread; i++) {
     ths[i] = new thread(Benchmark, i);
   }
-  printf("here 5\n");
   for (int i = 0; i < no_thread; i++) {
     ths[i]->join();
   }

@@ -31,7 +31,6 @@ int Client::ExchConnParam(const char* ip, int port, Server* server) {
 
   const char* conn_str = GetConnString(server->GetWorkerId());
   int conn_len = strlen(conn_str);
-  //int conn_len = MAX_CONN_STRLEN + 1;
   if (write(sockfd, conn_str, conn_len) != conn_len) {
     return -1;
   }
@@ -48,7 +47,6 @@ int Client::ExchConnParam(const char* ip, int port, Server* server) {
   msg[n] = '\0';
   epicLog(LOG_INFO, "received conn string %s\n", msg);
 
-  //epicLog(LOG_WARNING, "3 Unable to modify qp to RTR (%s)\n", msg);
   SetRemoteConnParam(msg);
   server->UpdateWidMap(this);
 
@@ -78,8 +76,6 @@ int Client::SetRemoteConnParam(const char *conn) {
   }
   p = strchr(conn, ':');
   p++;
-  //epicLog(LOG_WARNING, "2 Unable to modify qp to RTR (%s)\n",
-  //            p);
   return ctx->SetRemoteConnParam(p);
 }
 
@@ -90,16 +86,14 @@ const char* Client::GetConnString(int workerid) {
 
   if (resource->IsMaster()) {  //in the Master thread
     sprintf(connstr, "%04x:%s", wid, rdmaConn);  //wid is already set
-    printf("Master to worker here\n");
     epicLog(LOG_DEBUG, "master to worker here");
   } else if (IsForMaster()) {  //in the worker thread, but connected to Master
     sprintf(connstr, "%04x:%s", 0, rdmaConn);
-    printf("Worker to master here\n");
     epicLog(LOG_DEBUG, "worker to master here");
   } else if (!resource->IsMaster()) {  //in the worker thread, and connected to worker
     epicAssert(workerid != 0);
     sprintf(connstr, "%04x:%s", workerid, rdmaConn);  //wid is the current worker id (not the remote pair's)
-    printf("Worker to Worker here\n");
+    epicLog(LOG_DEBUG, "worker to worker here");
   } else {
     epicLog(LOG_WARNING, "undefined cases");
   }

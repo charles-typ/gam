@@ -491,10 +491,10 @@ int RdmaContext::SetRemoteConnParam(const char *conn) {
   char gid_str[32];
 
   if (IsMaster()) {
-    /* conn should be of the format "lid:qpn:psn" */
+    /* conn should be of the format "lid:qpn:psn:gid" */
     sscanf(conn, "%x:%x:%x:%s", &rlid, &rqpn, &rpsn, gid_str);
   } else {
-    /* conn should be of the format "lid:qpn:psn:rkey:vaddr" */
+    /* conn should be of the format "lid:qpn:psn:rkey:vaddr:gid" */
     sscanf(conn, "%x:%x:%x:%x:%lx:%s", &rlid, &rqpn, &rpsn, &rrkey, &rvaddr, gid_str);
     this->rkey = rrkey;
     this->vaddr = rvaddr;
@@ -510,7 +510,6 @@ int RdmaContext::SetRemoteConnParam(const char *conn) {
     attr.rq_psn = rpsn;
     attr.max_dest_rd_atomic = 1;
     attr.min_rnr_timer = 12;
-    attr.ah_attr.is_global = 0;
     attr.ah_attr.dlid = rlid;
     attr.ah_attr.src_path_bits = 0;
     //attr.ah_attr.sl = 1;
@@ -518,7 +517,7 @@ int RdmaContext::SetRemoteConnParam(const char *conn) {
     attr.ah_attr.is_global = 1;
     attr.ah_attr.grh.hop_limit = 1;
     attr.ah_attr.grh.dgid = gid;
-    attr.ah_attr.grh.sgid_index = 3; // FIXME
+    attr.ah_attr.grh.sgid_index = GID_INDEX;
 
     ret = ibv_modify_qp(
         this->qp,
@@ -713,9 +712,9 @@ ssize_t RdmaContext::Rdma(ibv_wr_opcode op, const void* src, size_t len,
           || signaled)) {  //we signal msg for every max_unsignaled_msg
     wr.send_flags |= IBV_SEND_SIGNALED;
     if (wr.opcode == IBV_WR_SEND) {
-      epicLog(LOG_WARNING, "signaled %s\n", (char* )sge_list.addr);
+      epicLog(LOG_INFO, "signaled %s\n", (char* )sge_list.addr);
     } else {
-      epicLog(LOG_WARNING, "signaled, op = %d", wr.opcode);
+      epicLog(LOG_INFO, "signaled, op = %d", wr.opcode);
     }
 
     to_signaled_send_msg += curr_to_signaled_send_msg;
@@ -736,11 +735,10 @@ ssize_t RdmaContext::Rdma(ibv_wr_opcode op, const void* src, size_t len,
         + ((uint64_t) (curr_to_signaled_send_msg & QUARTER_BITS) << 48)
         + ((uint64_t) (curr_to_signaled_w_r_msg & QUARTER_BITS) << 32);
   }
-  epicLog(LOG_WARNING,
+  epicLog(LOG_DEBUG,
           "Detail of this send command: wr_id = %d, num_sge = %d, op = %d, flags = %d, imm_date = %d\n",
           wr.wr_id, wr.num_sge, wr.opcode, wr.send_flags, wr.imm_data);
   struct ibv_send_wr *bad_wr;
-  epicLog(LOG_WARNING, "Worker connected to the master");
   if (ibv_post_send(qp, &wr, &bad_wr)) {
     epicLog(LOG_WARNING, "ibv_post_send failed (%d:%s)\n", errno, strerror(errno));
     return -2;
