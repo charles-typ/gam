@@ -12,23 +12,25 @@ int main() {
   //worker1
   Conf* conf = new Conf();
   GAllocFactory::SetConf(conf);
+  conf->master_ip = "10.10.41.221";
+  conf->worker_ip = "10.10.41.201";
   RdmaResource* res = new RdmaResource(list[0], false);
   Worker* worker1 = new Worker(*conf, res);
 
   //worker2
-  conf = new Conf();
-  res = new RdmaResource(list[0], false);
-  conf->worker_port += 1;
-  Worker* worker2 = new Worker(*conf, res);
-
-  //worker3
-  conf = new Conf();
-  res = new RdmaResource(list[0], false);
-  conf->worker_port += 2;
-  Worker* worker3 = new Worker(*conf, res);
+//  conf = new Conf();
+//  res = new RdmaResource(list[0], false);
+//  conf->worker_port += 1;
+//  Worker* worker2 = new Worker(*conf, res);
+//
+//  //worker3
+//  conf = new Conf();
+//  res = new RdmaResource(list[0], false);
+//  conf->worker_port += 2;
+//  Worker* worker3 = new Worker(*conf, res);
 
   worker1->Join();
-  worker2->Join();
-  worker3->Join();
+//  worker2->Join();
+//  worker3->Join();
   return 0;
 }

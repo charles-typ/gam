@@ -4,7 +4,7 @@ bin=`cd "$bin"; pwd`
 SRC_HOME=$bin/../test
 slaves=$bin/slaves
 log_file=$bin/log
-master_ip=ciidaa-a02
+master_ip=fastswap_client_01
 master_port=1231
 
 run() {
@@ -279,6 +279,51 @@ done
 done
 }
 
+
+run_read_test_new() {
+# read ratio test
+echo "**************************run new read ratio test****************************"
+result_file=$bin/results/read_ratio
+node_range="2"
+thread_range="1"
+remote_range="0 50 100"
+shared_range="0"
+read_range="0 10 20 30 40 50 60 70 80 90 100"
+space_range="0" #"0 10 20 30 40 50 60 70 80 90 100"
+time_range="0" #"0 10 20 30 40 50 60 70 80 90 100"
+op_range="0 1 2 3"
+cache_th=0.15
+
+for remote_ratio in $remote_range
+do
+for op_type in $op_range
+do
+for space_locality in $space_range
+do
+for time_locality in $time_range
+do
+for node in $node_range
+do
+for thread in $thread_range
+do
+for shared_ratio in $shared_range
+do
+for read_ratio in $read_range
+do
+	if [[ $remote_ratio -gt 0 && $node = 1 ]]; then
+		continue;
+	fi
+    run
+done
+done
+done
+done
+done
+done
+done
+done
+}
+
 run_space_test() {
 # space locality test
 echo "**************************run space locality test****************************"
@@ -419,10 +464,11 @@ done
 }
 
 #run_thread_test
-run_read_test
+#run_read_test
+run_read_test_new
 #run_time_test
 #run_shared_test
-run_remote_test
-run_space_test
-run_shared_test_noeviction
-run_node_test
+#run_remote_test
+#run_space_test
+#run_shared_test_noeviction
+#run_node_test

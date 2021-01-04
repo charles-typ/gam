@@ -93,6 +93,7 @@ const char* Client::GetConnString(int workerid) {
   } else if (!resource->IsMaster()) {  //in the worker thread, and connected to worker
     epicAssert(workerid != 0);
     sprintf(connstr, "%04x:%s", workerid, rdmaConn);  //wid is the current worker id (not the remote pair's)
+    epicLog(LOG_DEBUG, "worker to worker here");
   } else {
     epicLog(LOG_WARNING, "undefined cases");
   }

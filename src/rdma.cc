@@ -7,6 +7,7 @@
 #include <cstring>
 #include <climits>
 #include <arpa/inet.h>
+#include <stdexcept>
 
 #include "rdma.h"
 #include "settings.h"
@@ -17,6 +18,34 @@
 
 static int page_size = 4096;
 int MAX_RDMA_INLINE_SIZE = 256;
+
+void wire_gid_to_gid(const char *wgid, union ibv_gid *gid)
+{
+	char tmp[9];
+	uint32_t v32;
+	int i;
+	uint32_t tmp_gid[4];
+
+	for (tmp[8] = 0, i = 0; i < 4; ++i) {
+		memcpy(tmp, wgid + i * 8, 8);
+		sscanf(tmp, "%x", &v32);
+		tmp_gid[i] = be32toh(v32);
+	}
+	memcpy(gid, tmp_gid, sizeof(*gid));
+}
+
+void gid_to_wire_gid(const union ibv_gid *gid, char wgid[])
+{
+	uint32_t tmp_gid[4];
+	int i;
+
+	memcpy(tmp_gid, gid, sizeof(tmp_gid));
+	for (i = 0; i < 4; ++i) {
+		sprintf(&wgid[i * 8], "%08x", htobe32(tmp_gid[i]));
+	}
+	//for (i = 0; i < 32;i++)
+
+}
 
 RdmaResource::RdmaResource(ibv_device *dev, bool master)
     : device(dev),
@@ -459,17 +488,19 @@ int RdmaContext::SetRemoteConnParam(const char *conn) {
   int ret;
   uint32_t rlid, rpsn, rqpn, rrkey;
   uint64_t rvaddr;
+  char gid_str[32];
 
   if (IsMaster()) {
-    /* conn should be of the format "lid:qpn:psn" */
-    sscanf(conn, "%x:%x:%x", &rlid, &rqpn, &rpsn);
+    /* conn should be of the format "lid:qpn:psn:gid" */
+    sscanf(conn, "%x:%x:%x:%s", &rlid, &rqpn, &rpsn, gid_str);
   } else {
-    /* conn should be of the format "lid:qpn:psn:rkey:vaddr" */
-    sscanf(conn, "%x:%x:%x:%x:%lx", &rlid, &rqpn, &rpsn, &rrkey, &rvaddr);
+    /* conn should be of the format "lid:qpn:psn:rkey:vaddr:gid" */
+    sscanf(conn, "%x:%x:%x:%x:%lx:%s", &rlid, &rqpn, &rpsn, &rrkey, &rvaddr, gid_str);
     this->rkey = rrkey;
     this->vaddr = rvaddr;
   }
-
+  union ibv_gid gid;
+  wire_gid_to_gid(gid_str, &gid);
   /* modify qp to RTR state */
   {
     ibv_qp_attr attr = { };  //zero init the POD value (DON'T FORGET!!!!)
@@ -479,11 +510,14 @@ int RdmaContext::SetRemoteConnParam(const char *conn) {
     attr.rq_psn = rpsn;
     attr.max_dest_rd_atomic = 1;
     attr.min_rnr_timer = 12;
-    attr.ah_attr.is_global = 0;
     attr.ah_attr.dlid = rlid;
     attr.ah_attr.src_path_bits = 0;
     //attr.ah_attr.sl = 1;
     attr.ah_attr.port_num = resource->ibport;
+    attr.ah_attr.is_global = 1;
+    attr.ah_attr.grh.hop_limit = 1;
+    attr.ah_attr.grh.dgid = gid;
+    attr.ah_attr.grh.sgid_index = GID_INDEX;
 
     ret = ibv_modify_qp(
         this->qp,
@@ -523,6 +557,8 @@ int RdmaContext::SetRemoteConnParam(const char *conn) {
 }
 
 const char* RdmaContext::GetRdmaConnString() {
+  int rc;
+  char gid[32];
   if (!msg) {
     if (IsMaster())
       msg = (char *) zmalloc(MASTER_RDMA_CONN_STRLEN + 1);  //1 for \0
@@ -539,14 +575,20 @@ const char* RdmaContext::GetRdmaConnString() {
    * we use RDMA send/recv to do communication
    * for communication among workers, we also allow direct access to the whole memory space so that we expose the base addr and rkey
    */
+  rc = ibv_query_gid(this->resource->context, this->resource->ibport, 3, &(this->resource->gid));
+  gid_to_wire_gid(&(this->resource->gid), gid);
+  if (rc) {
+    fprintf(stderr, "Error, failed to query GID index %d of port %d in device '%s'\n",
+            2, 1, ibv_get_device_name(this->resource->device));
+  }
   if (IsMaster()) {
-    sprintf(msg, "%04x:%08x:%08x", this->resource->portAttribute.lid,
-            this->qp->qp_num, this->resource->psn);
+    sprintf(msg, "%04x:%08x:%08x:%s", this->resource->portAttribute.lid,
+            this->qp->qp_num, this->resource->psn, gid);
   } else {
-    sprintf(msg, "%04x:%08x:%08x:%08x:%016lx",
+    sprintf(msg, "%04x:%08x:%08x:%08x:%016lx:%s",
             this->resource->portAttribute.lid, this->qp->qp_num,
             this->resource->psn, this->resource->bmr->rkey,
-            (uintptr_t) this->resource->base);
+            (uintptr_t) this->resource->base, gid);
   }
   out:
   epicLog(LOG_DEBUG, "msg = %s\n", msg);
@@ -590,6 +632,7 @@ ssize_t RdmaContext::Rdma(ibv_wr_opcode op, const void* src, size_t len,
                           uint32_t imm, uint64_t oldval, uint64_t newval) {
   epicLog(LOG_DEBUG, "op = %d, src = %lx, len = %d, id = %d, signaled = %d, dest = %lx, imm = %u, oldval = %lu, newval = %lu\nsrc = %s",
       op, src, len, id, signaled, dest, imm, oldval, newval, src);
+
 
   int ret = len;
   struct ibv_sge sge_list = { };
@@ -692,7 +735,9 @@ ssize_t RdmaContext::Rdma(ibv_wr_opcode op, const void* src, size_t len,
         + ((uint64_t) (curr_to_signaled_send_msg & QUARTER_BITS) << 48)
         + ((uint64_t) (curr_to_signaled_w_r_msg & QUARTER_BITS) << 32);
   }
-
+  epicLog(LOG_DEBUG,
+          "Detail of this send command: wr_id = %d, num_sge = %d, op = %d, flags = %d, imm_date = %d\n",
+          wr.wr_id, wr.num_sge, wr.opcode, wr.send_flags, wr.imm_data);
   struct ibv_send_wr *bad_wr;
   if (ibv_post_send(qp, &wr, &bad_wr)) {
     epicLog(LOG_WARNING, "ibv_post_send failed (%d:%s)\n", errno, strerror(errno));

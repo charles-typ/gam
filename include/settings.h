@@ -102,4 +102,9 @@ using namespace std;
 
 #define MAX_MEM_STATS_SIZE  64 //10+10+20+20+4 in decimal
 
+/**
+ * RoCE configuration
+ */
+#define GID_INDEX 3
+
 #endif /* INCLUDE_SETTINGS_H_ */

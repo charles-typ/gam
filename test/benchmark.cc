@@ -649,6 +649,7 @@ int main(int argc, char* argv[]) {
   conf.worker_port = port_worker;
   long size = ((long) BLOCK_SIZE) * STEPS * no_thread * 4;
   conf.size = size < conf.size ? conf.size : size;
+  printf("This size!!!!!! %d\n", conf.size);
 
   conf.cache_th = cache_th;
 
@@ -660,7 +661,9 @@ int main(int argc, char* argv[]) {
   //check all the workers are started
   int id;
   node_id = alloc->GetID();
+  //sleep(20);
   alloc->Put(SYNC_KEY + node_id, &node_id, sizeof(int));
+  //sleep(20);
   for (int i = 1; i <= no_node; i++) {
     alloc->Get(SYNC_KEY + i, &id);
     epicAssert(id == i);

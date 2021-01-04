@@ -1,9 +1,9 @@
-CPP = g++ -std=c++11 -O3
+CPP = g++ -std=c++11 -O3 -lpthread -O2
 INCLUDE = -I../include -I../lib/libcuckoo/src -I../lib/libcuckoo/cityhash-1.1.1/src
 LIBS = ../src/libgalloc.a -libverbs -lpthread ../lib/libcuckoo/cityhash-1.1.1/src/.libs/libcityhash.a -lboost_thread -lboost_system
 CFLAGS += -g -rdynamic
 
-build: benchmark lru_test example example-r worker master slab_test rw_test fence_test lock_test hashtable_test hashtable_throw_test garray_test cs_test
+build: benchmark lru_test example example-r worker master slab_test rw_test fence_test lock_test hashtable_test hashtable_throw_test garray_test cs_test gam_test
 
 benchmark: benchmark.cc
 	$(CPP) $(CFLAGS) $(INCLUDE) -o $@ $^ $(LIBS) 
@@ -50,5 +50,9 @@ cs_test: cs_test.cc
 gfunc_test: ../test/gfunc_test.cc
 	$(CPP) $(CFLAGS) $(INCLUDE) -g -o $@ $^ $(LIBS)		
 
+gam_test: gam_test.cc
+	$(CPP) $(CFLAGS) $(INCLUDE) -o $@ $^ $(LIBS)
+
+
 clean:
-	rm -rf example example-r worker master slab_test rw_test lock_test lru_test fence_test benchmark hashtable_test hashtable_throw_test garray_test cs_test gfunc_test
+	rm -rf example example-r worker master slab_test rw_test lock_test lru_test fence_test benchmark hashtable_test hashtable_throw_test garray_test cs_test gfunc_test gam_test

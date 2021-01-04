@@ -59,9 +59,9 @@ void* SlabAllocator::mmap_malloc(size_t size) {
   }
 #ifdef USE_HUGEPAGE
   ret = mmap(fixed_base, size, PROT_READ | PROT_WRITE,
-             MAP_PRIVATE | MAP_ANON | MAP_HUGETLB, -1, 0);
+             MAP_PRIVATE | MAP_ANON | MAP_HUGETLB | MAP_NORESERVE, -1, 0);
 #else
-  ret = mmap(fixed_base, size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANON, -1, 0);
+  ret = mmap(fixed_base, size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANON | MAP_NORESERVE, -1, 0);
 #endif
   if (ret == MAP_FAILED) {
     perror("map failed");
