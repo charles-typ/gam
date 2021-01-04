@@ -43,7 +43,7 @@
 int addr_size = sizeof(GAddr);
 
 // Test configuration
-#define single_thread_test
+//#define single_thread_test
 //#define meta_data_test
 
 using namespace std;
@@ -174,6 +174,7 @@ void do_log(void *arg) {
   printf("Finish creating the Allocator in node: %d, in thread: %d\n", trace->node_idx, trace->tid);
 
   GAddr *remote;
+  trace->is_compute = false;
   if(trace->is_compute) {
     remote = (GAddr *) malloc(sizeof(GAddr) * remote_step);
     if (trace->is_master && trace->tid == 0 && trace->pass == 0) {
@@ -182,6 +183,7 @@ void do_log(void *arg) {
              trace->node_idx,
              trace->num_threads);
       for (int i = 0; i < remote_step; i++) {
+	print("Alloc step: %d\n");
         remote[i] = alloc->AlignedMalloc(BLOCK_SIZE * ratio, REMOTE);
         alloc->Put(i, &remote[i], addr_size);
       }
@@ -299,7 +301,7 @@ void do_log(void *arg) {
     for (int j = 0; j < trace->num_threads; j++) {
       epicLog(LOG_WARNING, "waiting for node %d, thread %d", i, j);
       alloc->Get(SYNC_RUN_BASE + trace->num_nodes * i + j + PASS_KEY * trace->pass, &sync_id);
-      epicLog(LOG_WARNING, "get sync_id %d from node %d, thread %d, should be:", sync_id, i,
+      epicLog(LOG_WARNING, "get sync_id %d from node %d, thread %d, should be: %d", sync_id, i,
               j, SYNC_RUN_BASE + trace->num_nodes * i + j + PASS_KEY * trace->pass);
       epicAssert(sync_id == SYNC_RUN_BASE + trace->num_nodes * i + j + PASS_KEY * trace->pass);
     }
@@ -443,7 +445,8 @@ int main(int argc, char **argv) {
 
   //FIXME fix this cache threshold
   if(is_compute) {
-    conf.cache_th = 0.15;
+  sleep(1);
+    conf.cache_th = 1.0;
     long size = (int)((double)benchmark_size / (double)num_comp_node * (double)remote_ratio);
     //FIXME might be too small for tf?
     //conf.size = size < conf.size ? conf.size : size;
