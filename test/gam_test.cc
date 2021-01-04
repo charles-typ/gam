@@ -43,7 +43,7 @@
 int addr_size = sizeof(GAddr);
 
 // Test configuration
-// #define single_thread_test
+//#define single_thread_test
 //#define meta_data_test
 
 using namespace std;
@@ -293,14 +293,15 @@ void do_log(void *arg) {
   }
   uint64_t SYNC_RUN_BASE = SYNC_KEY + trace->num_nodes * 2;
   int sync_id = SYNC_RUN_BASE + trace->num_nodes * node_id + trace->tid + PASS_KEY * trace->pass;
+  printf("Putting node_id: %d, thread id: %d, pass: %d, key: %d, value: %d\n", node_id, trace->tid, trace->pass, sync_id, sync_id);
   alloc->Put(sync_id, &sync_id, sizeof(int));
   for (int i = 1; i <= trace->num_nodes; i++) {
     for (int j = 0; j < trace->num_threads; j++) {
       epicLog(LOG_WARNING, "waiting for node %d, thread %d", i, j);
       alloc->Get(SYNC_RUN_BASE + trace->num_nodes * i + j + PASS_KEY * trace->pass, &sync_id);
+      epicLog(LOG_WARNING, "get sync_id %d from node %d, thread %d, should be:%d", sync_id, i,
+              j, SYNC_RUN_BASE + trace->num_nodes * i + j + PASS_KEY * trace->pass);
       epicAssert(sync_id == SYNC_RUN_BASE + trace->num_nodes * i + j + PASS_KEY * trace->pass);
-      epicLog(LOG_WARNING, "get sync_id %d from node %d, thread %d", sync_id, i,
-              j);
     }
   }
 
@@ -382,7 +383,6 @@ int main(int argc, char **argv) {
     return 1;
   }
 
-  //int num_comp_node = 4;
   int num_comp_node = 4;
   num_nodes = atoi(argv[arg_node_cnt]);
   num_threads = atoi(argv[arg_num_threads]);
@@ -441,6 +441,7 @@ int main(int argc, char **argv) {
   conf.worker_ip = ip_worker;
   conf.worker_port = port_worker;
 
+  //FIXME fix this cache threshold
   if(is_compute) {
     conf.cache_th = 0.15;
     long size = (int)((double)benchmark_size / (double)num_comp_node * (double)remote_ratio);
@@ -449,7 +450,7 @@ int main(int argc, char **argv) {
     printf("Size to allocate: %ld\n", conf.size);
 
   } else {
-    conf.cache_th = 0.15;
+    conf.cache_th = 0.0;
     //conf.size = 1024 * 1024 * 1024 * 10L;
     //conf.size = 1024 * 1024 * 1024 * 4L;
 
@@ -515,13 +516,13 @@ int main(int argc, char **argv) {
   //start load and run logs in time window
   unsigned long pass = 0;
   unsigned long ts_limit = start_ts;
-  for (int i = 0; i < num_threads; ++i) {
-    printf("Thread[%d]: loading log...\n", i);
-    ret = load_trace(fd[i], &args[i], ts_limit);
-    if (ret) {
-      printf("fail to load trace\n");
-    }
-  }
+  //for (int i = 0; i < num_threads; ++i) {
+  //  printf("Thread[%d]: loading log...\n", i);
+  //  ret = load_trace(fd[i], &args[i], ts_limit);
+  //  if (ret) {
+  //    printf("fail to load trace\n");
+  //  }
+  //}
   while (1) {
     ts_limit += TIMEWINDOW_US;
 
@@ -535,13 +536,14 @@ int main(int argc, char **argv) {
     }
 
     pthread_t thread[MAX_NUM_THREAD];
-    //printf("running trace...\n");
+    printf("running trace...\n");
 
 #ifdef single_thread_test
     num_threads = 1;
 #endif
     for (int i = 0; i < num_threads; ++i) {
       args[i].pass = pass;
+      printf("args has len: %d\n", args[i].len);
       if (args[i].len) {
         if (pthread_create(&thread[i], NULL, (void *(*)(void *)) do_log, &args[i])) {
           printf("Error creating thread %d\n", i);
