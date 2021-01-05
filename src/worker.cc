@@ -488,10 +488,10 @@ Client* Worker::GetClient(GAddr addr) {
     } else {
       //epicLog(LOG_DEBUG, "select a random server to allocate");
       //while ((wid = rand() % widCliMap.size() + 1) == GetWorkerId());
-      epicLog(LOG_DEBUG, "select the server with most free memory to allocate");
+      epicLog(LOG_WARNING, "select the server with most free memory to allocate");
       Size max = 0;
       for (auto& entry : widCliMapWorker) {
-        epicLog(LOG_DEBUG, "worker %d, have %lld free out of %lld",
+        epicLog(LOG_WARNING, "worker %d, have %lld free out of %lld",
             entry.second->GetWorkerId(), entry.second->GetFreeMem(),
             entry.second->GetTotalMem());
         if (entry.first == GetWorkerId())
@@ -500,7 +500,7 @@ Client* Worker::GetClient(GAddr addr) {
           max = entry.second->GetFreeMem();
           wid = entry.first;
           cli = entry.second;
-          epicLog(LOG_DEBUG, "worker %d has been selected", wid);
+          epicLog(LOG_WARNING, "worker %d has been selected", wid);
         }
       }
     }
