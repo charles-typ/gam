@@ -87,7 +87,7 @@ void Server::ProcessRdmaRequest(ibv_wc& wc) {
         if (wr->Deser(data + consumed_len, len)) {
           epicLog(LOG_WARNING, "de-serialize the work request failed\n");
         } else {
-          epicLog(LOG_WARNING, "After deserialize this should be processed\n");
+          epicLog(LOG_WARNING, "After deserialize this should be processed, %lld, %lld", wr->size, wr->free);
           ProcessRequest(cli, wr);
         }
         consumed_len += len;
