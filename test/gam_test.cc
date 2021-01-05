@@ -35,8 +35,9 @@
 #define SLEEP_THRES_NANOS 10
 #define TIMEWINDOW_US 10000000
 #define DEBUG_LEVEL LOG_WARNING
-#define SYNC_KEY 204800
+//#define SYNC_KEY 204800
 #define PASS_KEY 40960000
+#define SYNC_KEY (unsigned long)10 * 1024 * 1024 * 1024 // default: 10 GB
 //#define num_comp_node 4
 #define NUM_MEM_NODES 2
 
@@ -182,12 +183,8 @@ void do_log(void *arg) {
              trace->node_idx,
              trace->num_threads);
       for (int i = 0; i < remote_step; i++) {
-	printf("Alloc step: %d\n", i);
         remote[i] = alloc->Malloc(BLOCK_SIZE * ratio, REMOTE);
-	printf("Put step: %d\n", i);
-
         alloc->Put(i, &remote[i], addr_size);
-	sleep(1);
       }
       printf("Finish malloc the remote memory in slices node: %d, in thread: %d\n",
              trace->node_idx,
@@ -288,7 +285,6 @@ void do_log(void *arg) {
   }
 
   //FIXME warm up here?
-
   //make sure all the requests are complete
   if(trace->is_compute) {
     alloc->MFence();
