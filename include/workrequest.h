@@ -223,7 +223,6 @@ struct WorkRequest {
   }
 
   void Reset() {
-    epicLog(LOG_WARNING, "This work request is reset!!!");
     lock();
     //memset(this, 0, sizeof(WorkRequest));
     id = 0;  //identifier of the work request

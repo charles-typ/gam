@@ -96,20 +96,16 @@ Master::~Master() {
 }
 
 void Master::ProcessRequest(Client* client, WorkRequest* wr) {
-  epicLog(LOG_WARNING, "After deserialize this should be processed 2, %lld, %lld", wr->size, wr->free);
   epicAssert(wr->wid == client->GetWorkerId());
   switch (wr->op) {
     case UPDATE_MEM_STATS: {
-      epicLog(LOG_WARNING, "After deserialize this should be processed 3, %lld, %lld", wr->size, wr->free);
-      epicLog(LOG_WARNING, "set this memory stat 1 %lld:%lld", wr->size, wr->free);
       epicAssert(wr->size);
       Size curr_free = client->GetFreeMem();
       client->SetMemStat(wr->size, wr->free);
-      epicLog(LOG_WARNING, "set this memory stat 2 %lld:%lld", wr->size, wr->free);
       unsynced_workers.push(client);
 
       widCliMapWorker[client->GetWorkerId()] = client;
-      epicLog(LOG_WARNING, "Client has been add with id: %d, size and free: %lld:%lld", client->GetWorkerId(), client->GetFreeMem(), client->GetTotalMem());
+      epicLog(LOG_DEBUG, "Client has been add with id: %d, size and free: %lld:%lld", client->GetWorkerId(), client->GetFreeMem(), client->GetTotalMem());
 
       if (unsynced_workers.size() == conf->unsynced_th) {
         WorkRequest lwr { };
