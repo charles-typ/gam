@@ -25,6 +25,7 @@ int WorkRequest::Ser(char* buf, int& len) {
 #endif
     case UPDATE_MEM_STATS:
       len = appendInteger(buf, lop, wid, size, free);
+      epicLog(LOG_WARNING, "!!!!! Ser length: %d", len);
       break;
     case FETCH_MEM_STATS_REPLY:
     case BROADCAST_MEM_STATS:
@@ -162,6 +163,7 @@ int WorkRequest::Deser(const char* buf, int& len) {
 #endif
     case UPDATE_MEM_STATS:
       p += readInteger(p, wid, size, free);
+      epicLog(LOG_WARNING, "!!!!! Deser length: %d", p);
       break;
     case FETCH_MEM_STATS_REPLY:
     case BROADCAST_MEM_STATS:
