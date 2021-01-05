@@ -164,7 +164,7 @@ inline void interval_between_access(long delta_time_usec) {
 void do_log(void *arg) {
   printf("Show the start of do_log\n");
   struct trace_t *trace = (struct trace_t *) arg;
-  int ratio = 4;
+  int ratio = 1;
   int remote_step = trace->benchmark_size / BLOCK_SIZE / ratio;
 
   printf("Remote step to be %d\n", remote_step);
@@ -182,7 +182,7 @@ void do_log(void *arg) {
              trace->node_idx,
              trace->num_threads);
       for (int i = 0; i < remote_step; i++) {
-	printf("Alloc step: %d\n", i);
+	//printf("Alloc step: %d\n", i);
         remote[i] = alloc->AlignedMalloc(BLOCK_SIZE * ratio, REMOTE);
         alloc->Put(i, &remote[i], addr_size);
       }
@@ -389,6 +389,7 @@ int main(int argc, char **argv) {
   num_threads = atoi(argv[arg_num_threads]);
 #ifdef single_thread_test
     num_threads = 1;
+    num_comp_node = 1;
 #endif
   string ip_master = string(argv[arg_ip_master]);
   string ip_worker = string(argv[arg_ip_worker]);
@@ -457,7 +458,7 @@ int main(int argc, char **argv) {
 
   } else {
     conf.cache_th = 0.0;
-    //conf.size = 1024 * 1024 * 1024 * 10L;
+    conf.size = 1024 * 1024 * 1024 * 10L;
     //conf.size = 1024 * 1024 * 1024 * 4L;
 
   }
