@@ -39,12 +39,12 @@
 #define PASS_KEY 40960000
 #define SYNC_KEY (unsigned long)10 * 1024 * 1024 * 1024 // default: 10 GB
 //#define num_comp_node 4
-#define NUM_MEM_NODES 2
+//#define NUM_MEM_NODES 2
 
 int addr_size = sizeof(GAddr);
 
 // Test configuration
-#define single_thread_test
+//#define single_thread_test
 //#define meta_data_test
 
 using namespace std;
@@ -123,6 +123,7 @@ struct metadata_t {
 
 // int first;
 int num_nodes;
+int num_comp_nodes;
 int node_id = -1;
 int num_threads;
 
@@ -372,7 +373,8 @@ enum {
   arg_is_compute = 8,
   arg_remote_ratio = 9,
   arg_benchmark_size = 10,
-  arg_log1 = 11,
+  arg_num_comp_nodes = 11,
+  arg_log1 = 12,
 };
 
 int main(int argc, char **argv) {
@@ -383,7 +385,7 @@ int main(int argc, char **argv) {
     return 1;
   }
 
-  int num_comp_node = 4;
+  num_comp_nodes = atoi(argv[arg_num_comp_nodes]);
   num_nodes = atoi(argv[arg_node_cnt]);
   num_threads = atoi(argv[arg_num_threads]);
 #ifdef single_thread_test
@@ -449,13 +451,14 @@ int main(int argc, char **argv) {
 
   //FIXME fix this cache threshold
   if(is_compute) {
-    conf.cache_th = 0.5;
+    conf.cache_th = 1.0;
     long size = (int)((double)benchmark_size / (double)num_comp_node * (double)remote_ratio);
     //FIXME might be too small for tf?
     conf.size = size < conf.size ? conf.size : size;
   } else {
     conf.cache_th = 0.0;
     //conf.size = 1024 * 1024 * 1024 * 10L;
+    //FIXME this is for tensorflow 4GB
     conf.size = 1024 * 1024 * 1024 * 4L;
   }
   printf("Size to allocate: %ld\n", conf.size);
