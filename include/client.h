@@ -45,7 +45,7 @@ class Client {
     inline int GetWorkerId() {
       return wid;
     }
-    inline void SetMemStat(int size, int free) {
+    inline void SetMemStat(Size size, Size free) {
       this->size = size;
       this->free = free;
     }
