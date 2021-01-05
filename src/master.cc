@@ -109,7 +109,7 @@ void Master::ProcessRequest(Client* client, WorkRequest* wr) {
       unsynced_workers.push(client);
 
       widCliMapWorker[client->GetWorkerId()] = client;
-      epicLog(LOG_WARNING, "Client has been add with id: %d, size and free: %lld:%lld", client->GetWorkerId(), wr->size, wr->free);
+      epicLog(LOG_WARNING, "Client has been add with id: %d, size and free: %lld:%lld", client->GetWorkerId(), client->GetFreeMem(), client->GetTotalMem());
 
       if (unsynced_workers.size() == conf->unsynced_th) {
         WorkRequest lwr { };
