@@ -182,9 +182,12 @@ void do_log(void *arg) {
              trace->node_idx,
              trace->num_threads);
       for (int i = 0; i < remote_step; i++) {
-	//printf("Alloc step: %d\n", i);
-        remote[i] = alloc->AlignedMalloc(BLOCK_SIZE * ratio, REMOTE);
+	printf("Alloc step: %d\n", i);
+        remote[i] = alloc->Malloc(BLOCK_SIZE * ratio, REMOTE);
+	printf("Put step: %d\n", i);
+
         alloc->Put(i, &remote[i], addr_size);
+	sleep(1);
       }
       printf("Finish malloc the remote memory in slices node: %d, in thread: %d\n",
              trace->node_idx,
@@ -450,7 +453,7 @@ int main(int argc, char **argv) {
 
   //FIXME fix this cache threshold
   if(is_compute) {
-    conf.cache_th = 1.0;
+    conf.cache_th = 0.5;
     long size = (int)((double)benchmark_size / (double)num_comp_node * (double)remote_ratio);
     //FIXME might be too small for tf?
     conf.size = size < conf.size ? conf.size : size;

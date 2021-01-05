@@ -102,6 +102,7 @@ void Master::ProcessRequest(Client* client, WorkRequest* wr) {
       epicAssert(wr->size);
       Size curr_free = client->GetFreeMem();
       client->SetMemStat(wr->size, wr->free);
+      epicLog(LOG_WARNING, "set this memory stat %d:%d", wr->size, wr->free);
       unsynced_workers.push(client);
 
       widCliMapWorker[client->GetWorkerId()] = client;
