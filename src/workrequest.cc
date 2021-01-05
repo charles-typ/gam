@@ -169,6 +169,7 @@ int WorkRequest::Deser(const char* buf, int& len) {
       p += len_to_add;
       epicLog(LOG_WARNING, "!!!!! Deser length: %d", len_to_add + 4);
       epicLog(LOG_WARNING, "!!!!! Deser size: %lld, free size: %lld", *(long long *)(p - 16), *(long long *)(p - 8));
+      epicLog(LOG_WARNING, "!!!!! Deser size: %lld, free size: %lld", size, free);
       break;
     case FETCH_MEM_STATS_REPLY:
     case BROADCAST_MEM_STATS:
