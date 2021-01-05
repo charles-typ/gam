@@ -174,7 +174,6 @@ void do_log(void *arg) {
   printf("Finish creating the Allocator in node: %d, in thread: %d\n", trace->node_idx, trace->tid);
 
   GAddr *remote;
-  trace->is_compute = false;
   if(trace->is_compute) {
     remote = (GAddr *) malloc(sizeof(GAddr) * remote_step);
     if (trace->is_master && trace->tid == 0 && trace->pass == 0) {
@@ -402,10 +401,12 @@ int main(int argc, char **argv) {
   unsigned long benchmark_size = atol(argv[arg_benchmark_size]);
   printf("%ld %d %f %d %d\n", benchmark_size, num_comp_node, remote_ratio, is_master, is_compute);
   printf("Num Nodes: %d, Num Threads: %d\n", num_nodes, num_threads);
+#ifndef single_thread_test
   if (argc != arg_log1 + num_threads) {
     fprintf(stderr, "thread number and log files provided not match\n");
     return 1;
   }
+#endif
   /**
    *	struct Conf {
    * 	bool is_master = true;  //mark whether current process is the master (obtained from conf and the current ip)
