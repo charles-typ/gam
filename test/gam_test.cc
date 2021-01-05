@@ -449,11 +449,10 @@ int main(int argc, char **argv) {
 
   //FIXME fix this cache threshold
   if(is_compute) {
-  sleep(1);
     conf.cache_th = 1.0;
     long size = (int)((double)benchmark_size / (double)num_comp_node * (double)remote_ratio);
     //FIXME might be too small for tf?
-    //conf.size = size < conf.size ? conf.size : size;
+    conf.size = size < conf.size ? conf.size : size;
     printf("Size to allocate: %ld\n", conf.size);
 
   } else {
@@ -484,7 +483,6 @@ int main(int argc, char **argv) {
     epicAssert(id == i);
   }
 
-  printf("Heading to here");
   //open files
   int *fd = new int[num_threads];
   for (int i = 0; i < num_threads; ++i) {
