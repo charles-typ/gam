@@ -99,6 +99,7 @@ void Master::ProcessRequest(Client* client, WorkRequest* wr) {
   epicAssert(wr->wid == client->GetWorkerId());
   switch (wr->op) {
     case UPDATE_MEM_STATS: {
+      epicLog(LOG_WARNING, "After deserialize this should be processed 2\n");
       epicAssert(wr->size);
       Size curr_free = client->GetFreeMem();
       client->SetMemStat(wr->size, wr->free);
