@@ -26,7 +26,7 @@ int WorkRequest::Ser(char* buf, int& len) {
     case UPDATE_MEM_STATS:
       len = appendInteger(buf, lop, wid, size, free);
       epicLog(LOG_WARNING, "!!!!! Ser length: %d", len);
-      epicLog(LOG_WARNING, "!!!!! Ser size: %lld, free size: %lld", (long long *)(buf + len - 16), (long long *)(buf + len - 8));
+      epicLog(LOG_WARNING, "!!!!! Ser size: %lld, free size: %lld", *(long long *)(buf + len - 16), *(long long *)(buf + len - 8));
       break;
     case FETCH_MEM_STATS_REPLY:
     case BROADCAST_MEM_STATS:
@@ -168,7 +168,7 @@ int WorkRequest::Deser(const char* buf, int& len) {
       len_to_add = readInteger(p, wid, size, free);
       p += len_to_add;
       epicLog(LOG_WARNING, "!!!!! Deser length: %d", len_to_add + 4);
-      epicLog(LOG_WARNING, "!!!!! Deser size: %lld, free size: %lld", (long long *)(p - 16), (long long *)(p - 8));
+      epicLog(LOG_WARNING, "!!!!! Deser size: %lld, free size: %lld", *(long long *)(p - 16), *(long long *)(p - 8));
       break;
     case FETCH_MEM_STATS_REPLY:
     case BROADCAST_MEM_STATS:
