@@ -444,9 +444,10 @@ void Worker::SyncMaster(Work op, WorkRequest* parent) {
           GetWorkerId());
       return;
     }
-    size_t cache_size = conf->size * conf->cache_th;
+    long long cache_size = conf->size * conf->cache_th;
     wr->size = conf->size - cache_size;
     wr->free = sb.get_avail() - (cache_size - cache.GetUsedBytes());
+    epicLog(LOG_WARNING, "Sending memory stat, conf_size: %lld, conf_cache: %f, conf_cache_size: %lld, wr_size: %lld, wr_free: %lld", conf->size, conf->cache_th, cache_size, wr->size, wr->free);
     SubmitRequest(master, wr);
 
     //TODO: whether needs to do it in a callback func?

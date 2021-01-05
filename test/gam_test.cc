@@ -457,14 +457,12 @@ int main(int argc, char **argv) {
     long size = (int)((double)benchmark_size / (double)num_comp_node * (double)remote_ratio);
     //FIXME might be too small for tf?
     conf.size = size < conf.size ? conf.size : size;
-    printf("Size to allocate: %ld\n", conf.size);
-
   } else {
     conf.cache_th = 0.0;
-    conf.size = 1024 * 1024 * 1024 * 10L;
-    //conf.size = 1024 * 1024 * 1024 * 4L;
-
+    //conf.size = 1024 * 1024 * 1024 * 10L;
+    conf.size = 1024 * 1024 * 1024 * 4L;
   }
+  printf("Size to allocate: %ld\n", conf.size);
 
   // Global memory allocator
   printf("Start the allocator here !!!!!!!!!\n");
