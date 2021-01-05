@@ -292,14 +292,14 @@ void do_log(void *arg) {
     alloc->UnLock(remote[0], BLOCK_SIZE * ratio);
   }
   uint64_t SYNC_RUN_BASE = SYNC_KEY + trace->num_nodes * 2;
-  int sync_id = SYNC_RUN_BASE + trace->num_nodes * node_id + trace->tid + PASS_KEY * trace->pass;
-  printf("Putting node_id: %d, thread id: %d, pass: %d, key: %d, value: %d\n", node_id, trace->tid, trace->pass, sync_id, sync_id);
-  alloc->Put(sync_id, &sync_id, sizeof(int));
+  uint64_t sync_id = SYNC_RUN_BASE + trace->num_nodes * node_id + trace->tid + PASS_KEY * trace->pass;
+  printf("Putting node_id: %d, thread id: %d, pass: %d, key: %lld, value: %lld\n", node_id, trace->tid, trace->pass, sync_id, sync_id);
+  alloc->Put(sync_id, &sync_id, sizeof(uint64_t));
   for (int i = 1; i <= trace->num_nodes; i++) {
     for (int j = 0; j < trace->num_threads; j++) {
       epicLog(LOG_WARNING, "waiting for node %d, thread %d", i, j);
       alloc->Get(SYNC_RUN_BASE + trace->num_nodes * i + j + PASS_KEY * trace->pass, &sync_id);
-      epicLog(LOG_WARNING, "get sync_id %d from node %d, thread %d, should be: %d", sync_id, i,
+      epicLog(LOG_WARNING, "get sync_id %lld from node %d, thread %d, should be: %lld", sync_id, i,
               j, SYNC_RUN_BASE + trace->num_nodes * i + j + PASS_KEY * trace->pass);
       epicAssert(sync_id == SYNC_RUN_BASE + trace->num_nodes * i + j + PASS_KEY * trace->pass);
     }
@@ -471,11 +471,11 @@ int main(int argc, char **argv) {
   int id;
   node_id = alloc->GetID();
   printf("Waiting for all the nodes !!!!!!!!!\n");
-  printf("Putting %d, %d\n", SYNC_KEY + node_id, node_id);
+  printf("Putting %lld, %lld\n", SYNC_KEY + node_id, node_id);
   alloc->Put(SYNC_KEY + node_id, &node_id, sizeof(int));
   printf("Put done\n");
   for (int i = 1; i <= num_nodes; i++) {
-    printf("Gettting %d\n", SYNC_KEY + i);
+    printf("Gettting %lld\n", SYNC_KEY + i);
     alloc->Get(SYNC_KEY + i, &id);
     printf("Get done \n");
     epicAssert(id == i);
