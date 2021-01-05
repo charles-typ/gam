@@ -38,7 +38,7 @@
 //#define SYNC_KEY 204800
 #define PASS_KEY 40960000
 #define SYNC_KEY (unsigned long)10 * 1024 * 1024 * 1024 // default: 10 GB
-//#define num_comp_node 4
+//#define num_comp_nodes 4
 //#define NUM_MEM_NODES 2
 
 int addr_size = sizeof(GAddr);
@@ -390,7 +390,7 @@ int main(int argc, char **argv) {
   num_threads = atoi(argv[arg_num_threads]);
 #ifdef single_thread_test
     num_threads = 1;
-    num_comp_node = 1;
+    num_comp_nodes = 1;
 #endif
   string ip_master = string(argv[arg_ip_master]);
   string ip_worker = string(argv[arg_ip_worker]);
@@ -401,7 +401,7 @@ int main(int argc, char **argv) {
   bool is_compute = atoi(argv[arg_is_compute]);
   double remote_ratio = atof(argv[arg_remote_ratio]);
   unsigned long benchmark_size = atol(argv[arg_benchmark_size]);
-  printf("%ld %d %f %d %d\n", benchmark_size, num_comp_node, remote_ratio, is_master, is_compute);
+  printf("%ld %d %f %d %d\n", benchmark_size, num_comp_nodes, remote_ratio, is_master, is_compute);
   printf("Num Nodes: %d, Num Threads: %d\n", num_nodes, num_threads);
 #ifndef single_thread_test
   if (argc != arg_log1 + num_threads) {
@@ -452,7 +452,7 @@ int main(int argc, char **argv) {
   //FIXME fix this cache threshold
   if(is_compute) {
     conf.cache_th = 1.0;
-    long size = (int)((double)benchmark_size / (double)num_comp_node * (double)remote_ratio);
+    long size = (int)((double)benchmark_size / (double)num_comp_nodes * (double)remote_ratio);
     //FIXME might be too small for tf?
     conf.size = size < conf.size ? conf.size : size;
   } else {
