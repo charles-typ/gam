@@ -149,7 +149,9 @@ int WorkRequest::Deser(const char* buf, int& len) {
   len = 0;
   char* p = (char*) buf;
   wtype lop;
-  p += readInteger(p, lop);
+  int len_to_add = 0;
+  len_to_add = readInteger(p, lop);
+  p += len_to_add;
   op = static_cast<Work>(lop);
   stype s;
   switch (op) {
@@ -162,8 +164,9 @@ int WorkRequest::Deser(const char* buf, int& len) {
         break;
 #endif
     case UPDATE_MEM_STATS:
-      p += readInteger(p, wid, size, free);
-      epicLog(LOG_WARNING, "!!!!! Deser length: %d", p);
+      len_to_add = readInteger(p, wid, size, free);
+      p += len_to_add;
+      epicLog(LOG_WARNING, "!!!!! Deser length: %d", len_to_add);
       break;
     case FETCH_MEM_STATS_REPLY:
     case BROADCAST_MEM_STATS:
