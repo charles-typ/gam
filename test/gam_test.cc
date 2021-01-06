@@ -489,6 +489,7 @@ int main(int argc, char **argv) {
   GAlloc *alloc = GAllocFactory::CreateAllocator(&conf);
   printf("End the allocator here !!!!!!!!!\n");
   sleep(1);
+  fflush(stdout);
 
   //sync with all the other workers
   //check all the workers are started
