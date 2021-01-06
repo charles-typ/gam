@@ -315,7 +315,8 @@ void do_log(void *arg) {
 
 }
 
-void standalone(void *arg) { printf("Show the start of do_log\n");
+void standalone(void *arg) {
+  printf("Show the start of standalone\n");
   struct memory_config_t *trace = (struct memory_config_t *) arg;
   GAlloc *alloc = GAllocFactory::CreateAllocator();
   for (int i = 1; i <= trace->num_comp_nodes; i++) {
