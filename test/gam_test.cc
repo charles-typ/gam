@@ -103,6 +103,7 @@ struct trace_t {
   unsigned long len;
   int node_idx;
   int num_nodes;
+  int num_comp_nodes;
   int master_thread;
   int tid;
   unsigned long time;
@@ -114,7 +115,13 @@ struct trace_t {
   int num_threads;
   int pass;
 };
+
+struct memory_config_t {
+  int num_comp_nodes;
+};
+
 struct trace_t args[MAX_NUM_THREAD];
+struct memory_config_t memory_args;
 
 struct metadata_t {
   unsigned int node_mask;
@@ -296,7 +303,7 @@ void do_log(void *arg) {
   uint64_t sync_id = SYNC_RUN_BASE + trace->num_nodes * node_id + trace->tid + PASS_KEY * trace->pass;
   printf("Putting node_id: %d, thread id: %d, pass: %d, key: %lld, value: %lld\n", node_id, trace->tid, trace->pass, sync_id, sync_id);
   alloc->Put(sync_id, &sync_id, sizeof(uint64_t));
-  for (int i = 1; i <= trace->num_nodes; i++) {
+  for (int i = 1; i <= trace->num_comp_nodes; i++) {
     for (int j = 0; j < trace->num_threads; j++) {
       epicLog(LOG_WARNING, "waiting for node %d, thread %d", i, j);
       alloc->Get(SYNC_RUN_BASE + trace->num_nodes * i + j + PASS_KEY * trace->pass, &sync_id);
@@ -306,6 +313,18 @@ void do_log(void *arg) {
     }
   }
 
+}
+
+void standalone(void *arg) { printf("Show the start of do_log\n");
+  struct memory_config_t *trace = (struct memory_config_t *) arg;
+  GAlloc *alloc = GAllocFactory::CreateAllocator();
+  for (int i = 1; i <= trace->num_comp_nodes; i++) {
+    printf("Getting %lld\n", SYNC_KEY + i + 10);
+    int id;
+    alloc->Get(SYNC_KEY + i + 10, &id);
+    printf("Get done \n");
+    epicAssert(id == i);
+  }
 }
 
 int load_trace(int fd, struct trace_t *arg, unsigned long ts_limit) {
@@ -485,104 +504,122 @@ int main(int argc, char **argv) {
   }
 
   //open files
-  int *fd = new int[num_threads];
-  for (int i = 0; i < num_threads; ++i) {
-    fd[i] = open(argv[arg_log1 + i], O_RDONLY);
-    if (fd < 0) {
-      printf("fail to open log file\n");
+  if(is_compute) {
+    int *fd = new int[num_threads];
+    for (int i = 0; i < num_threads; ++i) {
+      fd[i] = open(argv[arg_log1 + i], O_RDONLY);
+      if (fd < 0) {
+        printf("fail to open log file\n");
+        return 1;
+      }
+    }
+
+    //get start ts
+    struct RWlog first_log;
+    unsigned long start_ts = -1;
+    for (int i = 0; i < num_threads; ++i) {
+      int size = read(fd[i], &first_log, sizeof(RWlog));
+      start_ts = min(start_ts, first_log.usec);
+    }
+    printf("start ts is: %lu\n", start_ts);
+
+    for (int i = 0; i < num_threads; ++i) {
+      args[i].num_threads = num_threads;
+      args[i].node_idx = node_id;
+      args[i].num_nodes = num_nodes;
+      args[i].num_comp_nodes = num_comp_nodes;
+      args[i].master_thread = (i == 0);
+      args[i].is_master = is_master;
+      args[i].is_compute = is_compute;
+      args[i].tid = i;
+      args[i].logs = (char *) malloc(LOG_NUM_TOTAL * sizeof(RWlog)); // This should be allocated locally
+      args[i].benchmark_size = benchmark_size;
+      args[i].remote_ratio = remote_ratio;
+      args[i].test_size = conf.size;
+      if (!args[i].logs)
+        printf("fail to alloc buf to hold logs\n");
+    }
+
+    //start load and run logs in time window
+    unsigned long pass = 0;
+    unsigned long ts_limit = start_ts;
+    //for (int i = 0; i < num_threads; ++i) {
+    //  printf("Thread[%d]: loading log...\n", i);
+    //  ret = load_trace(fd[i], &args[i], ts_limit);
+    //  if (ret) {
+    //    printf("fail to load trace\n");
+    //  }
+    //}
+    while (1) {
+      ts_limit += TIMEWINDOW_US;
+
+      printf("Pass[%lu] Node[%d]: loading log...\n", pass, node_id);
+      for (int i = 0; i < num_threads; ++i) {
+        printf("Thread[%d]: loading log...\n", i);
+        ret = load_trace(fd[i], &args[i], ts_limit);
+        if (ret) {
+          printf("fail to load trace\n");
+        }
+      }
+
+      pthread_t thread[MAX_NUM_THREAD];
+      printf("running trace...\n");
+
+      for (int i = 0; i < num_threads; ++i) {
+        args[i].pass = pass;
+        printf("args has len: %d\n", args[i].len);
+        if (args[i].len) {
+          if (pthread_create(&thread[i], NULL, (void *(*)(void *)) do_log, &args[i])) {
+            printf("Error creating thread %d\n", i);
+            return 1;
+          }
+        }
+      }
+
+      for (int i = 0; i < num_threads; ++i) {
+        if (args[i].len) {
+          if (pthread_join(thread[i], NULL)) {
+            printf("Error joining thread %d\n", i);
+            return 2;
+          }
+        }
+      }
+
+      //sync on the end of the time window
+      ++pass;
+
+      bool all_done = true;
+      for (int i = 0; i < num_threads; ++i) {
+        if (args[i].len != 0) {
+          all_done = false;
+        }
+      }
+      if (all_done) {
+        printf("All done here\n");
+        break;
+      }
+    }
+    printf("Putting %lld, %lld\n", SYNC_KEY + node_id + 10, node_id);
+    alloc->Put(SYNC_KEY + node_id + 10, &node_id, sizeof(int));
+    printf("Put done\n");
+
+    for (int i = 0; i < num_threads; ++i) {
+      close(fd[i]);
+    }
+    delete[] fd;
+  } else {
+    pthread_t memory_thread;
+    memory_args.num_comp_nodes = num_comp_nodes;
+    if (pthread_create(&memory_thread, NULL, (void *(*)(void *)) standalone, &memory_args)) {
+      printf("Error creating thread %d\n", i);
       return 1;
     }
-  }
-
-  //get start ts
-  struct RWlog first_log;
-  unsigned long start_ts = -1;
-  for (int i = 0; i < num_threads; ++i) {
-    int size = read(fd[i], &first_log, sizeof(RWlog));
-    start_ts = min(start_ts, first_log.usec);
-  }
-  printf("start ts is: %lu\n", start_ts);
-
-  for (int i = 0; i < num_threads; ++i) {
-    args[i].num_threads = num_threads;
-    args[i].node_idx = node_id;
-    args[i].num_nodes = num_nodes;
-    args[i].master_thread = (i == 0);
-    args[i].is_master = is_master;
-    args[i].is_compute = is_compute;
-    args[i].tid = i;
-    args[i].logs = (char *) malloc(LOG_NUM_TOTAL * sizeof(RWlog)); // This should be allocated locally
-    args[i].benchmark_size = benchmark_size;
-    args[i].remote_ratio = remote_ratio;
-    args[i].test_size = conf.size;
-    if (!args[i].logs)
-      printf("fail to alloc buf to hold logs\n");
-  }
-
-  //start load and run logs in time window
-  unsigned long pass = 0;
-  unsigned long ts_limit = start_ts;
-  //for (int i = 0; i < num_threads; ++i) {
-  //  printf("Thread[%d]: loading log...\n", i);
-  //  ret = load_trace(fd[i], &args[i], ts_limit);
-  //  if (ret) {
-  //    printf("fail to load trace\n");
-  //  }
-  //}
-  while (1) {
-    ts_limit += TIMEWINDOW_US;
-
-    printf("Pass[%lu] Node[%d]: loading log...\n", pass, node_id);
-    for (int i = 0; i < num_threads; ++i) {
-      printf("Thread[%d]: loading log...\n", i);
-      ret = load_trace(fd[i], &args[i], ts_limit);
-      if (ret) {
-        printf("fail to load trace\n");
-      }
+    if (pthread_join(memory_thread, NULL)) {
+      printf("Error joining thread %d\n", i);
+      return 2;
     }
 
-    pthread_t thread[MAX_NUM_THREAD];
-    printf("running trace...\n");
-
-    for (int i = 0; i < num_threads; ++i) {
-      args[i].pass = pass;
-      printf("args has len: %d\n", args[i].len);
-      if (args[i].len) {
-        if (pthread_create(&thread[i], NULL, (void *(*)(void *)) do_log, &args[i])) {
-          printf("Error creating thread %d\n", i);
-          return 1;
-        }
-      }
-    }
-
-    for (int i = 0; i < num_threads; ++i) {
-      if (args[i].len) {
-        if (pthread_join(thread[i], NULL)) {
-          printf("Error joining thread %d\n", i);
-          return 2;
-        }
-      }
-    }
-
-    //sync on the end of the time window
-    ++pass;
-
-    bool all_done = true;
-    for (int i = 0; i < num_threads; ++i) {
-      if (args[i].len != 0) {
-        all_done = false;
-      }
-    }
-    if (all_done) {
-	    printf("All done here\n");
-      break;
-    }
   }
-
-  for (int i = 0; i < num_threads; ++i) {
-    close(fd[i]);
-  }
-  delete[] fd;
 
   return 0;
 }
