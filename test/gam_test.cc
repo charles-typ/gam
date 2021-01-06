@@ -611,11 +611,11 @@ int main(int argc, char **argv) {
     pthread_t memory_thread;
     memory_args.num_comp_nodes = num_comp_nodes;
     if (pthread_create(&memory_thread, NULL, (void *(*)(void *)) standalone, &memory_args)) {
-      printf("Error creating thread %d\n", i);
+      printf("Error creating memory thread \n");
       return 1;
     }
     if (pthread_join(memory_thread, NULL)) {
-      printf("Error joining thread %d\n", i);
+      printf("Error joining memory thread\n");
       return 2;
     }
 
