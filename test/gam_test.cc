@@ -171,45 +171,45 @@ inline void interval_between_access(long delta_time_usec) {
 }
 
 void do_log(void *arg) {
-  printf("Show the start of do_log\n");
+  //printf("Show the start of do_log\n");
   struct trace_t *trace = (struct trace_t *) arg;
   int ratio = 1;
   int remote_step = trace->benchmark_size / BLOCK_SIZE / ratio;
 
-  printf("Remote step to be %d\n", remote_step);
+  //printf("Remote step to be %d\n", remote_step);
 
-  printf("Creating the Allocator in node: %d, in thread: %d\n", trace->node_idx, trace->tid);
+  //printf("Creating the Allocator in node: %d, in thread: %d\n", trace->node_idx, trace->tid);
   GAlloc *alloc = GAllocFactory::CreateAllocator();
-  printf("Finish creating the Allocator in node: %d, in thread: %d\n", trace->node_idx, trace->tid);
+  //printf("Finish creating the Allocator in node: %d, in thread: %d\n", trace->node_idx, trace->tid);
 
   GAddr *remote;
   if(trace->is_compute) {
     remote = (GAddr *) malloc(sizeof(GAddr) * remote_step);
     if (trace->is_master && trace->tid == 0 && trace->pass == 0) {
-      printf("Master malloc the remote memory in slices: %d, node: %d, in thread: %d\n",
-             remote_step,
-             trace->node_idx,
-             trace->tid);
+      //printf("Master malloc the remote memory in slices: %d, node: %d, in thread: %d\n",
+             //remote_step,
+             //trace->node_idx,
+             //trace->tid);
       for (int i = 0; i < remote_step; i++) {
         remote[i] = alloc->Malloc(BLOCK_SIZE * ratio, REMOTE);
         alloc->Put(i, &remote[i], addr_size);
       }
-      printf("Finish malloc the remote memory in slices node: %d, in thread: %d\n",
-             trace->node_idx,
-             trace->tid);
+      //printf("Finish malloc the remote memory in slices node: %d, in thread: %d\n",
+             //trace->node_idx,
+             //trace->tid);
     } else {
-      printf("Worker malloc the remote memory in slices node: %d, in thread: %d\n",
-             trace->node_idx,
-             trace->tid);
+      //printf("Worker malloc the remote memory in slices node: %d, in thread: %d\n",
+             //trace->node_idx,
+             //trace->tid);
       for (int i = 0; i < remote_step; i++) {
         GAddr addr;
         int ret = alloc->Get(i, &addr);
         epicAssert(ret == addr_size);
         remote[i] = addr;
       }
-      printf("Finish worker malloc the remote memory in slices node: %d, in thread: %d\n",
-             trace->node_idx,
-             trace->tid);
+      //printf("Finish worker malloc the remote memory in slices node: %d, in thread: %d\n",
+             //trace->node_idx,
+             //trace->tid);
     }
   }
 
@@ -230,7 +230,7 @@ void do_log(void *arg) {
   char *cur;
 
   if (trace->is_compute) {
-    printf("This is a compute node, run everything here!\n");
+    //printf("This is a compute node, run everything here!\n");
     for (i = 0; i < trace->len; ++i) {
       volatile char op = trace->logs[i * sizeof(RWlog)];
       cur = &(trace->logs[i * sizeof(RWlog)]);
@@ -259,8 +259,8 @@ void do_log(void *arg) {
         struct Mlog *log = (struct Mlog *) cur;
         interval_between_access(log->hdr.usec);
         unsigned int len = log->len;
-        GAddr ret_addr = alloc->Malloc(len, REMOTE);
-        len2addr.insert(pair<unsigned int, GAddr>(len, ret_addr));
+        //GAddr ret_addr = alloc->Malloc(len, REMOTE);
+        //len2addr.insert(pair<unsigned int, GAddr>(len, ret_addr));
         old_ts += log->hdr.usec;
       } else if (op == 'B') {
         struct Blog *log = (struct Blog *) cur;
@@ -269,13 +269,13 @@ void do_log(void *arg) {
       } else if (op == 'U') {
         struct Ulog *log = (struct Ulog *) cur;
         interval_between_access(log->hdr.usec);
-        auto itr = len2addr.find(log->len);
-        if (itr == len2addr.end()) {
-          printf("no memory to free\n");
-        } else {
-          alloc->Free(itr->second);
-          len2addr.erase(itr);
-        }
+        //auto itr = len2addr.find(log->len);
+        //if (itr == len2addr.end()) {
+          //printf("no memory to free\n");
+        //} else {
+          //alloc->Free(itr->second);
+          //len2addr.erase(itr);
+        //}
         old_ts += log->hdr.usec;
       } else {
         printf("unexpected log: %c at line: %lu\n", op, i);
@@ -287,9 +287,9 @@ void do_log(void *arg) {
     gettimeofday(&ts, NULL);
     unsigned long dt = ts.tv_sec * 1000000 + ts.tv_usec - old_t;
 
-    printf("done in %lu us\n", dt);
+    //printf("done in %lu us\n", dt);
     trace->time += dt;
-    printf("total run time is %lu us\n", trace->time);
+    //printf("total run time is %lu us\n", trace->time);
   }
 
   //FIXME warm up here?
@@ -302,14 +302,14 @@ void do_log(void *arg) {
   }
   uint64_t SYNC_RUN_BASE = SYNC_KEY + trace->num_nodes * 2;
   uint64_t sync_id = SYNC_RUN_BASE + trace->num_nodes * node_id + trace->tid + PASS_KEY * trace->pass;
-  printf("Putting node_id: %d, thread id: %d, pass: %d, key: %lld, value: %lld\n", node_id, trace->tid, trace->pass, sync_id, sync_id);
+  //printf("Putting node_id: %d, thread id: %d, pass: %d, key: %lld, value: %lld\n", node_id, trace->tid, trace->pass, sync_id, sync_id);
   alloc->Put(sync_id, &sync_id, sizeof(uint64_t));
   for (int i = 1; i <= trace->num_comp_nodes; i++) {
     for (int j = 0; j < trace->num_threads; j++) {
-      epicLog(LOG_WARNING, "waiting for node %d, thread %d", i, j);
+      //epicLog(LOG_WARNING, "waiting for node %d, thread %d", i, j);
       alloc->Get(SYNC_RUN_BASE + trace->num_nodes * i + j + PASS_KEY * trace->pass, &sync_id);
-      epicLog(LOG_WARNING, "get sync_id %lld from node %d, thread %d, should be: %lld", sync_id, i,
-              j, SYNC_RUN_BASE + trace->num_nodes * i + j + PASS_KEY * trace->pass);
+      //epicLog(LOG_WARNING, "get sync_id %lld from node %d, thread %d, should be: %lld", sync_id, i,
+              //j, SYNC_RUN_BASE + trace->num_nodes * i + j + PASS_KEY * trace->pass);
       epicAssert(sync_id == SYNC_RUN_BASE + trace->num_nodes * i + j + PASS_KEY * trace->pass);
     }
   }
@@ -317,20 +317,20 @@ void do_log(void *arg) {
 }
 
 void standalone(void *arg) {
-  printf("Show the start of standalone\n");
+  //printf("Show the start of standalone\n");
   struct memory_config_t *trace = (struct memory_config_t *) arg;
   GAlloc *alloc = GAllocFactory::CreateAllocator();
   for (int i = 1; i <= trace->num_comp_nodes; i++) {
-    printf("Getting %lld\n", SYNC_KEY + i + 10);
+    //printf("Getting %lld\n", SYNC_KEY + i + 10);
     int id;
     alloc->Get(SYNC_KEY + i + 10, &id);
-    printf("Get done \n");
+    //printf("Get done \n");
     epicAssert(id == i);
   }
 }
 
 int load_trace(int fd, struct trace_t *arg, unsigned long ts_limit) {
-  printf("ts_limit: %lu\n", ts_limit);
+  //printf("ts_limit: %lu\n", ts_limit);
   assert(sizeof(RWlog) == sizeof(Mlog));
   assert(sizeof(RWlog) == sizeof(Blog));
   assert(sizeof(RWlog) == sizeof(Ulog));
@@ -601,9 +601,9 @@ int main(int argc, char **argv) {
         break;
       }
     }
-    printf("Putting %lld, %lld\n", SYNC_KEY + node_id + 10, node_id);
+    //printf("Putting %lld, %lld\n", SYNC_KEY + node_id + 10, node_id);
     alloc->Put(SYNC_KEY + node_id + 10, &node_id, sizeof(int));
-    printf("Put done\n");
+    //printf("Put done\n");
 
     for (int i = 0; i < num_threads; ++i) {
       close(fd[i]);
