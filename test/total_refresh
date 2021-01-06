@@ -1,0 +1,5 @@
+git pull origin master
+cd ../src/ && make clean
+make -j 8
+cd ../test/ && make clean
+make -j 8
