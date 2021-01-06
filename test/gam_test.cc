@@ -420,7 +420,7 @@ int main(int argc, char **argv) {
   bool is_master = atoi(argv[arg_is_master]);
   bool is_compute = atoi(argv[arg_is_compute]);
   double remote_ratio = atof(argv[arg_remote_ratio]);
-  unsigned long benchmark_size = atol(argv[arg_benchmark_size]);
+  long long benchmark_size = atol(argv[arg_benchmark_size]);
   printf("%ld %d %f %d %d\n", benchmark_size, num_comp_nodes, remote_ratio, is_master, is_compute);
   printf("Num Nodes: %d, Num Threads: %d\n", num_nodes, num_threads);
 #ifndef single_thread_test
