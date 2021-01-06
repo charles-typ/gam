@@ -287,9 +287,10 @@ void do_log(void *arg) {
     gettimeofday(&ts, NULL);
     unsigned long dt = ts.tv_sec * 1000000 + ts.tv_usec - old_t;
 
-    //printf("done in %lu us\n", dt);
+    printf("done in %lu us\n", dt);
     trace->time += dt;
-    //printf("total run time is %lu us\n", trace->time);
+    printf("total run time is %lu us\n", trace->time);
+    fflush(stdout);
   }
 
   //FIXME warm up here?
