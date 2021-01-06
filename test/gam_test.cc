@@ -189,7 +189,7 @@ void do_log(void *arg) {
       printf("Master malloc the remote memory in slices: %d, node: %d, in thread: %d\n",
              remote_step,
              trace->node_idx,
-             trace->num_threads);
+             trace->tid);
       for (int i = 0; i < remote_step; i++) {
         remote[i] = alloc->Malloc(BLOCK_SIZE * ratio, REMOTE);
         alloc->Put(i, &remote[i], addr_size);
