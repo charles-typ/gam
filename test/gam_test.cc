@@ -196,21 +196,20 @@ void do_log(void *arg) {
       }
       printf("Finish malloc the remote memory in slices node: %d, in thread: %d\n",
              trace->node_idx,
-             trace->num_threads);
+             trace->tid);
     } else {
       printf("Worker malloc the remote memory in slices node: %d, in thread: %d\n",
              trace->node_idx,
-             trace->num_threads);
+             trace->tid);
       for (int i = 0; i < remote_step; i++) {
         GAddr addr;
-        // FIXME does this use global or local memory??
         int ret = alloc->Get(i, &addr);
         epicAssert(ret == addr_size);
         remote[i] = addr;
       }
       printf("Finish worker malloc the remote memory in slices node: %d, in thread: %d\n",
              trace->node_idx,
-             trace->num_threads);
+             trace->tid);
     }
   }
 
@@ -283,6 +282,7 @@ void do_log(void *arg) {
       }
     }
 
+
     unsigned long old_t = ts.tv_sec * 1000000 + ts.tv_usec;
     gettimeofday(&ts, NULL);
     unsigned long dt = ts.tv_sec * 1000000 + ts.tv_usec - old_t;
@@ -298,6 +298,7 @@ void do_log(void *arg) {
     alloc->MFence();
     alloc->WLock(remote[0], BLOCK_SIZE * ratio);
     alloc->UnLock(remote[0], BLOCK_SIZE * ratio);
+    free(remote);
   }
   uint64_t SYNC_RUN_BASE = SYNC_KEY + trace->num_nodes * 2;
   uint64_t sync_id = SYNC_RUN_BASE + trace->num_nodes * node_id + trace->tid + PASS_KEY * trace->pass;
