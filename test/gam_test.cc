@@ -470,17 +470,16 @@ int main(int argc, char **argv) {
   conf.worker_ip = ip_worker;
   conf.worker_port = port_worker;
 
-  //FIXME fix this cache threshold
   if(is_compute) {
     conf.cache_th = 1.0;
     long size = (int)((double)benchmark_size / (double)num_comp_nodes * (double)remote_ratio);
-    //FIXME might be too small for tf?
     conf.size = size < conf.size ? conf.size : size;
   } else {
     conf.cache_th = 0.0;
-    //conf.size = 1024 * 1024 * 1024 * 10L;
-    //FIXME this is for tensorflow 4GB
-    conf.size = 1024 * 1024 * 1024 * 4L;
+    //this is for voltDB 10GB
+    conf.size = 1024 * 1024 * 1024 * 10L;
+    //this is for tensorflow 4GB
+    //conf.size = 1024 * 1024 * 1024 * 4L;
   }
   printf("Size to allocate: %ld\n", conf.size);
 
