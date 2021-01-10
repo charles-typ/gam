@@ -106,13 +106,12 @@ struct trace_t {
   int num_comp_nodes;
   int master_thread;
   int tid;
-  unsigned long time;
-  unsigned long read_time;
-  unsigned long read_ops;
-  unsigned long write_time;
-  unsigned long write_ops;
+  long time;
+  long read_time;
+  long read_ops;
+  long write_time;
+  long write_ops;
   unsigned long benchmark_size;
-  unsigned long test_size;
   double remote_ratio;
   bool is_master;
   bool is_compute;
@@ -201,8 +200,7 @@ void do_log(void *arg) {
   unsigned long old_ts = 0;
   unsigned long i = 0;
 
-  struct timeval ts;
-  gettimeofday(&ts, NULL);
+  long pass_start = get_time();
   char *cur;
 
   if (trace->is_compute) {
@@ -216,14 +214,10 @@ void do_log(void *arg) {
         char buf;
         size_t cache_line_block = (log->addr & MMAP_ADDR_MASK) / (BLOCK_SIZE * resize_ratio);
         size_t cache_line_offset = (log->addr & MMAP_ADDR_MASK) % (BLOCK_SIZE * resize_ratio);
-        struct timeval read_ts;
-        gettimeofday(&read_ts, NULL);
-
+        long read_start = get_time();
         ret = alloc->Read(remote[cache_line_block] + cache_line_offset, &buf, 1);
-        unsigned long read_old_t = read_ts.tv_sec * 1000000 + read_ts.tv_usec;
-        gettimeofday(&read_ts, NULL);
-        unsigned long read_dt = read_ts.tv_sec * 1000000 + read_ts.tv_usec - read_old_t;
-        trace->read_time += read_dt;
+        long read_end = get_time();
+        trace->read_time += read_end - read_start;
         trace->read_ops += 1;
         assert(ret == 1);
         old_ts = log->usec;
@@ -235,14 +229,10 @@ void do_log(void *arg) {
         unsigned long addr = log->addr & MMAP_ADDR_MASK;
         size_t cache_line_block = (log->addr & MMAP_ADDR_MASK) / (BLOCK_SIZE * resize_ratio);
         size_t cache_line_offset = (log->addr & MMAP_ADDR_MASK) % (BLOCK_SIZE * resize_ratio);
-        struct timeval write_ts;
-        gettimeofday(&write_ts, NULL);
-
+        long write_start = get_time();
         ret = alloc->Write(remote[cache_line_block] + cache_line_offset, &buf, 1);
-        unsigned long write_old_t = write_ts.tv_sec * 1000000 + write_ts.tv_usec;
-        gettimeofday(&write_ts, NULL);
-        unsigned long write_dt = write_ts.tv_sec * 1000000 + write_ts.tv_usec - write_old_t;
-        trace->write_time += write_dt;
+        long write_end = get_time();
+        trace->write_time += write_end - write_start;
         trace->write_ops += 1;
         assert(ret == 1);
         old_ts = log->usec;
@@ -274,16 +264,17 @@ void do_log(void *arg) {
       }
     }
 
+    long pass_end = get_time();
 
-    unsigned long old_t = ts.tv_sec * 1000000 + ts.tv_usec;
-    gettimeofday(&ts, NULL);
-    unsigned long dt = ts.tv_sec * 1000000 + ts.tv_usec - old_t;
-
-    printf("done in %lu us, thread: %d, pass: %d\n", dt, trace->tid, trace->pass);
-    trace->time += dt;
-    printf("total run time is %lu us, thread: %d, pass: %d\n", trace->time, trace->tid, trace->pass);
-    printf("average write latency is %lu us, thread: %d, pass: %d\n", trace->read_ops/trace->read_time, trace->tid, trace->pass);
-    printf("average read latency is %lu us, thread: %d, pass: %d\n", trace->write_ops/trace->write_time, trace->tid, trace->pass);
+    printf("done in %ld ns, thread: %d, pass: %d\n", pass_end - pass_start, trace->tid, trace->pass);
+    trace->time += pass_end - pass_start;
+    printf("total run time is %ld ns, thread: %d, pass: %d\n", trace->time, trace->tid, trace->pass);
+    printf("average write latency is %ld ns, thread: %d, pass: %d\n", trace->read_ops/trace->read_time, trace->tid, trace->pass);
+    printf("average read latency is %ld ns, thread: %d, pass: %d\n", trace->write_ops/trace->write_time, trace->tid, trace->pass);
+    trace->write_time = 0;
+    trace->read_time = 0;
+    trace->read_ops = 0;
+    trace->write_ops = 0;
     fflush(stdout);
   }
 
@@ -522,8 +513,8 @@ int main(int argc, char **argv) {
     int remote_step = benchmark_size / BLOCK_SIZE / resize_ratio;
     remote = (GAddr *) malloc(sizeof(GAddr) * remote_step);
     //GAddr *remote;
-    struct timeval alloc_ts;
-    gettimeofday(&alloc_ts, NULL);
+    long alloc_start = get_time();
+
     if(is_compute) {
       if (is_master) {
         //printf("Master malloc the remote memory in slices: %d, node: %d, in thread: %d\n",
@@ -552,10 +543,8 @@ int main(int argc, char **argv) {
         //trace->tid);
       }
     }
-    unsigned long alloc_old_t = alloc_ts.tv_sec * 1000000 + alloc_ts.tv_usec;
-    gettimeofday(&alloc_ts, NULL);
-    unsigned long alloc_dt = alloc_ts.tv_sec * 1000000 + alloc_ts.tv_usec - alloc_old_t;
-    printf("allocate is %lu us\n", alloc_dt);
+    long alloc_end = get_time();
+    printf("allocate is %ld ns\n", alloc_end - alloc_start);
     fflush(stdout);
 
 
@@ -570,7 +559,6 @@ int main(int argc, char **argv) {
       args[i].tid = i;
       args[i].logs = (char *) malloc(LOG_NUM_TOTAL * sizeof(RWlog)); // This should be allocated locally
       args[i].benchmark_size = benchmark_size;
-      args[i].test_size = conf.size;
       if (!args[i].logs)
         printf("fail to alloc buf to hold logs\n");
     }
