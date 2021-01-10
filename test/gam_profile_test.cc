@@ -524,7 +524,7 @@ int main(int argc, char **argv) {
         //trace->node_idx,
         //trace->tid);
         for (int i = 0; i < remote_step; i++) {
-          remote[i] = alloc->AlignedMalloc(BLOCK_SIZE * resize_ratio, REMOTE);
+          remote[i] = alloc->Malloc(BLOCK_SIZE * resize_ratio, REMOTE);
           alloc->Put(i, &remote[i], addr_size);
         }
         //printf("Finish malloc the remote memory in slices node: %d, in thread: %d\n",
