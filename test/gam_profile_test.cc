@@ -107,6 +107,10 @@ struct trace_t {
   int master_thread;
   int tid;
   unsigned long time;
+  unsigned long read_time;
+  unsigned long read_ops;
+  unsigned long write_time;
+  unsigned long write_ops;
   unsigned long benchmark_size;
   unsigned long test_size;
   double remote_ratio;
@@ -133,6 +137,9 @@ int num_nodes;
 int num_comp_nodes;
 int node_id = -1;
 int num_threads;
+GAddr *remote;
+int resize_ratio = 1;
+
 
 static int calc_mask_sum(unsigned int mask) {
   int sum = 0;
@@ -173,8 +180,7 @@ inline void interval_between_access(long delta_time_usec) {
 void do_log(void *arg) {
   //printf("Show the start of do_log\n");
   struct trace_t *trace = (struct trace_t *) arg;
-  int ratio = 1;
-  int remote_step = trace->benchmark_size / BLOCK_SIZE / ratio;
+
 
   //printf("Remote step to be %d\n", remote_step);
 
@@ -182,42 +188,6 @@ void do_log(void *arg) {
   GAlloc *alloc = GAllocFactory::CreateAllocator();
   //printf("Finish creating the Allocator in node: %d, in thread: %d\n", trace->node_idx, trace->tid);
 
-  GAddr *remote;
-  struct timeval alloc_ts;
-  gettimeofday(&alloc_ts, NULL);
-  if(trace->is_compute) {
-    remote = (GAddr *) malloc(sizeof(GAddr) * remote_step);
-    if (trace->is_master && trace->tid == 0 && trace->pass == 0) {
-      //printf("Master malloc the remote memory in slices: %d, node: %d, in thread: %d\n",
-             //remote_step,
-             //trace->node_idx,
-             //trace->tid);
-      for (int i = 0; i < remote_step; i++) {
-        remote[i] = alloc->Malloc(BLOCK_SIZE * ratio, REMOTE);
-        alloc->Put(i, &remote[i], addr_size);
-      }
-      //printf("Finish malloc the remote memory in slices node: %d, in thread: %d\n",
-             //trace->node_idx,
-             //trace->tid);
-    } else {
-      //printf("Worker malloc the remote memory in slices node: %d, in thread: %d\n",
-             //trace->node_idx,
-             //trace->tid);
-      for (int i = 0; i < remote_step; i++) {
-        GAddr addr;
-        int ret = alloc->Get(i, &addr);
-        epicAssert(ret == addr_size);
-        remote[i] = addr;
-      }
-      //printf("Finish worker malloc the remote memory in slices node: %d, in thread: %d\n",
-             //trace->node_idx,
-             //trace->tid);
-    }
-  }
-  unsigned long alloc_old_t = alloc_ts.tv_sec * 1000000 + alloc_ts.tv_usec;
-  gettimeofday(&alloc_ts, NULL);
-  unsigned long alloc_dt = alloc_ts.tv_sec * 1000000 + alloc_ts.tv_usec - alloc_old_t;
-  printf("allocate is %lu us, thread: %d, pass: %d\n", alloc_dt, trace->tid, trace->pass);
 
   int ret;
 
@@ -253,7 +223,8 @@ void do_log(void *arg) {
         unsigned long read_old_t = read_ts.tv_sec * 1000000 + read_ts.tv_usec;
         gettimeofday(&read_ts, NULL);
         unsigned long read_dt = read_ts.tv_sec * 1000000 + read_ts.tv_usec - read_old_t;
-        printf("read is %lu us, thread: %d, pass: %d\n", read_dt, trace->tid, trace->pass);
+        trace->read_time += read_dt;
+        trace->read_ops += 1;
         assert(ret == 1);
         old_ts = log->usec;
 
@@ -271,6 +242,8 @@ void do_log(void *arg) {
         unsigned long write_old_t = write_ts.tv_sec * 1000000 + write_ts.tv_usec;
         gettimeofday(&write_ts, NULL);
         unsigned long write_dt = write_ts.tv_sec * 1000000 + write_ts.tv_usec - write_old_t;
+        trace->write_time += write_dt;
+        trace->write_ops += 1;
         printf("write is %lu us, thread: %d, pass: %d\n", write_dt, trace->tid, trace->pass);
         assert(ret == 1);
         old_ts = log->usec;
@@ -545,6 +518,45 @@ int main(int argc, char **argv) {
       start_ts = min(start_ts, first_log.usec);
     }
     printf("start ts is: %lu\n", start_ts);
+
+    int remote_step = benchmark_size / BLOCK_SIZE / resize_ratio;
+    remote = (GAddr *) malloc(sizeof(GAddr) * remote_step);
+    //GAddr *remote;
+    struct timeval alloc_ts;
+    gettimeofday(&alloc_ts, NULL);
+    if(is_compute) {
+      if (trace->is_master) {
+        //printf("Master malloc the remote memory in slices: %d, node: %d, in thread: %d\n",
+        //remote_step,
+        //trace->node_idx,
+        //trace->tid);
+        for (int i = 0; i < remote_step; i++) {
+          remote[i] = alloc->Malloc(BLOCK_SIZE * ratio, REMOTE);
+          alloc->Put(i, &remote[i], addr_size);
+        }
+        //printf("Finish malloc the remote memory in slices node: %d, in thread: %d\n",
+        //trace->node_idx,
+        //trace->tid);
+      } else {
+        //printf("Worker malloc the remote memory in slices node: %d, in thread: %d\n",
+        //trace->node_idx,
+        //trace->tid);
+        for (int i = 0; i < remote_step; i++) {
+          GAddr addr;
+          int ret = alloc->Get(i, &addr);
+          epicAssert(ret == addr_size);
+          remote[i] = addr;
+        }
+        //printf("Finish worker malloc the remote memory in slices node: %d, in thread: %d\n",
+        //trace->node_idx,
+        //trace->tid);
+      }
+    }
+    unsigned long alloc_old_t = alloc_ts.tv_sec * 1000000 + alloc_ts.tv_usec;
+    gettimeofday(&alloc_ts, NULL);
+    unsigned long alloc_dt = alloc_ts.tv_sec * 1000000 + alloc_ts.tv_usec - alloc_old_t;
+    printf("allocate is %lu us, thread: %d, pass: %d\n", alloc_dt, trace->tid, trace->pass);
+
 
     for (int i = 0; i < num_threads; ++i) {
       args[i].num_threads = num_threads;
