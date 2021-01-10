@@ -525,7 +525,7 @@ int main(int argc, char **argv) {
     printf("Get done \n");
     epicAssert(id == i);
   }
-
+  fflush(stdout);
   //open files
   if(is_compute) {
     int *fd = new int[num_threads];
