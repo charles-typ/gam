@@ -525,7 +525,7 @@ int main(int argc, char **argv) {
     struct timeval alloc_ts;
     gettimeofday(&alloc_ts, NULL);
     if(is_compute) {
-      if (trace->is_master) {
+      if (is_master) {
         //printf("Master malloc the remote memory in slices: %d, node: %d, in thread: %d\n",
         //remote_step,
         //trace->node_idx,
