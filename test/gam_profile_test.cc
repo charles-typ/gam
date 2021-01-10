@@ -459,7 +459,7 @@ int main(int argc, char **argv) {
 
   if(is_compute) {
     conf.cache_th = 1.0;
-    long size = (int)((double)benchmark_size / (double)num_comp_nodes * (double)remote_ratio);
+    long long size = (long long)((double)benchmark_size / (double)num_comp_nodes * (double)remote_ratio);
     conf.size = size < conf.size ? conf.size : size;
   } else {
     conf.cache_th = 0.0;
