@@ -214,8 +214,8 @@ void do_log(void *arg) {
         struct RWlog *log = (struct RWlog *) cur;
         interval_between_access(log->usec - old_ts);
         char buf;
-        size_t cache_line_block = (log->addr & MMAP_ADDR_MASK) / (BLOCK_SIZE * ratio);
-        size_t cache_line_offset = (log->addr & MMAP_ADDR_MASK) % (BLOCK_SIZE * ratio);
+        size_t cache_line_block = (log->addr & MMAP_ADDR_MASK) / (BLOCK_SIZE * resize_ratio);
+        size_t cache_line_offset = (log->addr & MMAP_ADDR_MASK) % (BLOCK_SIZE * resize_ratio);
         struct timeval read_ts;
         gettimeofday(&read_ts, NULL);
 
@@ -233,8 +233,8 @@ void do_log(void *arg) {
         interval_between_access(log->usec - old_ts);
         char buf = '0';
         unsigned long addr = log->addr & MMAP_ADDR_MASK;
-        size_t cache_line_block = (log->addr & MMAP_ADDR_MASK) / (BLOCK_SIZE * ratio);
-        size_t cache_line_offset = (log->addr & MMAP_ADDR_MASK) % (BLOCK_SIZE * ratio);
+        size_t cache_line_block = (log->addr & MMAP_ADDR_MASK) / (BLOCK_SIZE * resize_ratio);
+        size_t cache_line_offset = (log->addr & MMAP_ADDR_MASK) % (BLOCK_SIZE * resize_ratio);
         struct timeval write_ts;
         gettimeofday(&write_ts, NULL);
 
@@ -290,8 +290,8 @@ void do_log(void *arg) {
   //make sure all the requests are complete
   if(trace->is_compute) {
     alloc->MFence();
-    alloc->WLock(remote[0], BLOCK_SIZE * ratio);
-    alloc->UnLock(remote[0], BLOCK_SIZE * ratio);
+    alloc->WLock(remote[0], BLOCK_SIZE * resize_ratio);
+    alloc->UnLock(remote[0], BLOCK_SIZE * resize_ratio);
     free(remote);
   }
   uint64_t SYNC_RUN_BASE = SYNC_KEY + trace->num_nodes * 2;
@@ -531,7 +531,7 @@ int main(int argc, char **argv) {
         //trace->node_idx,
         //trace->tid);
         for (int i = 0; i < remote_step; i++) {
-          remote[i] = alloc->Malloc(BLOCK_SIZE * ratio, REMOTE);
+          remote[i] = alloc->Malloc(BLOCK_SIZE * resize_ratio, REMOTE);
           alloc->Put(i, &remote[i], addr_size);
         }
         //printf("Finish malloc the remote memory in slices node: %d, in thread: %d\n",
@@ -569,7 +569,6 @@ int main(int argc, char **argv) {
       args[i].tid = i;
       args[i].logs = (char *) malloc(LOG_NUM_TOTAL * sizeof(RWlog)); // This should be allocated locally
       args[i].benchmark_size = benchmark_size;
-      args[i].remote_ratio = remote_ratio;
       args[i].test_size = conf.size;
       if (!args[i].logs)
         printf("fail to alloc buf to hold logs\n");
