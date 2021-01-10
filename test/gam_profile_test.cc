@@ -270,9 +270,9 @@ void do_log(void *arg) {
     trace->time += pass_end - pass_start;
     printf("total run time is %ld ns, thread: %d, pass: %d\n", trace->time, trace->tid, trace->pass);
     if(trace->read_ops)
-      printf("average read latency is %ld %ld %ld ns, thread: %d, pass: %d\n", trace->read_ops/trace->read_time, trace->read_ops, trace->read_time, trace->tid, trace->pass);
+      printf("average read latency is %ld ns, thread: %d, pass: %d\n", trace->read_time/trace->read_ops, trace->tid, trace->pass);
     if(trace->write_ops)
-      printf("average write latency is %ld %ld %ld ns, thread: %d, pass: %d\n", trace->write_ops/trace->write_time, trace->write_ops, trace->write_time, trace->tid, trace->pass);
+      printf("average write latency is %ld ns, thread: %d, pass: %d\n", trace->write_time/trace->write_ops, trace->tid, trace->pass);
     trace->write_time = 0;
     trace->read_time = 0;
     trace->read_ops = 0;
