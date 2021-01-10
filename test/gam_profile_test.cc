@@ -244,7 +244,6 @@ void do_log(void *arg) {
         unsigned long write_dt = write_ts.tv_sec * 1000000 + write_ts.tv_usec - write_old_t;
         trace->write_time += write_dt;
         trace->write_ops += 1;
-        printf("write is %lu us, thread: %d, pass: %d\n", write_dt, trace->tid, trace->pass);
         assert(ret == 1);
         old_ts = log->usec;
 
@@ -283,6 +282,8 @@ void do_log(void *arg) {
     printf("done in %lu us, thread: %d, pass: %d\n", dt, trace->tid, trace->pass);
     trace->time += dt;
     printf("total run time is %lu us, thread: %d, pass: %d\n", trace->time, trace->tid, trace->pass);
+    printf("average write latency is %lu us, thread: %d, pass: %d\n", trace->read_ops/trace->read_time, trace->tid, trace->pass);
+    printf("average read latency is %lu us, thread: %d, pass: %d\n", trace->write_ops/trace->write_time, trace->tid, trace->pass);
     fflush(stdout);
   }
 
