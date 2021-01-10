@@ -293,7 +293,6 @@ void do_log(void *arg) {
     alloc->MFence();
     alloc->WLock(remote[0], BLOCK_SIZE * resize_ratio);
     alloc->UnLock(remote[0], BLOCK_SIZE * resize_ratio);
-    free(remote);
   }
   uint64_t SYNC_RUN_BASE = SYNC_KEY + trace->num_nodes * 2;
   uint64_t sync_id = SYNC_RUN_BASE + trace->num_nodes * node_id + trace->tid + PASS_KEY * trace->pass;
@@ -643,6 +642,7 @@ int main(int argc, char **argv) {
       close(fd[i]);
     }
     delete[] fd;
+    free(remote);
   } else {
     pthread_t memory_thread;
     memory_args.num_comp_nodes = num_comp_nodes;
