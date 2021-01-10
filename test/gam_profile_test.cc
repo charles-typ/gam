@@ -252,7 +252,7 @@ void do_log(void *arg) {
         ret = alloc->Read(remote[cache_line_block] + cache_line_offset, &buf, 1);
         unsigned long read_old_t = read_ts.tv_sec * 1000000 + read_ts.tv_usec;
         gettimeofday(&read_ts, NULL);
-        unsigned long read_dt = read_ts.tv_sec * 1000000 + read_ts.tv_usec - read_old_t
+        unsigned long read_dt = read_ts.tv_sec * 1000000 + read_ts.tv_usec - read_old_t;
         printf("read is %lu us, thread: %d, pass: %d\n", read_dt, trace->tid, trace->pass);
         assert(ret == 1);
         old_ts = log->usec;
