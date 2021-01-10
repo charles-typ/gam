@@ -555,7 +555,7 @@ int main(int argc, char **argv) {
     unsigned long alloc_old_t = alloc_ts.tv_sec * 1000000 + alloc_ts.tv_usec;
     gettimeofday(&alloc_ts, NULL);
     unsigned long alloc_dt = alloc_ts.tv_sec * 1000000 + alloc_ts.tv_usec - alloc_old_t;
-    printf("allocate is %lu us, thread: %d, pass: %d\n", alloc_dt, trace->tid, trace->pass);
+    printf("allocate is %lu us\n", alloc_dt);
 
 
     for (int i = 0; i < num_threads; ++i) {
