@@ -531,7 +531,7 @@ int main(int argc, char **argv) {
         //trace->node_idx,
         //trace->tid);
         for (int i = 0; i < remote_step; i++) {
-          remote[i] = alloc->Malloc(BLOCK_SIZE * resize_ratio, REMOTE);
+          remote[i] = alloc->AlignedMalloc(BLOCK_SIZE * resize_ratio, REMOTE);
           alloc->Put(i, &remote[i], addr_size);
         }
         //printf("Finish malloc the remote memory in slices node: %d, in thread: %d\n",
@@ -556,6 +556,7 @@ int main(int argc, char **argv) {
     gettimeofday(&alloc_ts, NULL);
     unsigned long alloc_dt = alloc_ts.tv_sec * 1000000 + alloc_ts.tv_usec - alloc_old_t;
     printf("allocate is %lu us\n", alloc_dt);
+    fflush(stdout);
 
 
     for (int i = 0; i < num_threads; ++i) {
