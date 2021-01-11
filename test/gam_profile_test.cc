@@ -263,10 +263,14 @@ void do_log(void *arg) {
         printf("unexpected log: %c at line: %lu\n", op, i);
       }
     }
-
+    long fence_start = get_time();
+    alloc->MFence();
+    alloc->WLock(remote[0], BLOCK_SIZE * resize_ratio);
+    alloc->UnLock(remote[0], BLOCK_SIZE * resize_ratio);
     long pass_end = get_time();
 
-    printf("done in %ld ns, thread: %d, pass: %d\n", pass_end - pass_start, trace->tid, trace->pass);
+
+    printf("done in %ld ns, fence time is %ld, thread: %d, pass: %d\n", pass_end - pass_start, pass_end - fence_start, trace->tid, trace->pass);
     trace->time += pass_end - pass_start;
     printf("total run time is %ld ns, thread: %d, pass: %d\n", trace->time, trace->tid, trace->pass);
     if(trace->read_ops)
@@ -282,11 +286,6 @@ void do_log(void *arg) {
 
   //FIXME warm up here?
   //make sure all the requests are complete
-  if(trace->is_compute) {
-    alloc->MFence();
-    alloc->WLock(remote[0], BLOCK_SIZE * resize_ratio);
-    alloc->UnLock(remote[0], BLOCK_SIZE * resize_ratio);
-  }
   uint64_t SYNC_RUN_BASE = SYNC_KEY + trace->num_nodes * 2;
   uint64_t sync_id = SYNC_RUN_BASE + trace->num_nodes * node_id + trace->tid + PASS_KEY * trace->pass;
   //printf("Putting node_id: %d, thread id: %d, pass: %d, key: %lld, value: %lld\n", node_id, trace->tid, trace->pass, sync_id, sync_id);
