@@ -1,0 +1,1592 @@
+8589934592 4 1.000000 1 1
+Num Nodes: 5, Num Threads: 4
+Currently configuration is: master: 10.10.10.201:1231, worker: 10.10.10.201:1234, is_master: true, size to allocate: 1717986918
+Size to allocate: 2147483648
+Start the allocator here !!!!!!!!!
+[21016] 11 Jan 14:18:15.532 - [worker.cc:444-SyncMaster()] found one CacheOnly instance with wid = 1
+[21016] 11 Jan 14:18:15.532 - [worker.cc:122-Worker()] LRU eviction is enabled, max cache lines = 4194304, reserved mem size = 2147483648, cache_percentage = 1.000000, block_size = 512
+End the allocator here !!!!!!!!!
+Waiting for all the nodes !!!!!!!!!
+Putting 10737418241, 1
+Put done
+Gettting 10737418241
+Get done 
+Gettting 10737418242
+Get done 
+Gettting 10737418243
+Get done 
+Gettting 10737418244
+Get done 
+Gettting 10737418245
+Get done 
+start ts is: 1608309204356442
+allocate is 102134015793 ns
+Pass[0] Node[1]: loading log...
+Thread[0]: loading log...
+finish loading 20104000 logs
+Thread[1]: loading log...
+finish loading 1000 logs
+Thread[2]: loading log...
+finish loading 1000 logs
+Thread[3]: loading log...
+finish loading 1000 logs
+running trace...
+args has len: 20104000
+args has len: 1000
+args has len: 1000
+args has len: 1000
+done in 1422227 ns, thread: 2, pass: 0
+total run time is 1422227 ns, thread: 2, pass: 0
+average read latency is 1275 ns, thread: 2, pass: 0
+average write latency is 1288 ns, thread: 2, pass: 0
+done in 3121322 ns, thread: 1, pass: 0
+total run time is 3121322 ns, thread: 1, pass: 0
+average read latency is 3517 ns, thread: 1, pass: 0
+average write latency is 1746 ns, thread: 1, pass: 0
+done in 4007347 ns, thread: 3, pass: 0
+total run time is 4007347 ns, thread: 3, pass: 0
+average read latency is 2216 ns, thread: 3, pass: 0
+average write latency is 720 ns, thread: 3, pass: 0
+done in 6959929645 ns, thread: 0, pass: 0
+total run time is 6959929645 ns, thread: 0, pass: 0
+average read latency is 233 ns, thread: 0, pass: 0
+average write latency is 279 ns, thread: 0, pass: 0
+Pass[1] Node[1]: loading log...
+Thread[0]: loading log...
+finish loading 6740000 logs
+Thread[1]: loading log...
+finish loading 26303000 logs
+Thread[2]: loading log...
+finish loading 1000 logs
+Thread[3]: loading log...
+finish loading 1000 logs
+running trace...
+args has len: 6740000
+args has len: 26303000
+args has len: 1000
+args has len: 1000
+done in 1316000 ns, thread: 2, pass: 1
+total run time is 2738227 ns, thread: 2, pass: 1
+average read latency is 1061 ns, thread: 2, pass: 1
+average write latency is 1313 ns, thread: 2, pass: 1
+done in 3473346 ns, thread: 3, pass: 1
+total run time is 7480693 ns, thread: 3, pass: 1
+average read latency is 1474 ns, thread: 3, pass: 1
+average write latency is 1514 ns, thread: 3, pass: 1
+done in 8373700851 ns, thread: 0, pass: 1
+total run time is 15333630496 ns, thread: 0, pass: 1
+average read latency is 1524 ns, thread: 0, pass: 1
+average write latency is 571 ns, thread: 0, pass: 1
+done in 26990600928 ns, thread: 1, pass: 1
+total run time is 26993722250 ns, thread: 1, pass: 1
+average read latency is 1229 ns, thread: 1, pass: 1
+average write latency is 484 ns, thread: 1, pass: 1
+Pass[2] Node[1]: loading log...
+Thread[0]: loading log...
+finish loading 1000 logs
+Thread[1]: loading log...
+finish loading 35401000 logs
+Thread[2]: loading log...
+finish loading 1000 logs
+Thread[3]: loading log...
+finish loading 1000 logs
+running trace...
+args has len: 1000
+args has len: 35401000
+args has len: 1000
+args has len: 1000
+done in 1353367 ns, thread: 2, pass: 2
+total run time is 4091594 ns, thread: 2, pass: 2
+average read latency is 936 ns, thread: 2, pass: 2
+average write latency is 1326 ns, thread: 2, pass: 2
+done in 3649942 ns, thread: 0, pass: 2
+total run time is 15337280438 ns, thread: 0, pass: 2
+average read latency is 1153 ns, thread: 0, pass: 2
+average write latency is 1292 ns, thread: 0, pass: 2
+done in 4643537 ns, thread: 3, pass: 2
+total run time is 12124230 ns, thread: 3, pass: 2
+average read latency is 3110 ns, thread: 3, pass: 2
+average write latency is 1597 ns, thread: 3, pass: 2
+done in 26174763845 ns, thread: 1, pass: 2
+total run time is 53168486095 ns, thread: 1, pass: 2
+average read latency is 860 ns, thread: 1, pass: 2
+average write latency is 373 ns, thread: 1, pass: 2
+Pass[3] Node[1]: loading log...
+Thread[0]: loading log...
+finish loading 2380000 logs
+Thread[1]: loading log...
+finish loading 28718000 logs
+Thread[2]: loading log...
+finish loading 1000 logs
+Thread[3]: loading log...
+finish loading 74000 logs
+running trace...
+args has len: 2380000
+args has len: 28718000
+args has len: 1000
+args has len: 74000
+done in 1371173 ns, thread: 2, pass: 3
+total run time is 5462767 ns, thread: 2, pass: 3
+average read latency is 1078 ns, thread: 2, pass: 3
+average write latency is 1380 ns, thread: 2, pass: 3
+done in 437769047 ns, thread: 3, pass: 3
+total run time is 449893277 ns, thread: 3, pass: 3
+average read latency is 2918 ns, thread: 3, pass: 3
+average write latency is 924 ns, thread: 3, pass: 3
+done in 3724780514 ns, thread: 0, pass: 3
+total run time is 19062060952 ns, thread: 0, pass: 3
+average read latency is 1938 ns, thread: 0, pass: 3
+average write latency is 636 ns, thread: 0, pass: 3
+done in 23889644837 ns, thread: 1, pass: 3
+total run time is 77058130932 ns, thread: 1, pass: 3
+average read latency is 946 ns, thread: 1, pass: 3
+average write latency is 421 ns, thread: 1, pass: 3
+Pass[4] Node[1]: loading log...
+Thread[0]: loading log...
+finish loading 34216000 logs
+Thread[1]: loading log...
+finish loading 1000 logs
+Thread[2]: loading log...
+finish loading 1000 logs
+Thread[3]: loading log...
+finish loading 1000 logs
+running trace...
+args has len: 34216000
+args has len: 1000
+args has len: 1000
+args has len: 1000
+done in 682454 ns, thread: 2, pass: 4
+total run time is 6145221 ns, thread: 2, pass: 4
+average read latency is 571 ns, thread: 2, pass: 4
+average write latency is 703 ns, thread: 2, pass: 4
+done in 1707347 ns, thread: 1, pass: 4
+total run time is 77059838279 ns, thread: 1, pass: 4
+average write latency is 1552 ns, thread: 1, pass: 4
+done in 164402228 ns, thread: 3, pass: 4
+total run time is 614295505 ns, thread: 3, pass: 4
+average read latency is 1672 ns, thread: 3, pass: 4
+average write latency is 1338 ns, thread: 3, pass: 4
+done in 24952419545 ns, thread: 0, pass: 4
+total run time is 44014480497 ns, thread: 0, pass: 4
+average read latency is 846 ns, thread: 0, pass: 4
+average write latency is 384 ns, thread: 0, pass: 4
+Pass[5] Node[1]: loading log...
+Thread[0]: loading log...
+finish loading 35709000 logs
+Thread[1]: loading log...
+finish loading 1000 logs
+Thread[2]: loading log...
+finish loading 1000 logs
+Thread[3]: loading log...
+finish loading 1000 logs
+running trace...
+args has len: 35709000
+args has len: 1000
+args has len: 1000
+args has len: 1000
+done in 1018736 ns, thread: 2, pass: 5
+total run time is 7163957 ns, thread: 2, pass: 5
+average read latency is 901 ns, thread: 2, pass: 5
+average write latency is 1045 ns, thread: 2, pass: 5
+done in 1312782 ns, thread: 3, pass: 5
+total run time is 615608287 ns, thread: 3, pass: 5
+average read latency is 1147 ns, thread: 3, pass: 5
+average write latency is 1267 ns, thread: 3, pass: 5
+done in 1849092 ns, thread: 1, pass: 5
+total run time is 77061687371 ns, thread: 1, pass: 5
+average write latency is 1694 ns, thread: 1, pass: 5
+done in 30975551374 ns, thread: 0, pass: 5
+total run time is 74990031871 ns, thread: 0, pass: 5
+average read latency is 1040 ns, thread: 0, pass: 5
+average write latency is 411 ns, thread: 0, pass: 5
+Pass[6] Node[1]: loading log...
+Thread[0]: loading log...
+finish loading 31316000 logs
+Thread[1]: loading log...
+finish loading 1000 logs
+Thread[2]: loading log...
+finish loading 1000 logs
+Thread[3]: loading log...
+finish loading 1000 logs
+running trace...
+args has len: 31316000
+args has len: 1000
+args has len: 1000
+args has len: 1000
+done in 857302 ns, thread: 2, pass: 6
+total run time is 8021259 ns, thread: 2, pass: 6
+average read latency is 676 ns, thread: 2, pass: 6
+average write latency is 948 ns, thread: 2, pass: 6
+done in 1617623 ns, thread: 1, pass: 6
+total run time is 77063304994 ns, thread: 1, pass: 6
+average write latency is 1459 ns, thread: 1, pass: 6
+done in 358966 ns, thread: 3, pass: 6
+total run time is 615967253 ns, thread: 3, pass: 6
+average read latency is 264 ns, thread: 3, pass: 6
+average write latency is 362 ns, thread: 3, pass: 6
+done in 24861489621 ns, thread: 0, pass: 6
+total run time is 99851521492 ns, thread: 0, pass: 6
+average read latency is 926 ns, thread: 0, pass: 6
+average write latency is 401 ns, thread: 0, pass: 6
+Pass[7] Node[1]: loading log...
+Thread[0]: loading log...
+finish loading 30125000 logs
+Thread[1]: loading log...
+finish loading 1000 logs
+Thread[2]: loading log...
+finish loading 1000 logs
+Thread[3]: loading log...
+finish loading 1000 logs
+running trace...
+args has len: 30125000
+args has len: 1000
+args has len: 1000
+args has len: 1000
+done in 1203828 ns, thread: 2, pass: 7
+total run time is 9225087 ns, thread: 2, pass: 7
+average read latency is 1122 ns, thread: 2, pass: 7
+average write latency is 1188 ns, thread: 2, pass: 7
+done in 1988179 ns, thread: 3, pass: 7
+total run time is 617955432 ns, thread: 3, pass: 7
+average read latency is 1605 ns, thread: 3, pass: 7
+average write latency is 2026 ns, thread: 3, pass: 7
+done in 1977082 ns, thread: 1, pass: 7
+total run time is 77065282076 ns, thread: 1, pass: 7
+average write latency is 1817 ns, thread: 1, pass: 7
+done in 18887823085 ns, thread: 0, pass: 7
+total run time is 118739344577 ns, thread: 0, pass: 7
+average read latency is 677 ns, thread: 0, pass: 7
+average write latency is 350 ns, thread: 0, pass: 7
+Pass[8] Node[1]: loading log...
+Thread[0]: loading log...
+finish loading 21039000 logs
+Thread[1]: loading log...
+finish loading 1000 logs
+Thread[2]: loading log...
+finish loading 1000 logs
+Thread[3]: loading log...
+finish loading 1000 logs
+running trace...
+args has len: 21039000
+args has len: 1000
+args has len: 1000
+args has len: 1000
+done in 1357800 ns, thread: 2, pass: 8
+total run time is 10582887 ns, thread: 2, pass: 8
+average read latency is 1922 ns, thread: 2, pass: 8
+average write latency is 700 ns, thread: 2, pass: 8
+done in 1765220 ns, thread: 3, pass: 8
+total run time is 619720652 ns, thread: 3, pass: 8
+average read latency is 1794 ns, thread: 3, pass: 8
+average write latency is 1436 ns, thread: 3, pass: 8
+done in 1803833 ns, thread: 1, pass: 8
+total run time is 77067085909 ns, thread: 1, pass: 8
+average write latency is 1700 ns, thread: 1, pass: 8
+done in 26990712054 ns, thread: 0, pass: 8
+total run time is 145730056631 ns, thread: 0, pass: 8
+average read latency is 1496 ns, thread: 0, pass: 8
+average write latency is 553 ns, thread: 0, pass: 8
+Pass[9] Node[1]: loading log...
+Thread[0]: loading log...
+finish loading 37093000 logs
+Thread[1]: loading log...
+finish loading 1000 logs
+Thread[2]: loading log...
+finish loading 1000 logs
+Thread[3]: loading log...
+finish loading 1000 logs
+running trace...
+args has len: 37093000
+args has len: 1000
+args has len: 1000
+args has len: 1000
+done in 1074185 ns, thread: 2, pass: 9
+total run time is 11657072 ns, thread: 2, pass: 9
+average read latency is 963 ns, thread: 2, pass: 9
+average write latency is 1090 ns, thread: 2, pass: 9
+done in 1848072 ns, thread: 3, pass: 9
+total run time is 621568724 ns, thread: 3, pass: 9
+average read latency is 1509 ns, thread: 3, pass: 9
+average write latency is 1850 ns, thread: 3, pass: 9
+done in 1927312 ns, thread: 1, pass: 9
+total run time is 77069013221 ns, thread: 1, pass: 9
+average write latency is 1770 ns, thread: 1, pass: 9
+done in 67852341137 ns, thread: 0, pass: 9
+total run time is 213582397768 ns, thread: 0, pass: 9
+average read latency is 1983 ns, thread: 0, pass: 9
+average write latency is 874 ns, thread: 0, pass: 9
+Pass[10] Node[1]: loading log...
+Thread[0]: loading log...
+finish loading 37319000 logs
+Thread[1]: loading log...
+finish loading 1000 logs
+Thread[2]: loading log...
+finish loading 1000 logs
+Thread[3]: loading log...
+finish loading 1000 logs
+running trace...
+args has len: 37319000
+args has len: 1000
+args has len: 1000
+args has len: 1000
+done in 1183173 ns, thread: 2, pass: 10
+total run time is 12840245 ns, thread: 2, pass: 10
+average read latency is 1075 ns, thread: 2, pass: 10
+average write latency is 1194 ns, thread: 2, pass: 10
+done in 2049554 ns, thread: 3, pass: 10
+total run time is 623618278 ns, thread: 3, pass: 10
+average read latency is 1704 ns, thread: 3, pass: 10
+average write latency is 1954 ns, thread: 3, pass: 10
+done in 2089390 ns, thread: 1, pass: 10
+total run time is 77071102611 ns, thread: 1, pass: 10
+average write latency is 1931 ns, thread: 1, pass: 10
+done in 62279114552 ns, thread: 0, pass: 10
+total run time is 275861512320 ns, thread: 0, pass: 10
+average read latency is 1771 ns, thread: 0, pass: 10
+average write latency is 886 ns, thread: 0, pass: 10
+Pass[11] Node[1]: loading log...
+Thread[0]: loading log...
+finish loading 32774000 logs
+Thread[1]: loading log...
+finish loading 1000 logs
+Thread[2]: loading log...
+finish loading 1000 logs
+Thread[3]: loading log...
+finish loading 1000 logs
+running trace...
+args has len: 32774000
+args has len: 1000
+args has len: 1000
+args has len: 1000
+done in 1072996 ns, thread: 2, pass: 11
+total run time is 13913241 ns, thread: 2, pass: 11
+average read latency is 987 ns, thread: 2, pass: 11
+average write latency is 1021 ns, thread: 2, pass: 11
+done in 1018091 ns, thread: 1, pass: 11
+total run time is 77072120702 ns, thread: 1, pass: 11
+average write latency is 956 ns, thread: 1, pass: 11
+done in 1632794 ns, thread: 3, pass: 11
+total run time is 625251072 ns, thread: 3, pass: 11
+average read latency is 1166 ns, thread: 3, pass: 11
+average write latency is 1399 ns, thread: 3, pass: 11
+done in 52059501104 ns, thread: 0, pass: 11
+total run time is 327921013424 ns, thread: 0, pass: 11
+average read latency is 1644 ns, thread: 0, pass: 11
+average write latency is 890 ns, thread: 0, pass: 11
+Pass[12] Node[1]: loading log...
+Thread[0]: loading log...
+finish loading 6267000 logs
+Thread[1]: loading log...
+finish loading 1000 logs
+Thread[2]: loading log...
+finish loading 1000 logs
+Thread[3]: loading log...
+finish loading 1000 logs
+running trace...
+args has len: 6267000
+args has len: 1000
+args has len: 1000
+args has len: 1000
+done in 993259 ns, thread: 2, pass: 12
+total run time is 14906500 ns, thread: 2, pass: 12
+average read latency is 897 ns, thread: 2, pass: 12
+average write latency is 986 ns, thread: 2, pass: 12
+done in 1593952 ns, thread: 3, pass: 12
+total run time is 626845024 ns, thread: 3, pass: 12
+average read latency is 1307 ns, thread: 3, pass: 12
+average write latency is 1574 ns, thread: 3, pass: 12
+done in 1816120 ns, thread: 1, pass: 12
+total run time is 77073936822 ns, thread: 1, pass: 12
+average write latency is 1653 ns, thread: 1, pass: 12
+done in 10306709081 ns, thread: 0, pass: 12
+total run time is 338227722505 ns, thread: 0, pass: 12
+average read latency is 1766 ns, thread: 0, pass: 12
+average write latency is 580 ns, thread: 0, pass: 12
+Pass[13] Node[1]: loading log...
+Thread[0]: loading log...
+finish loading 20495000 logs
+Thread[1]: loading log...
+finish loading 1000 logs
+Thread[2]: loading log...
+finish loading 1000 logs
+Thread[3]: loading log...
+finish loading 1000 logs
+running trace...
+args has len: 20495000
+args has len: 1000
+args has len: 1000
+args has len: 1000
+done in 982123 ns, thread: 2, pass: 13
+total run time is 15888623 ns, thread: 2, pass: 13
+average read latency is 880 ns, thread: 2, pass: 13
+average write latency is 984 ns, thread: 2, pass: 13
+done in 1049991 ns, thread: 1, pass: 13
+total run time is 77074986813 ns, thread: 1, pass: 13
+average write latency is 987 ns, thread: 1, pass: 13
+done in 1538500 ns, thread: 3, pass: 13
+total run time is 628383524 ns, thread: 3, pass: 13
+average read latency is 1214 ns, thread: 3, pass: 13
+average write latency is 1511 ns, thread: 3, pass: 13
+done in 33896528421 ns, thread: 0, pass: 13
+total run time is 372124250926 ns, thread: 0, pass: 13
+average read latency is 2114 ns, thread: 0, pass: 13
+average write latency is 603 ns, thread: 0, pass: 13
+Pass[14] Node[1]: loading log...
+Thread[0]: loading log...
+finish loading 21104000 logs
+Thread[1]: loading log...
+finish loading 1000 logs
+Thread[2]: loading log...
+finish loading 1000 logs
+Thread[3]: loading log...
+finish loading 1000 logs
+running trace...
+args has len: 21104000
+args has len: 1000
+args has len: 1000
+args has len: 1000
+done in 1458453 ns, thread: 1, pass: 14
+total run time is 77076445266 ns, thread: 1, pass: 14
+average write latency is 1336 ns, thread: 1, pass: 14
+done in 1141839 ns, thread: 2, pass: 14
+total run time is 17030462 ns, thread: 2, pass: 14
+average read latency is 967 ns, thread: 2, pass: 14
+average write latency is 1135 ns, thread: 2, pass: 14
+done in 1345623 ns, thread: 3, pass: 14
+total run time is 629729147 ns, thread: 3, pass: 14
+average read latency is 1071 ns, thread: 3, pass: 14
+average write latency is 1270 ns, thread: 3, pass: 14
+done in 33144099766 ns, thread: 0, pass: 14
+total run time is 405268350692 ns, thread: 0, pass: 14
+average read latency is 1992 ns, thread: 0, pass: 14
+average write latency is 614 ns, thread: 0, pass: 14
+Pass[15] Node[1]: loading log...
+Thread[0]: loading log...
+finish loading 17957000 logs
+Thread[1]: loading log...
+finish loading 1000 logs
+Thread[2]: loading log...
+finish loading 1000 logs
+Thread[3]: loading log...
+finish loading 1000 logs
+running trace...
+args has len: 17957000
+args has len: 1000
+args has len: 1000
+args has len: 1000
+done in 977581 ns, thread: 2, pass: 15
+total run time is 18008043 ns, thread: 2, pass: 15
+average read latency is 874 ns, thread: 2, pass: 15
+average write latency is 989 ns, thread: 2, pass: 15
+done in 1021435 ns, thread: 1, pass: 15
+total run time is 77077466701 ns, thread: 1, pass: 15
+average write latency is 970 ns, thread: 1, pass: 15
+done in 1801150 ns, thread: 3, pass: 15
+total run time is 631530297 ns, thread: 3, pass: 15
+average read latency is 1463 ns, thread: 3, pass: 15
+average write latency is 1794 ns, thread: 3, pass: 15
+done in 26982406826 ns, thread: 0, pass: 15
+total run time is 432250757518 ns, thread: 0, pass: 15
+average read latency is 1840 ns, thread: 0, pass: 15
+average write latency is 602 ns, thread: 0, pass: 15
+Pass[16] Node[1]: loading log...
+Thread[0]: loading log...
+finish loading 10138000 logs
+Thread[1]: loading log...
+finish loading 1000 logs
+Thread[2]: loading log...
+finish loading 1000 logs
+Thread[3]: loading log...
+finish loading 1000 logs
+running trace...
+args has len: 10138000
+args has len: 1000
+args has len: 1000
+args has len: 1000
+done in 1101105 ns, thread: 2, pass: 16
+total run time is 19109148 ns, thread: 2, pass: 16
+average read latency is 983 ns, thread: 2, pass: 16
+average write latency is 1119 ns, thread: 2, pass: 16
+done in 1398353 ns, thread: 3, pass: 16
+total run time is 632928650 ns, thread: 3, pass: 16
+average read latency is 1223 ns, thread: 3, pass: 16
+average write latency is 1330 ns, thread: 3, pass: 16
+done in 1857971 ns, thread: 1, pass: 16
+total run time is 77079324672 ns, thread: 1, pass: 16
+average write latency is 1697 ns, thread: 1, pass: 16
+done in 16741875675 ns, thread: 0, pass: 16
+total run time is 448992633193 ns, thread: 0, pass: 16
+average read latency is 1878 ns, thread: 0, pass: 16
+average write latency is 635 ns, thread: 0, pass: 16
+Pass[17] Node[1]: loading log...
+Thread[0]: loading log...
+finish loading 26609000 logs
+Thread[1]: loading log...
+finish loading 1000 logs
+Thread[2]: loading log...
+finish loading 1000 logs
+Thread[3]: loading log...
+finish loading 1000 logs
+running trace...
+args has len: 26609000
+args has len: 1000
+args has len: 1000
+args has len: 1000
+done in 826970 ns, thread: 2, pass: 17
+total run time is 19936118 ns, thread: 2, pass: 17
+average read latency is 691 ns, thread: 2, pass: 17
+average write latency is 866 ns, thread: 2, pass: 17
+done in 1372787 ns, thread: 3, pass: 17
+total run time is 634301437 ns, thread: 3, pass: 17
+average read latency is 1029 ns, thread: 3, pass: 17
+average write latency is 1278 ns, thread: 3, pass: 17
+done in 1663245 ns, thread: 1, pass: 17
+total run time is 77080987917 ns, thread: 1, pass: 17
+average write latency is 1497 ns, thread: 1, pass: 17
+done in 24345621751 ns, thread: 0, pass: 17
+total run time is 473338254944 ns, thread: 0, pass: 17
+average read latency is 1056 ns, thread: 0, pass: 17
+average write latency is 445 ns, thread: 0, pass: 17
+Pass[18] Node[1]: loading log...
+Thread[0]: loading log...
+finish loading 32422000 logs
+Thread[1]: loading log...
+finish loading 1000 logs
+Thread[2]: loading log...
+finish loading 1000 logs
+Thread[3]: loading log...
+finish loading 1000 logs
+running trace...
+args has len: 32422000
+args has len: 1000
+args has len: 1000
+args has len: 1000
+done in 1093592 ns, thread: 3, pass: 18
+total run time is 635395029 ns, thread: 3, pass: 18
+average read latency is 1015 ns, thread: 3, pass: 18
+average write latency is 1013 ns, thread: 3, pass: 18
+done in 1521836 ns, thread: 2, pass: 18
+total run time is 21457954 ns, thread: 2, pass: 18
+average read latency is 1320 ns, thread: 2, pass: 18
+average write latency is 1512 ns, thread: 2, pass: 18
+done in 1886480 ns, thread: 1, pass: 18
+total run time is 77082874397 ns, thread: 1, pass: 18
+average write latency is 1729 ns, thread: 1, pass: 18
+done in 25977440157 ns, thread: 0, pass: 18
+total run time is 499315695101 ns, thread: 0, pass: 18
+average read latency is 933 ns, thread: 0, pass: 18
+average write latency is 405 ns, thread: 0, pass: 18
+Pass[19] Node[1]: loading log...
+Thread[0]: loading log...
+finish loading 10722000 logs
+Thread[1]: loading log...
+finish loading 24766000 logs
+Thread[2]: loading log...
+finish loading 1000 logs
+Thread[3]: loading log...
+finish loading 1000 logs
+running trace...
+args has len: 10722000
+args has len: 24766000
+args has len: 1000
+args has len: 1000
+done in 1924737 ns, thread: 2, pass: 19
+total run time is 23382691 ns, thread: 2, pass: 19
+average read latency is 1604 ns, thread: 2, pass: 19
+average write latency is 1966 ns, thread: 2, pass: 19
+done in 1929217 ns, thread: 3, pass: 19
+total run time is 637324246 ns, thread: 3, pass: 19
+average read latency is 1529 ns, thread: 3, pass: 19
+average write latency is 1922 ns, thread: 3, pass: 19
+done in 14245590924 ns, thread: 0, pass: 19
+total run time is 513561286025 ns, thread: 0, pass: 19
+average read latency is 1659 ns, thread: 0, pass: 19
+average write latency is 606 ns, thread: 0, pass: 19
+done in 23771536679 ns, thread: 1, pass: 19
+total run time is 100854411076 ns, thread: 1, pass: 19
+average read latency is 1184 ns, thread: 1, pass: 19
+average write latency is 463 ns, thread: 1, pass: 19
+Pass[20] Node[1]: loading log...
+Thread[0]: loading log...
+finish loading 1000 logs
+Thread[1]: loading log...
+finish loading 36165000 logs
+Thread[2]: loading log...
+finish loading 1000 logs
+Thread[3]: loading log...
+finish loading 1000 logs
+running trace...
+args has len: 1000
+args has len: 36165000
+args has len: 1000
+args has len: 1000
+done in 1960610 ns, thread: 2, pass: 20
+total run time is 25343301 ns, thread: 2, pass: 20
+average read latency is 1564 ns, thread: 2, pass: 20
+average write latency is 2051 ns, thread: 2, pass: 20
+done in 1997639 ns, thread: 3, pass: 20
+total run time is 639321885 ns, thread: 3, pass: 20
+average read latency is 1603 ns, thread: 3, pass: 20
+average write latency is 1943 ns, thread: 3, pass: 20
+done in 2494058 ns, thread: 0, pass: 20
+total run time is 513563780083 ns, thread: 0, pass: 20
+average read latency is 7485 ns, thread: 0, pass: 20
+average write latency is 2128 ns, thread: 0, pass: 20
+done in 33519742928 ns, thread: 1, pass: 20
+total run time is 134374154004 ns, thread: 1, pass: 20
+average read latency is 1117 ns, thread: 1, pass: 20
+average write latency is 441 ns, thread: 1, pass: 20
+Pass[21] Node[1]: loading log...
+Thread[0]: loading log...
+finish loading 1000 logs
+Thread[1]: loading log...
+finish loading 36416000 logs
+Thread[2]: loading log...
+finish loading 1000 logs
+Thread[3]: loading log...
+finish loading 1000 logs
+running trace...
+args has len: 1000
+args has len: 36416000
+args has len: 1000
+args has len: 1000
+done in 1394726 ns, thread: 3, pass: 21
+total run time is 640716611 ns, thread: 3, pass: 21
+average read latency is 1211 ns, thread: 3, pass: 21
+average write latency is 1317 ns, thread: 3, pass: 21
+done in 1824499 ns, thread: 2, pass: 21
+total run time is 27167800 ns, thread: 2, pass: 21
+average read latency is 1479 ns, thread: 2, pass: 21
+average write latency is 1872 ns, thread: 2, pass: 21
+done in 3004030 ns, thread: 0, pass: 21
+total run time is 513566784113 ns, thread: 0, pass: 21
+average read latency is 2892 ns, thread: 0, pass: 21
+average write latency is 2291 ns, thread: 0, pass: 21
+done in 34946480298 ns, thread: 1, pass: 21
+total run time is 169320634302 ns, thread: 1, pass: 21
+average read latency is 1150 ns, thread: 1, pass: 21
+average write latency is 457 ns, thread: 1, pass: 21
+Pass[22] Node[1]: loading log...
+Thread[0]: loading log...
+finish loading 1000 logs
+Thread[1]: loading log...
+finish loading 36471000 logs
+Thread[2]: loading log...
+finish loading 1000 logs
+Thread[3]: loading log...
+finish loading 1000 logs
+running trace...
+args has len: 1000
+args has len: 36471000
+args has len: 1000
+args has len: 1000
+done in 961133 ns, thread: 3, pass: 22
+total run time is 641677744 ns, thread: 3, pass: 22
+average read latency is 822 ns, thread: 3, pass: 22
+average write latency is 945 ns, thread: 3, pass: 22
+done in 1767614 ns, thread: 2, pass: 22
+total run time is 28935414 ns, thread: 2, pass: 22
+average read latency is 1466 ns, thread: 2, pass: 22
+average write latency is 1767 ns, thread: 2, pass: 22
+done in 2329834 ns, thread: 0, pass: 22
+total run time is 513569113947 ns, thread: 0, pass: 22
+average read latency is 3042 ns, thread: 0, pass: 22
+average write latency is 1892 ns, thread: 0, pass: 22
+done in 30532647122 ns, thread: 1, pass: 22
+total run time is 199853281424 ns, thread: 1, pass: 22
+average read latency is 987 ns, thread: 1, pass: 22
+average write latency is 429 ns, thread: 1, pass: 22
+Pass[23] Node[1]: loading log...
+Thread[0]: loading log...
+finish loading 1000 logs
+Thread[1]: loading log...
+finish loading 35304000 logs
+Thread[2]: loading log...
+finish loading 1000 logs
+Thread[3]: loading log...
+finish loading 1000 logs
+running trace...
+args has len: 1000
+args has len: 35304000
+args has len: 1000
+args has len: 1000
+done in 1060315 ns, thread: 3, pass: 23
+total run time is 642738059 ns, thread: 3, pass: 23
+average read latency is 924 ns, thread: 3, pass: 23
+average write latency is 1036 ns, thread: 3, pass: 23
+done in 1805114 ns, thread: 2, pass: 23
+total run time is 30740528 ns, thread: 2, pass: 23
+average read latency is 1608 ns, thread: 2, pass: 23
+average write latency is 1701 ns, thread: 2, pass: 23
+done in 2225285 ns, thread: 0, pass: 23
+total run time is 513571339232 ns, thread: 0, pass: 23
+average read latency is 2101 ns, thread: 0, pass: 23
+average write latency is 2068 ns, thread: 0, pass: 23
+done in 29540899125 ns, thread: 1, pass: 23
+total run time is 229394180549 ns, thread: 1, pass: 23
+average read latency is 1000 ns, thread: 1, pass: 23
+average write latency is 416 ns, thread: 1, pass: 23
+Pass[24] Node[1]: loading log...
+Thread[0]: loading log...
+finish loading 1000 logs
+Thread[1]: loading log...
+finish loading 32638000 logs
+Thread[2]: loading log...
+finish loading 1000 logs
+Thread[3]: loading log...
+finish loading 1000 logs
+running trace...
+args has len: 1000
+args has len: 32638000
+args has len: 1000
+args has len: 1000
+done in 742150 ns, thread: 3, pass: 24
+total run time is 643480209 ns, thread: 3, pass: 24
+average read latency is 584 ns, thread: 3, pass: 24
+average write latency is 761 ns, thread: 3, pass: 24
+done in 1520420 ns, thread: 2, pass: 24
+total run time is 32260948 ns, thread: 2, pass: 24
+average read latency is 1255 ns, thread: 2, pass: 24
+average write latency is 1486 ns, thread: 2, pass: 24
+done in 2843266 ns, thread: 0, pass: 24
+total run time is 513574182498 ns, thread: 0, pass: 24
+average read latency is 2496 ns, thread: 0, pass: 24
+average write latency is 1670 ns, thread: 0, pass: 24
+done in 24583415652 ns, thread: 1, pass: 24
+total run time is 253977596201 ns, thread: 1, pass: 24
+average read latency is 862 ns, thread: 1, pass: 24
+average write latency is 399 ns, thread: 1, pass: 24
+Pass[25] Node[1]: loading log...
+Thread[0]: loading log...
+finish loading 1000 logs
+Thread[1]: loading log...
+finish loading 36210000 logs
+Thread[2]: loading log...
+finish loading 1000 logs
+Thread[3]: loading log...
+finish loading 1000 logs
+running trace...
+args has len: 1000
+args has len: 36210000
+args has len: 1000
+args has len: 1000
+done in 769277 ns, thread: 3, pass: 25
+total run time is 644249486 ns, thread: 3, pass: 25
+average read latency is 655 ns, thread: 3, pass: 25
+average write latency is 747 ns, thread: 3, pass: 25
+done in 1072059 ns, thread: 2, pass: 25
+total run time is 33333007 ns, thread: 2, pass: 25
+average read latency is 907 ns, thread: 2, pass: 25
+average write latency is 1084 ns, thread: 2, pass: 25
+done in 5731161 ns, thread: 0, pass: 25
+total run time is 513579913659 ns, thread: 0, pass: 25
+average read latency is 2533 ns, thread: 0, pass: 25
+average write latency is 1518 ns, thread: 0, pass: 25
+done in 30189936055 ns, thread: 1, pass: 25
+total run time is 284167532256 ns, thread: 1, pass: 25
+average read latency is 993 ns, thread: 1, pass: 25
+average write latency is 420 ns, thread: 1, pass: 25
+Pass[26] Node[1]: loading log...
+Thread[0]: loading log...
+finish loading 1000 logs
+Thread[1]: loading log...
+finish loading 34630000 logs
+Thread[2]: loading log...
+finish loading 1000 logs
+Thread[3]: loading log...
+finish loading 1000 logs
+running trace...
+args has len: 1000
+args has len: 34630000
+args has len: 1000
+args has len: 1000
+done in 871847 ns, thread: 3, pass: 26
+total run time is 645121333 ns, thread: 3, pass: 26
+average read latency is 686 ns, thread: 3, pass: 26
+average write latency is 894 ns, thread: 3, pass: 26
+done in 1473778 ns, thread: 2, pass: 26
+total run time is 34806785 ns, thread: 2, pass: 26
+average read latency is 1196 ns, thread: 2, pass: 26
+average write latency is 1454 ns, thread: 2, pass: 26
+done in 11452952 ns, thread: 0, pass: 26
+total run time is 513591366611 ns, thread: 0, pass: 26
+average read latency is 1817 ns, thread: 0, pass: 26
+average write latency is 1855 ns, thread: 0, pass: 26
+done in 25031813756 ns, thread: 1, pass: 26
+total run time is 309199346012 ns, thread: 1, pass: 26
+average read latency is 827 ns, thread: 1, pass: 26
+average write latency is 391 ns, thread: 1, pass: 26
+Pass[27] Node[1]: loading log...
+Thread[0]: loading log...
+finish loading 1000 logs
+Thread[1]: loading log...
+finish loading 34261000 logs
+Thread[2]: loading log...
+finish loading 1000 logs
+Thread[3]: loading log...
+finish loading 1000 logs
+running trace...
+args has len: 1000
+args has len: 34261000
+args has len: 1000
+args has len: 1000
+done in 1588096 ns, thread: 2, pass: 27
+total run time is 36394881 ns, thread: 2, pass: 27
+average read latency is 1305 ns, thread: 2, pass: 27
+average write latency is 1622 ns, thread: 2, pass: 27
+done in 1638351 ns, thread: 3, pass: 27
+total run time is 646759684 ns, thread: 3, pass: 27
+average read latency is 1329 ns, thread: 3, pass: 27
+average write latency is 1584 ns, thread: 3, pass: 27
+done in 2235916 ns, thread: 0, pass: 27
+total run time is 513593602527 ns, thread: 0, pass: 27
+average read latency is 3125 ns, thread: 0, pass: 27
+average write latency is 1868 ns, thread: 0, pass: 27
+done in 24420299702 ns, thread: 1, pass: 27
+total run time is 333619645714 ns, thread: 1, pass: 27
+average read latency is 812 ns, thread: 1, pass: 27
+average write latency is 383 ns, thread: 1, pass: 27
+Pass[28] Node[1]: loading log...
+Thread[0]: loading log...
+finish loading 1000 logs
+Thread[1]: loading log...
+finish loading 34949000 logs
+Thread[2]: loading log...
+finish loading 1000 logs
+Thread[3]: loading log...
+finish loading 1000 logs
+running trace...
+args has len: 1000
+args has len: 34949000
+args has len: 1000
+args has len: 1000
+done in 1697866 ns, thread: 2, pass: 28
+total run time is 38092747 ns, thread: 2, pass: 28
+average read latency is 1399 ns, thread: 2, pass: 28
+average write latency is 1600 ns, thread: 2, pass: 28
+done in 1782835 ns, thread: 3, pass: 28
+total run time is 648542519 ns, thread: 3, pass: 28
+average read latency is 2350 ns, thread: 3, pass: 28
+average write latency is 1018 ns, thread: 3, pass: 28
+done in 2975736 ns, thread: 0, pass: 28
+total run time is 513596578263 ns, thread: 0, pass: 28
+average read latency is 2205 ns, thread: 0, pass: 28
+average write latency is 2817 ns, thread: 0, pass: 28
+done in 22376052743 ns, thread: 1, pass: 28
+total run time is 355995698457 ns, thread: 1, pass: 28
+average read latency is 721 ns, thread: 1, pass: 28
+average write latency is 361 ns, thread: 1, pass: 28
+Pass[29] Node[1]: loading log...
+Thread[0]: loading log...
+finish loading 1000 logs
+Thread[1]: loading log...
+finish loading 35638000 logs
+Thread[2]: loading log...
+finish loading 1000 logs
+Thread[3]: loading log...
+finish loading 1000 logs
+running trace...
+args has len: 1000
+args has len: 35638000
+args has len: 1000
+args has len: 1000
+done in 1795309 ns, thread: 2, pass: 29
+total run time is 39888056 ns, thread: 2, pass: 29
+average read latency is 1479 ns, thread: 2, pass: 29
+average write latency is 1836 ns, thread: 2, pass: 29
+done in 1977382 ns, thread: 3, pass: 29
+total run time is 650519901 ns, thread: 3, pass: 29
+average read latency is 1613 ns, thread: 3, pass: 29
+average write latency is 1932 ns, thread: 3, pass: 29
+done in 562358095 ns, thread: 0, pass: 29
+total run time is 514158936358 ns, thread: 0, pass: 29
+average read latency is 2663 ns, thread: 0, pass: 29
+average write latency is 2194 ns, thread: 0, pass: 29
+done in 27788213069 ns, thread: 1, pass: 29
+total run time is 383783911526 ns, thread: 1, pass: 29
+average read latency is 915 ns, thread: 1, pass: 29
+average write latency is 402 ns, thread: 1, pass: 29
+Pass[30] Node[1]: loading log...
+Thread[0]: loading log...
+finish loading 1000 logs
+Thread[1]: loading log...
+finish loading 35065000 logs
+Thread[2]: loading log...
+finish loading 1000 logs
+Thread[3]: loading log...
+finish loading 1000 logs
+running trace...
+args has len: 1000
+args has len: 35065000
+args has len: 1000
+args has len: 1000
+done in 2577283 ns, thread: 0, pass: 30
+total run time is 514161513641 ns, thread: 0, pass: 30
+average read latency is 2284 ns, thread: 0, pass: 30
+average write latency is 1454 ns, thread: 0, pass: 30
+done in 1357704 ns, thread: 2, pass: 30
+total run time is 41245760 ns, thread: 2, pass: 30
+average read latency is 1139 ns, thread: 2, pass: 30
+average write latency is 1341 ns, thread: 2, pass: 30
+done in 1603419 ns, thread: 3, pass: 30
+total run time is 652123320 ns, thread: 3, pass: 30
+average read latency is 1257 ns, thread: 3, pass: 30
+average write latency is 1525 ns, thread: 3, pass: 30
+done in 24274744694 ns, thread: 1, pass: 30
+total run time is 408058656220 ns, thread: 1, pass: 30
+average read latency is 789 ns, thread: 1, pass: 30
+average write latency is 378 ns, thread: 1, pass: 30
+Pass[31] Node[1]: loading log...
+Thread[0]: loading log...
+finish loading 1000 logs
+Thread[1]: loading log...
+finish loading 16024000 logs
+Thread[2]: loading log...
+finish loading 18814000 logs
+Thread[3]: loading log...
+finish loading 1000 logs
+running trace...
+args has len: 1000
+args has len: 16024000
+args has len: 18814000
+args has len: 1000
+done in 2240350 ns, thread: 3, pass: 31
+total run time is 654363670 ns, thread: 3, pass: 31
+average read latency is 1857 ns, thread: 3, pass: 31
+average write latency is 2190 ns, thread: 3, pass: 31
+done in 3748409 ns, thread: 0, pass: 31
+total run time is 514165262050 ns, thread: 0, pass: 31
+average read latency is 2765 ns, thread: 0, pass: 31
+average write latency is 2632 ns, thread: 0, pass: 31
+done in 16132747374 ns, thread: 1, pass: 31
+total run time is 424191403594 ns, thread: 1, pass: 31
+average read latency is 1166 ns, thread: 1, pass: 31
+average write latency is 535 ns, thread: 1, pass: 31
+done in 17953691166 ns, thread: 2, pass: 31
+total run time is 17994936926 ns, thread: 2, pass: 31
+average read latency is 1125 ns, thread: 2, pass: 31
+average write latency is 518 ns, thread: 2, pass: 31
+Pass[32] Node[1]: loading log...
+Thread[0]: loading log...
+finish loading 1000 logs
+Thread[1]: loading log...
+finish loading 1000 logs
+Thread[2]: loading log...
+finish loading 35834000 logs
+Thread[3]: loading log...
+finish loading 1000 logs
+running trace...
+args has len: 1000
+args has len: 1000
+args has len: 35834000
+args has len: 1000
+done in 1283795 ns, thread: 3, pass: 32
+total run time is 655647465 ns, thread: 3, pass: 32
+average read latency is 1089 ns, thread: 3, pass: 32
+average write latency is 1273 ns, thread: 3, pass: 32
+done in 1769872 ns, thread: 0, pass: 32
+total run time is 514167031922 ns, thread: 0, pass: 32
+average read latency is 1957 ns, thread: 0, pass: 32
+average write latency is 1084 ns, thread: 0, pass: 32
+done in 2166569 ns, thread: 1, pass: 32
+total run time is 424193570163 ns, thread: 1, pass: 32
+average read latency is 2818 ns, thread: 1, pass: 32
+average write latency is 1944 ns, thread: 1, pass: 32
+done in 24114290511 ns, thread: 2, pass: 32
+total run time is 42109227437 ns, thread: 2, pass: 32
+average read latency is 760 ns, thread: 2, pass: 32
+average write latency is 370 ns, thread: 2, pass: 32
+Pass[33] Node[1]: loading log...
+Thread[0]: loading log...
+finish loading 1000 logs
+Thread[1]: loading log...
+finish loading 1000 logs
+Thread[2]: loading log...
+finish loading 35409000 logs
+Thread[3]: loading log...
+finish loading 1000 logs
+running trace...
+args has len: 1000
+args has len: 1000
+args has len: 35409000
+args has len: 1000
+done in 1809168 ns, thread: 3, pass: 33
+total run time is 657456633 ns, thread: 3, pass: 33
+average read latency is 1520 ns, thread: 3, pass: 33
+average write latency is 1753 ns, thread: 3, pass: 33
+done in 2149993 ns, thread: 1, pass: 33
+total run time is 424195720156 ns, thread: 1, pass: 33
+average read latency is 2296 ns, thread: 1, pass: 33
+average write latency is 1941 ns, thread: 1, pass: 33
+done in 2836328 ns, thread: 0, pass: 33
+total run time is 514169868250 ns, thread: 0, pass: 33
+average read latency is 2581 ns, thread: 0, pass: 33
+average write latency is 1664 ns, thread: 0, pass: 33
+done in 23548382950 ns, thread: 2, pass: 33
+total run time is 65657610387 ns, thread: 2, pass: 33
+average read latency is 764 ns, thread: 2, pass: 33
+average write latency is 367 ns, thread: 2, pass: 33
+Pass[34] Node[1]: loading log...
+Thread[0]: loading log...
+finish loading 1000 logs
+Thread[1]: loading log...
+finish loading 1000 logs
+Thread[2]: loading log...
+finish loading 35560000 logs
+Thread[3]: loading log...
+finish loading 1000 logs
+running trace...
+args has len: 1000
+args has len: 1000
+args has len: 35560000
+args has len: 1000
+done in 2037959 ns, thread: 3, pass: 34
+total run time is 659494592 ns, thread: 3, pass: 34
+average read latency is 1622 ns, thread: 3, pass: 34
+average write latency is 1991 ns, thread: 3, pass: 34
+done in 2422055 ns, thread: 1, pass: 34
+total run time is 424198142211 ns, thread: 1, pass: 34
+average read latency is 1760 ns, thread: 1, pass: 34
+average write latency is 2090 ns, thread: 1, pass: 34
+done in 2614616 ns, thread: 0, pass: 34
+total run time is 514172482866 ns, thread: 0, pass: 34
+average read latency is 2846 ns, thread: 0, pass: 34
+average write latency is 1959 ns, thread: 0, pass: 34
+done in 43719687562 ns, thread: 2, pass: 34
+total run time is 109377297949 ns, thread: 2, pass: 34
+average read latency is 1518 ns, thread: 2, pass: 34
+average write latency is 499 ns, thread: 2, pass: 34
+Pass[35] Node[1]: loading log...
+Thread[0]: loading log...
+finish loading 1000 logs
+Thread[1]: loading log...
+finish loading 1000 logs
+Thread[2]: loading log...
+finish loading 32459000 logs
+Thread[3]: loading log...
+finish loading 1000 logs
+running trace...
+args has len: 1000
+args has len: 1000
+args has len: 32459000
+args has len: 1000
+done in 1822508 ns, thread: 1, pass: 35
+total run time is 424199964719 ns, thread: 1, pass: 35
+average read latency is 1354 ns, thread: 1, pass: 35
+average write latency is 1388 ns, thread: 1, pass: 35
+done in 2037949 ns, thread: 3, pass: 35
+total run time is 661532541 ns, thread: 3, pass: 35
+average read latency is 1691 ns, thread: 3, pass: 35
+average write latency is 2038 ns, thread: 3, pass: 35
+done in 2396446 ns, thread: 0, pass: 35
+total run time is 514174879312 ns, thread: 0, pass: 35
+average read latency is 2396 ns, thread: 0, pass: 35
+average write latency is 2005 ns, thread: 0, pass: 35
+done in 26909830305 ns, thread: 2, pass: 35
+total run time is 136287128254 ns, thread: 2, pass: 35
+average read latency is 973 ns, thread: 2, pass: 35
+average write latency is 423 ns, thread: 2, pass: 35
+Pass[36] Node[1]: loading log...
+Thread[0]: loading log...
+finish loading 1000 logs
+Thread[1]: loading log...
+finish loading 1000 logs
+Thread[2]: loading log...
+finish loading 24057000 logs
+Thread[3]: loading log...
+finish loading 1000 logs
+running trace...
+args has len: 1000
+args has len: 1000
+args has len: 24057000
+args has len: 1000
+done in 1839774 ns, thread: 3, pass: 36
+total run time is 663372315 ns, thread: 3, pass: 36
+average read latency is 1500 ns, thread: 3, pass: 36
+average write latency is 1883 ns, thread: 3, pass: 36
+done in 2045910 ns, thread: 1, pass: 36
+total run time is 424202010629 ns, thread: 1, pass: 36
+average read latency is 1585 ns, thread: 1, pass: 36
+average write latency is 1739 ns, thread: 1, pass: 36
+done in 2360933 ns, thread: 0, pass: 36
+total run time is 514177240245 ns, thread: 0, pass: 36
+average read latency is 2452 ns, thread: 0, pass: 36
+average write latency is 1881 ns, thread: 0, pass: 36
+done in 24235727183 ns, thread: 2, pass: 36
+total run time is 160522855437 ns, thread: 2, pass: 36
+average read latency is 1187 ns, thread: 2, pass: 36
+average write latency is 470 ns, thread: 2, pass: 36
+Pass[37] Node[1]: loading log...
+Thread[0]: loading log...
+finish loading 1000 logs
+Thread[1]: loading log...
+finish loading 1000 logs
+Thread[2]: loading log...
+finish loading 32016000 logs
+Thread[3]: loading log...
+finish loading 1000 logs
+running trace...
+args has len: 1000
+args has len: 1000
+args has len: 32016000
+args has len: 1000
+done in 884788 ns, thread: 3, pass: 37
+total run time is 664257103 ns, thread: 3, pass: 37
+average read latency is 799 ns, thread: 3, pass: 37
+average write latency is 861 ns, thread: 3, pass: 37
+done in 1014734 ns, thread: 1, pass: 37
+total run time is 424203025363 ns, thread: 1, pass: 37
+average read latency is 794 ns, thread: 1, pass: 37
+average write latency is 907 ns, thread: 1, pass: 37
+done in 1803551 ns, thread: 0, pass: 37
+total run time is 514179043796 ns, thread: 0, pass: 37
+average read latency is 1794 ns, thread: 0, pass: 37
+average write latency is 1428 ns, thread: 0, pass: 37
+done in 27757352619 ns, thread: 2, pass: 37
+total run time is 188280208056 ns, thread: 2, pass: 37
+average read latency is 1019 ns, thread: 2, pass: 37
+average write latency is 426 ns, thread: 2, pass: 37
+Pass[38] Node[1]: loading log...
+Thread[0]: loading log...
+finish loading 1000 logs
+Thread[1]: loading log...
+finish loading 1000 logs
+Thread[2]: loading log...
+finish loading 34260000 logs
+Thread[3]: loading log...
+finish loading 1000 logs
+running trace...
+args has len: 1000
+args has len: 1000
+args has len: 34260000
+args has len: 1000
+done in 811675 ns, thread: 3, pass: 38
+total run time is 665068778 ns, thread: 3, pass: 38
+average read latency is 703 ns, thread: 3, pass: 38
+average write latency is 808 ns, thread: 3, pass: 38
+done in 2270421 ns, thread: 0, pass: 38
+total run time is 514181314217 ns, thread: 0, pass: 38
+average read latency is 2297 ns, thread: 0, pass: 38
+average write latency is 1795 ns, thread: 0, pass: 38
+done in 2363510 ns, thread: 1, pass: 38
+total run time is 424205388873 ns, thread: 1, pass: 38
+average read latency is 2147 ns, thread: 1, pass: 38
+average write latency is 1333 ns, thread: 1, pass: 38
+done in 20770259357 ns, thread: 2, pass: 38
+total run time is 209050467413 ns, thread: 2, pass: 38
+average read latency is 693 ns, thread: 2, pass: 38
+average write latency is 356 ns, thread: 2, pass: 38
+Pass[39] Node[1]: loading log...
+Thread[0]: loading log...
+finish loading 1000 logs
+Thread[1]: loading log...
+finish loading 1000 logs
+Thread[2]: loading log...
+finish loading 35559000 logs
+Thread[3]: loading log...
+finish loading 1000 logs
+running trace...
+args has len: 1000
+args has len: 1000
+args has len: 35559000
+args has len: 1000
+done in 2039084 ns, thread: 3, pass: 39
+total run time is 667107862 ns, thread: 3, pass: 39
+average read latency is 2105 ns, thread: 3, pass: 39
+average write latency is 1610 ns, thread: 3, pass: 39
+done in 2019913 ns, thread: 0, pass: 39
+total run time is 514183334130 ns, thread: 0, pass: 39
+average read latency is 1975 ns, thread: 0, pass: 39
+average write latency is 1707 ns, thread: 0, pass: 39
+done in 3723206 ns, thread: 1, pass: 39
+total run time is 424209112079 ns, thread: 1, pass: 39
+average read latency is 1696 ns, thread: 1, pass: 39
+average write latency is 837 ns, thread: 1, pass: 39
+done in 36121417472 ns, thread: 2, pass: 39
+total run time is 245171884885 ns, thread: 2, pass: 39
+average read latency is 1217 ns, thread: 2, pass: 39
+average write latency is 483 ns, thread: 2, pass: 39
+Pass[40] Node[1]: loading log...
+Thread[0]: loading log...
+finish loading 1000 logs
+Thread[1]: loading log...
+finish loading 1000 logs
+Thread[2]: loading log...
+finish loading 34921000 logs
+Thread[3]: loading log...
+finish loading 1000 logs
+running trace...
+args has len: 1000
+args has len: 1000
+args has len: 34921000
+args has len: 1000
+done in 1109461 ns, thread: 1, pass: 40
+total run time is 424210221540 ns, thread: 1, pass: 40
+average write latency is 943 ns, thread: 1, pass: 40
+done in 2750374 ns, thread: 3, pass: 40
+total run time is 669858236 ns, thread: 3, pass: 40
+average read latency is 2987 ns, thread: 3, pass: 40
+average write latency is 1758 ns, thread: 3, pass: 40
+done in 12133485 ns, thread: 0, pass: 40
+total run time is 514195467615 ns, thread: 0, pass: 40
+average read latency is 2315 ns, thread: 0, pass: 40
+average write latency is 1636 ns, thread: 0, pass: 40
+done in 30405770063 ns, thread: 2, pass: 40
+total run time is 275577654948 ns, thread: 2, pass: 40
+average read latency is 1046 ns, thread: 2, pass: 40
+average write latency is 439 ns, thread: 2, pass: 40
+Pass[41] Node[1]: loading log...
+Thread[0]: loading log...
+finish loading 1000 logs
+Thread[1]: loading log...
+finish loading 1000 logs
+Thread[2]: loading log...
+finish loading 35677000 logs
+Thread[3]: loading log...
+finish loading 1000 logs
+running trace...
+args has len: 1000
+args has len: 1000
+args has len: 35677000
+args has len: 1000
+done in 1935029 ns, thread: 1, pass: 41
+total run time is 424212156569 ns, thread: 1, pass: 41
+average read latency is 1854 ns, thread: 1, pass: 41
+average write latency is 1086 ns, thread: 1, pass: 41
+done in 2255862 ns, thread: 0, pass: 41
+total run time is 514197723477 ns, thread: 0, pass: 41
+average read latency is 2230 ns, thread: 0, pass: 41
+average write latency is 1908 ns, thread: 0, pass: 41
+done in 2917355 ns, thread: 3, pass: 41
+total run time is 672775591 ns, thread: 3, pass: 41
+average read latency is 3270 ns, thread: 3, pass: 41
+average write latency is 1905 ns, thread: 3, pass: 41
+done in 29998806638 ns, thread: 2, pass: 41
+total run time is 305576461586 ns, thread: 2, pass: 41
+average read latency is 1007 ns, thread: 2, pass: 41
+average write latency is 410 ns, thread: 2, pass: 41
+Pass[42] Node[1]: loading log...
+Thread[0]: loading log...
+finish loading 1000 logs
+Thread[1]: loading log...
+finish loading 1000 logs
+Thread[2]: loading log...
+finish loading 35336000 logs
+Thread[3]: loading log...
+finish loading 1000 logs
+running trace...
+args has len: 1000
+args has len: 1000
+args has len: 35336000
+args has len: 1000
+done in 984053 ns, thread: 1, pass: 42
+total run time is 424213140622 ns, thread: 1, pass: 42
+average read latency is 924 ns, thread: 1, pass: 42
+average write latency is 1094 ns, thread: 1, pass: 42
+done in 2196758 ns, thread: 3, pass: 42
+total run time is 674972349 ns, thread: 3, pass: 42
+average read latency is 2108 ns, thread: 3, pass: 42
+average write latency is 1952 ns, thread: 3, pass: 42
+done in 2322865 ns, thread: 0, pass: 42
+total run time is 514200046342 ns, thread: 0, pass: 42
+average read latency is 1971 ns, thread: 0, pass: 42
+average write latency is 2199 ns, thread: 0, pass: 42
+done in 22610738051 ns, thread: 2, pass: 42
+total run time is 328187199637 ns, thread: 2, pass: 42
+average read latency is 718 ns, thread: 2, pass: 42
+average write latency is 361 ns, thread: 2, pass: 42
+Pass[43] Node[1]: loading log...
+Thread[0]: loading log...
+finish loading 1000 logs
+Thread[1]: loading log...
+finish loading 1000 logs
+Thread[2]: loading log...
+finish loading 35183000 logs
+Thread[3]: loading log...
+finish loading 1000 logs
+running trace...
+args has len: 1000
+args has len: 1000
+args has len: 35183000
+args has len: 1000
+done in 1191138 ns, thread: 1, pass: 43
+total run time is 424214331760 ns, thread: 1, pass: 43
+average read latency is 1077 ns, thread: 1, pass: 43
+average write latency is 1082 ns, thread: 1, pass: 43
+done in 1789908 ns, thread: 0, pass: 43
+total run time is 514201836250 ns, thread: 0, pass: 43
+average read latency is 1470 ns, thread: 0, pass: 43
+average write latency is 1729 ns, thread: 0, pass: 43
+done in 2115329 ns, thread: 3, pass: 43
+total run time is 677087678 ns, thread: 3, pass: 43
+average read latency is 2066 ns, thread: 3, pass: 43
+average write latency is 1754 ns, thread: 3, pass: 43
+done in 29766599486 ns, thread: 2, pass: 43
+total run time is 357953799123 ns, thread: 2, pass: 43
+average read latency is 1007 ns, thread: 2, pass: 43
+average write latency is 427 ns, thread: 2, pass: 43
+Pass[44] Node[1]: loading log...
+Thread[0]: loading log...
+finish loading 1000 logs
+Thread[1]: loading log...
+finish loading 1000 logs
+Thread[2]: loading log...
+finish loading 35308000 logs
+Thread[3]: loading log...
+finish loading 1000 logs
+running trace...
+args has len: 1000
+args has len: 1000
+args has len: 35308000
+args has len: 1000
+done in 944990 ns, thread: 1, pass: 44
+total run time is 424215276750 ns, thread: 1, pass: 44
+average read latency is 894 ns, thread: 1, pass: 44
+average write latency is 979 ns, thread: 1, pass: 44
+done in 1721913 ns, thread: 0, pass: 44
+total run time is 514203558163 ns, thread: 0, pass: 44
+average read latency is 1509 ns, thread: 0, pass: 44
+average write latency is 1697 ns, thread: 0, pass: 44
+done in 2328887 ns, thread: 3, pass: 44
+total run time is 679416565 ns, thread: 3, pass: 44
+average read latency is 2390 ns, thread: 3, pass: 44
+average write latency is 1737 ns, thread: 3, pass: 44
+done in 28460874293 ns, thread: 2, pass: 44
+total run time is 386414673416 ns, thread: 2, pass: 44
+average read latency is 932 ns, thread: 2, pass: 44
+average write latency is 422 ns, thread: 2, pass: 44
+Pass[45] Node[1]: loading log...
+Thread[0]: loading log...
+finish loading 1000 logs
+Thread[1]: loading log...
+finish loading 1000 logs
+Thread[2]: loading log...
+finish loading 36055000 logs
+Thread[3]: loading log...
+finish loading 1000 logs
+running trace...
+args has len: 1000
+args has len: 1000
+args has len: 36055000
+args has len: 1000
+done in 966963 ns, thread: 1, pass: 45
+total run time is 424216243713 ns, thread: 1, pass: 45
+average read latency is 908 ns, thread: 1, pass: 45
+average write latency is 1146 ns, thread: 1, pass: 45
+done in 3278411 ns, thread: 0, pass: 45
+total run time is 514206836574 ns, thread: 0, pass: 45
+average read latency is 3584 ns, thread: 0, pass: 45
+average write latency is 2123 ns, thread: 0, pass: 45
+done in 3353773 ns, thread: 3, pass: 45
+total run time is 682770338 ns, thread: 3, pass: 45
+average read latency is 3980 ns, thread: 3, pass: 45
+average write latency is 1973 ns, thread: 3, pass: 45
+done in 31514893440 ns, thread: 2, pass: 45
+total run time is 417929566856 ns, thread: 2, pass: 45
+average read latency is 1041 ns, thread: 2, pass: 45
+average write latency is 432 ns, thread: 2, pass: 45
+Pass[46] Node[1]: loading log...
+Thread[0]: loading log...
+finish loading 1000 logs
+Thread[1]: loading log...
+finish loading 1000 logs
+Thread[2]: loading log...
+finish loading 35520000 logs
+Thread[3]: loading log...
+finish loading 1000 logs
+running trace...
+args has len: 1000
+args has len: 1000
+args has len: 35520000
+args has len: 1000
+done in 1048989 ns, thread: 1, pass: 46
+total run time is 424217292702 ns, thread: 1, pass: 46
+average read latency is 990 ns, thread: 1, pass: 46
+average write latency is 1250 ns, thread: 1, pass: 46
+done in 1772921 ns, thread: 0, pass: 46
+total run time is 514208609495 ns, thread: 0, pass: 46
+average read latency is 1605 ns, thread: 0, pass: 46
+average write latency is 1648 ns, thread: 0, pass: 46
+done in 2018503 ns, thread: 3, pass: 46
+total run time is 684788841 ns, thread: 3, pass: 46
+average read latency is 2026 ns, thread: 3, pass: 46
+average write latency is 1632 ns, thread: 3, pass: 46
+done in 32120693202 ns, thread: 2, pass: 46
+total run time is 450050260058 ns, thread: 2, pass: 46
+average read latency is 1095 ns, thread: 2, pass: 46
+average write latency is 422 ns, thread: 2, pass: 46
+Pass[47] Node[1]: loading log...
+Thread[0]: loading log...
+finish loading 1000 logs
+Thread[1]: loading log...
+finish loading 1000 logs
+Thread[2]: loading log...
+finish loading 35097000 logs
+Thread[3]: loading log...
+finish loading 1000 logs
+running trace...
+args has len: 1000
+args has len: 1000
+args has len: 35097000
+args has len: 1000
+done in 1087853 ns, thread: 1, pass: 47
+total run time is 424218380555 ns, thread: 1, pass: 47
+average read latency is 1031 ns, thread: 1, pass: 47
+average write latency is 1237 ns, thread: 1, pass: 47
+done in 1899155 ns, thread: 0, pass: 47
+total run time is 514210508650 ns, thread: 0, pass: 47
+average read latency is 1672 ns, thread: 0, pass: 47
+average write latency is 1898 ns, thread: 0, pass: 47
+done in 2052896 ns, thread: 3, pass: 47
+total run time is 686841737 ns, thread: 3, pass: 47
+average read latency is 2048 ns, thread: 3, pass: 47
+average write latency is 1725 ns, thread: 3, pass: 47
+done in 30973389152 ns, thread: 2, pass: 47
+total run time is 481023649210 ns, thread: 2, pass: 47
+average read latency is 1046 ns, thread: 2, pass: 47
+average write latency is 446 ns, thread: 2, pass: 47
+Pass[48] Node[1]: loading log...
+Thread[0]: loading log...
+finish loading 1000 logs
+Thread[1]: loading log...
+finish loading 1000 logs
+Thread[2]: loading log...
+finish loading 13955000 logs
+Thread[3]: loading log...
+finish loading 20359000 logs
+running trace...
+args has len: 1000
+args has len: 1000
+args has len: 13955000
+args has len: 20359000
+done in 896767 ns, thread: 1, pass: 48
+total run time is 424219277322 ns, thread: 1, pass: 48
+average read latency is 831 ns, thread: 1, pass: 48
+average write latency is 1244 ns, thread: 1, pass: 48
+done in 1665273 ns, thread: 0, pass: 48
+total run time is 514212173923 ns, thread: 0, pass: 48
+average read latency is 1609 ns, thread: 0, pass: 48
+average write latency is 1373 ns, thread: 0, pass: 48
+done in 17611135552 ns, thread: 2, pass: 48
+total run time is 498634784762 ns, thread: 2, pass: 48
+average read latency is 1532 ns, thread: 2, pass: 48
+average write latency is 609 ns, thread: 2, pass: 48
+done in 21620994956 ns, thread: 3, pass: 48
+total run time is 22307836693 ns, thread: 3, pass: 48
+average read latency is 1267 ns, thread: 3, pass: 48
+average write latency is 521 ns, thread: 3, pass: 48
+Pass[49] Node[1]: loading log...
+Thread[0]: loading log...
+finish loading 1000 logs
+Thread[1]: loading log...
+finish loading 1000 logs
+Thread[2]: loading log...
+finish loading 1000 logs
+Thread[3]: loading log...
+finish loading 36010000 logs
+running trace...
+args has len: 1000
+args has len: 1000
+args has len: 1000
+args has len: 36010000
+done in 1060083 ns, thread: 1, pass: 49
+total run time is 424220337405 ns, thread: 1, pass: 49
+average read latency is 1002 ns, thread: 1, pass: 49
+average write latency is 1194 ns, thread: 1, pass: 49
+done in 1576405 ns, thread: 0, pass: 49
+total run time is 514213750328 ns, thread: 0, pass: 49
+average read latency is 1386 ns, thread: 0, pass: 49
+average write latency is 1573 ns, thread: 0, pass: 49
+done in 1918409 ns, thread: 2, pass: 49
+total run time is 498636703171 ns, thread: 2, pass: 49
+average write latency is 1707 ns, thread: 2, pass: 49
+done in 37171060633 ns, thread: 3, pass: 49
+total run time is 59478897326 ns, thread: 3, pass: 49
+average read latency is 1209 ns, thread: 3, pass: 49
+average write latency is 485 ns, thread: 3, pass: 49
+Pass[50] Node[1]: loading log...
+Thread[0]: loading log...
+finish loading 1000 logs
+Thread[1]: loading log...
+finish loading 1000 logs
+Thread[2]: loading log...
+finish loading 1000 logs
+Thread[3]: loading log...
+finish loading 33420000 logs
+running trace...
+args has len: 1000
+args has len: 1000
+args has len: 1000
+args has len: 33420000
+done in 981600 ns, thread: 1, pass: 50
+total run time is 424221319005 ns, thread: 1, pass: 50
+average read latency is 924 ns, thread: 1, pass: 50
+average write latency is 1048 ns, thread: 1, pass: 50
+done in 1773979 ns, thread: 0, pass: 50
+total run time is 514215524307 ns, thread: 0, pass: 50
+average read latency is 1542 ns, thread: 0, pass: 50
+average write latency is 1785 ns, thread: 0, pass: 50
+done in 2040881 ns, thread: 2, pass: 50
+total run time is 498638744052 ns, thread: 2, pass: 50
+average read latency is 2224 ns, thread: 2, pass: 50
+average write latency is 1729 ns, thread: 2, pass: 50
+done in 31789450080 ns, thread: 3, pass: 50
+total run time is 91268347406 ns, thread: 3, pass: 50
+average read latency is 1161 ns, thread: 3, pass: 50
+average write latency is 459 ns, thread: 3, pass: 50
+Pass[51] Node[1]: loading log...
+Thread[0]: loading log...
+finish loading 1000 logs
+Thread[1]: loading log...
+finish loading 1000 logs
+Thread[2]: loading log...
+finish loading 1000 logs
+Thread[3]: loading log...
+finish loading 31718000 logs
+running trace...
+args has len: 1000
+args has len: 1000
+args has len: 1000
+args has len: 31718000
+done in 996088 ns, thread: 1, pass: 51
+total run time is 424222315093 ns, thread: 1, pass: 51
+average read latency is 936 ns, thread: 1, pass: 51
+average write latency is 1164 ns, thread: 1, pass: 51
+done in 1804990 ns, thread: 0, pass: 51
+total run time is 514217329297 ns, thread: 0, pass: 51
+average read latency is 1654 ns, thread: 0, pass: 51
+average write latency is 1607 ns, thread: 0, pass: 51
+done in 565117962 ns, thread: 2, pass: 51
+total run time is 499203862014 ns, thread: 2, pass: 51
+average read latency is 2206 ns, thread: 2, pass: 51
+average write latency is 1513 ns, thread: 2, pass: 51
+done in 29780611100 ns, thread: 3, pass: 51
+total run time is 121048958506 ns, thread: 3, pass: 51
+average read latency is 1109 ns, thread: 3, pass: 51
+average write latency is 469 ns, thread: 3, pass: 51
+Pass[52] Node[1]: loading log...
+Thread[0]: loading log...
+finish loading 1000 logs
+Thread[1]: loading log...
+finish loading 1000 logs
+Thread[2]: loading log...
+finish loading 1000 logs
+Thread[3]: loading log...
+finish loading 34811000 logs
+running trace...
+args has len: 1000
+args has len: 1000
+args has len: 1000
+args has len: 34811000
+done in 964646 ns, thread: 1, pass: 52
+total run time is 424223279739 ns, thread: 1, pass: 52
+average read latency is 901 ns, thread: 1, pass: 52
+average write latency is 973 ns, thread: 1, pass: 52
+done in 1662504 ns, thread: 0, pass: 52
+total run time is 514218991801 ns, thread: 0, pass: 52
+average read latency is 1493 ns, thread: 0, pass: 52
+average write latency is 1582 ns, thread: 0, pass: 52
+done in 1917392 ns, thread: 2, pass: 52
+total run time is 499205779406 ns, thread: 2, pass: 52
+average read latency is 1648 ns, thread: 2, pass: 52
+average write latency is 1252 ns, thread: 2, pass: 52
