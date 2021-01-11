@@ -184,7 +184,10 @@ void do_log(void *arg) {
   //printf("Remote step to be %d\n", remote_step);
 
   //printf("Creating the Allocator in node: %d, in thread: %d\n", trace->node_idx, trace->tid);
+  long allocator_start = get_time();
   GAlloc *alloc = GAllocFactory::CreateAllocator();
+  long allocator_end = get_time();
+  printf("Allocator created in %ld ns\n", allocator_end - allocator_start);
   //printf("Finish creating the Allocator in node: %d, in thread: %d\n", trace->node_idx, trace->tid);
 
 
@@ -286,6 +289,7 @@ void do_log(void *arg) {
 
   //FIXME warm up here?
   //make sure all the requests are complete
+  long sync_start = get_time();
   uint64_t SYNC_RUN_BASE = SYNC_KEY + trace->num_nodes * 2;
   uint64_t sync_id = SYNC_RUN_BASE + trace->num_nodes * node_id + trace->tid + PASS_KEY * trace->pass;
   //printf("Putting node_id: %d, thread id: %d, pass: %d, key: %lld, value: %lld\n", node_id, trace->tid, trace->pass, sync_id, sync_id);
@@ -299,6 +303,8 @@ void do_log(void *arg) {
       epicAssert(sync_id == SYNC_RUN_BASE + trace->num_nodes * i + j + PASS_KEY * trace->pass);
     }
   }
+  long sync_end = get_time();
+  printf("All nodes synced in %ld ns\n", sync_end - sync_start);
 
 }
 
