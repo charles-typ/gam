@@ -215,6 +215,7 @@ void do_log(void *arg) {
         struct RWlog *log = (struct RWlog *) cur;
         interval_between_access(log->usec - old_ts);
         char buf;
+        log->addr = 2590695688178910448;
         size_t cache_line_block = (log->addr & MMAP_ADDR_MASK) / (BLOCK_SIZE * resize_ratio);
         size_t cache_line_offset = (log->addr & MMAP_ADDR_MASK) % (BLOCK_SIZE * resize_ratio);
         long read_start = get_time();
@@ -229,6 +230,7 @@ void do_log(void *arg) {
         struct RWlog *log = (struct RWlog *) cur;
         interval_between_access(log->usec - old_ts);
         char buf = '0';
+        log->addr = 2590695688178910448;
         unsigned long addr = log->addr & MMAP_ADDR_MASK;
         size_t cache_line_block = (log->addr & MMAP_ADDR_MASK) / (BLOCK_SIZE * resize_ratio);
         size_t cache_line_offset = (log->addr & MMAP_ADDR_MASK) % (BLOCK_SIZE * resize_ratio);
