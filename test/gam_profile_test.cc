@@ -275,7 +275,7 @@ void do_log(void *arg) {
     alloc->UnLock(remote[0], BLOCK_SIZE * resize_ratio);
     long pass_end = get_time();
 
-
+    alloc->ReportCacheStatistics();
     printf("done in %ld ns, fence time is %ld, thread: %d, pass: %d\n", pass_end - pass_start, pass_end - fence_start, trace->tid, trace->pass);
     trace->time += pass_end - pass_start;
     printf("total run time is %ld ns, thread: %d, pass: %d\n", trace->time, trace->tid, trace->pass);
