@@ -220,7 +220,7 @@ void do_log(void *arg) {
         size_t cache_line_block = (addr) / (BLOCK_SIZE * resize_ratio);
         size_t cache_line_offset = (addr) % (BLOCK_SIZE * resize_ratio);
         long read_start = get_time();
-        ret = alloc->Read(remote[cache_line_block] + cache_line_offset, &buf, 1);
+        //ret = alloc->Read(remote[cache_line_block] + cache_line_offset, &buf, 1);
         long read_end = get_time();
         trace->read_time += read_end - read_start;
         trace->read_ops += 1;
