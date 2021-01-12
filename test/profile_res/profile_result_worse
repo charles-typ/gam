@@ -1,0 +1,500 @@
+8589934592 4 1.000000 1 1
+Num Nodes: 5, Num Threads: 4
+Currently configuration is: master: 10.10.10.201:1231, worker: 10.10.10.201:1234, is_master: true, size to allocate: 1717986918
+Size to allocate: 2147483648
+Start the allocator here !!!!!!!!!
+[28474] 12 Jan 13:41:05.735 - [worker.cc:444-SyncMaster()] found one CacheOnly instance with wid = 1
+[28474] 12 Jan 13:41:05.735 - [worker.cc:122-Worker()] LRU eviction is enabled, max cache lines = 4194304, reserved mem size = 2147483648, cache_percentage = 1.000000, block_size = 512
+End the allocator here !!!!!!!!!
+Waiting for all the nodes !!!!!!!!!
+Putting 10737418241, 1
+Put done
+Gettting 10737418241
+Get done 
+Gettting 10737418242
+Get done 
+Gettting 10737418243
+Get done 
+Gettting 10737418244
+Get done 
+Gettting 10737418245
+Get done 
+start ts is: 1608309204356442
+allocate is 106794602263 ns
+Pass[0] Node[1]: loading log...
+Thread[0]: loading log...
+finish loading 20104000 logs
+Thread[1]: loading log...
+finish loading 1000 logs
+Thread[2]: loading log...
+finish loading 1000 logs
+Thread[3]: loading log...
+finish loading 1000 logs
+running trace...
+args has len: 20104000
+args has len: 1000
+args has len: 1000
+args has len: 1000
+Allocator created in 110568 ns
+Allocator created in 225387 ns
+Allocator created in 322758 ns
+Allocator created in 311011 ns
+done in 4114105 ns, fence time is 89047, thread: 1, pass: 0
+total run time is 4114105 ns, thread: 1, pass: 0
+average read latency is 3886 ns, thread: 1, pass: 0
+average write latency is 3790 ns, thread: 1, pass: 0
+done in 4116488 ns, fence time is 9735, thread: 3, pass: 0
+total run time is 4116488 ns, thread: 3, pass: 0
+average read latency is 3877 ns, thread: 3, pass: 0
+average write latency is 3866 ns, thread: 3, pass: 0
+done in 4119967 ns, fence time is 8683, thread: 2, pass: 0
+total run time is 4119967 ns, thread: 2, pass: 0
+average read latency is 3836 ns, thread: 2, pass: 0
+average write latency is 4043 ns, thread: 2, pass: 0
+done in 5142990579 ns, fence time is 6556, thread: 0, pass: 0
+total run time is 5142990579 ns, thread: 0, pass: 0
+average read latency is 192 ns, thread: 0, pass: 0
+average write latency is 250 ns, thread: 0, pass: 0
+All nodes synced in 122519822952 ns
+All nodes synced in 122519686248 ns
+All nodes synced in 122519656242 ns
+All nodes synced in 117381022920 ns
+Pass[1] Node[1]: loading log...
+Thread[0]: loading log...
+finish loading 6740000 logs
+Thread[1]: loading log...
+finish loading 26303000 logs
+Thread[2]: loading log...
+finish loading 1000 logs
+Thread[3]: loading log...
+finish loading 1000 logs
+running trace...
+args has len: 6740000
+args has len: 26303000
+args has len: 1000
+args has len: 1000
+Allocator created in 40787 ns
+Allocator created in 61779 ns
+Allocator created in 104922 ns
+Allocator created in 186760 ns
+done in 11125981 ns, fence time is 41333, thread: 3, pass: 1
+total run time is 15242469 ns, thread: 3, pass: 1
+average read latency is 13026 ns, thread: 3, pass: 1
+average write latency is 5096 ns, thread: 3, pass: 1
+done in 11846819 ns, fence time is 8671, thread: 2, pass: 1
+total run time is 15966786 ns, thread: 2, pass: 1
+average read latency is 17685 ns, thread: 2, pass: 1
+average write latency is 5583 ns, thread: 2, pass: 1
+done in 39337834304 ns, fence time is 21959, thread: 0, pass: 1
+total run time is 44480824883 ns, thread: 0, pass: 1
+average read latency is 8394 ns, thread: 0, pass: 1
+average write latency is 1185 ns, thread: 0, pass: 1
+done in 100249396606 ns, fence time is 45002, thread: 1, pass: 1
+total run time is 100253510711 ns, thread: 1, pass: 1
+average read latency is 5355 ns, thread: 1, pass: 1
+average write latency is 881 ns, thread: 1, pass: 1
+All nodes synced in 100239017614 ns
+All nodes synced in 100238205017 ns
+All nodes synced in 60912435886 ns
+All nodes synced in 712552 ns
+Pass[2] Node[1]: loading log...
+Thread[0]: loading log...
+finish loading 1000 logs
+Thread[1]: loading log...
+finish loading 35401000 logs
+Thread[2]: loading log...
+finish loading 1000 logs
+Thread[3]: loading log...
+finish loading 1000 logs
+running trace...
+args has len: 1000
+args has len: 35401000
+args has len: 1000
+args has len: 1000
+Allocator created in 69981 ns
+Allocator created in 64597 ns
+done in 9083887 ns, fence time is 65581, thread: 0, pass: 2
+total run time is 44489908770 ns, thread: 0, pass: 2
+average read latency is 10915 ns, thread: 0, pass: 2
+average write latency is 3375 ns, thread: 0, pass: 2
+done in 9871161 ns, fence time is 27424, thread: 2, pass: 2
+total run time is 25837947 ns, thread: 2, pass: 2
+average read latency is 15679 ns, thread: 2, pass: 2
+average write latency is 3660 ns, thread: 2, pass: 2
+Allocator created in 14317636 ns
+Allocator created in 14360653 ns
+done in 16615590 ns, fence time is 1952, thread: 3, pass: 2
+total run time is 31858059 ns, thread: 3, pass: 2
+average read latency is 22121 ns, thread: 3, pass: 2
+average write latency is 1698 ns, thread: 3, pass: 2
+done in 117042774493 ns, fence time is 77946, thread: 1, pass: 2
+total run time is 217296285204 ns, thread: 1, pass: 2
+average read latency is 4579 ns, thread: 1, pass: 2
+average write latency is 776 ns, thread: 1, pass: 2
+All nodes synced in 117048532485 ns
+All nodes synced in 117047873814 ns
+All nodes synced in 117023090476 ns
+All nodes synced in 655980 ns
+Pass[3] Node[1]: loading log...
+Thread[0]: loading log...
+finish loading 2380000 logs
+Thread[1]: loading log...
+finish loading 28718000 logs
+Thread[2]: loading log...
+finish loading 1000 logs
+Thread[3]: loading log...
+finish loading 74000 logs
+running trace...
+args has len: 2380000
+args has len: 28718000
+args has len: 1000
+args has len: 74000
+Allocator created in 63186 ns
+Allocator created in 40125 ns
+Allocator created in 72979 ns
+Allocator created in 167901 ns
+done in 3372446 ns, fence time is 11637, thread: 2, pass: 3
+total run time is 29210393 ns, thread: 2, pass: 3
+average read latency is 3158 ns, thread: 2, pass: 3
+average write latency is 3252 ns, thread: 2, pass: 3
+done in 558245404 ns, fence time is 20047, thread: 3, pass: 3
+total run time is 590103463 ns, thread: 3, pass: 3
+average read latency is 9523 ns, thread: 3, pass: 3
+average write latency is 1959 ns, thread: 3, pass: 3
+done in 13956095127 ns, fence time is 60241, thread: 0, pass: 3
+total run time is 58446003897 ns, thread: 0, pass: 3
+average read latency is 8520 ns, thread: 0, pass: 3
+average write latency is 1191 ns, thread: 0, pass: 3
+done in 98788708655 ns, fence time is 78007, thread: 1, pass: 3
+total run time is 316084993859 ns, thread: 1, pass: 3
+average read latency is 4717 ns, thread: 1, pass: 3
+average write latency is 830 ns, thread: 1, pass: 3
+All nodes synced in 84833090998 ns
+All nodes synced in 98785890320 ns
+All nodes synced in 508817 ns
+All nodes synced in 98230972983 ns
+Pass[4] Node[1]: loading log...
+Thread[0]: loading log...
+finish loading 34216000 logs
+Thread[1]: loading log...
+finish loading 1000 logs
+Thread[2]: loading log...
+finish loading 1000 logs
+Thread[3]: loading log...
+finish loading 1000 logs
+running trace...
+args has len: 34216000
+args has len: 1000
+args has len: 1000
+args has len: 1000
+Allocator created in 69730 ns
+Allocator created in 70245 ns
+Allocator created in 154933 ns
+Allocator created in 232690 ns
+done in 4158344 ns, fence time is 2222802, thread: 1, pass: 4
+total run time is 316089152203 ns, thread: 1, pass: 4
+average write latency is 1796 ns, thread: 1, pass: 4
+done in 9808585 ns, fence time is 24988, thread: 3, pass: 4
+total run time is 599912048 ns, thread: 3, pass: 4
+average read latency is 13362 ns, thread: 3, pass: 4
+average write latency is 3389 ns, thread: 3, pass: 4
+done in 10056840 ns, fence time is 26605, thread: 2, pass: 4
+total run time is 39267233 ns, thread: 2, pass: 4
+average read latency is 16281 ns, thread: 2, pass: 4
+average write latency is 3447 ns, thread: 2, pass: 4
+done in 114158881829 ns, fence time is 73765, thread: 0, pass: 4
+total run time is 172604885726 ns, thread: 0, pass: 4
+average read latency is 4679 ns, thread: 0, pass: 4
+average write latency is 783 ns, thread: 0, pass: 4
+All nodes synced in 114155176707 ns
+All nodes synced in 534613 ns
+All nodes synced in 114149673190 ns
+All nodes synced in 114149408191 ns
+Pass[5] Node[1]: loading log...
+Thread[0]: loading log...
+finish loading 35709000 logs
+Thread[1]: loading log...
+finish loading 1000 logs
+Thread[2]: loading log...
+finish loading 1000 logs
+Thread[3]: loading log...
+finish loading 1000 logs
+running trace...
+args has len: 35709000
+args has len: 1000
+args has len: 1000
+args has len: 1000
+Allocator created in 70189 ns
+Allocator created in 113713 ns
+Allocator created in 118874 ns
+Allocator created in 161315 ns
+done in 3467837 ns, fence time is 124239, thread: 1, pass: 5
+total run time is 316092620040 ns, thread: 1, pass: 5
+average write latency is 3204 ns, thread: 1, pass: 5
+done in 7976827 ns, fence time is 8185, thread: 3, pass: 5
+total run time is 607888875 ns, thread: 3, pass: 5
+average read latency is 11059 ns, thread: 3, pass: 5
+average write latency is 4468 ns, thread: 3, pass: 5
+done in 8122428 ns, fence time is 5913, thread: 2, pass: 5
+total run time is 47389661 ns, thread: 2, pass: 5
+average read latency is 11553 ns, thread: 2, pass: 5
+average write latency is 4320 ns, thread: 2, pass: 5
+done in 121451512813 ns, fence time is 92231, thread: 0, pass: 5
+total run time is 294056398539 ns, thread: 0, pass: 5
+average read latency is 4778 ns, thread: 0, pass: 5
+average write latency is 806 ns, thread: 0, pass: 5
+All nodes synced in 121448521923 ns
+All nodes synced in 121444040385 ns
+All nodes synced in 121443850278 ns
+All nodes synced in 616851 ns
+Pass[6] Node[1]: loading log...
+Thread[0]: loading log...
+finish loading 31316000 logs
+Thread[1]: loading log...
+finish loading 1000 logs
+Thread[2]: loading log...
+finish loading 1000 logs
+Thread[3]: loading log...
+finish loading 1000 logs
+running trace...
+args has len: 31316000
+args has len: 1000
+args has len: 1000
+args has len: 1000
+Allocator created in 64191 ns
+Allocator created in 94688 ns
+done in 2644173 ns, fence time is 70087, thread: 1, pass: 6
+total run time is 316095264213 ns, thread: 1, pass: 6
+average write latency is 2430 ns, thread: 1, pass: 6
+Allocator created in 24737033 ns
+Allocator created in 24738477 ns
+done in 9399646 ns, fence time is 25289, thread: 3, pass: 6
+total run time is 617288521 ns, thread: 3, pass: 6
+average read latency is 14657 ns, thread: 3, pass: 6
+average write latency is 3669 ns, thread: 3, pass: 6
+done in 9560042 ns, fence time is 35225, thread: 2, pass: 6
+total run time is 56949703 ns, thread: 2, pass: 6
+average read latency is 14954 ns, thread: 2, pass: 6
+average write latency is 3686 ns, thread: 2, pass: 6
+done in 107626099971 ns, fence time is 70041, thread: 0, pass: 6
+total run time is 401682498510 ns, thread: 0, pass: 6
+average read latency is 4848 ns, thread: 0, pass: 6
+average write latency is 800 ns, thread: 0, pass: 6
+All nodes synced in 107623861855 ns
+All nodes synced in 107592272220 ns
+All nodes synced in 107592433857 ns
+All nodes synced in 498378 ns
+Pass[7] Node[1]: loading log...
+Thread[0]: loading log...
+finish loading 30125000 logs
+Thread[1]: loading log...
+finish loading 1000 logs
+Thread[2]: loading log...
+finish loading 1000 logs
+Thread[3]: loading log...
+finish loading 1000 logs
+running trace...
+args has len: 30125000
+args has len: 1000
+args has len: 1000
+args has len: 1000
+Allocator created in 42721 ns
+Allocator created in 57664 ns
+Allocator created in 92945 ns
+Allocator created in 103513 ns
+done in 2890540 ns, fence time is 1712321, thread: 1, pass: 7
+total run time is 316098154753 ns, thread: 1, pass: 7
+average write latency is 1075 ns, thread: 1, pass: 7
+done in 9856500 ns, fence time is 27505, thread: 2, pass: 7
+total run time is 66806203 ns, thread: 2, pass: 7
+average read latency is 15727 ns, thread: 2, pass: 7
+average write latency is 3509 ns, thread: 2, pass: 7
+done in 10964026 ns, fence time is 7563, thread: 3, pass: 7
+total run time is 628252547 ns, thread: 3, pass: 7
+average read latency is 17911 ns, thread: 3, pass: 7
+average write latency is 3601 ns, thread: 3, pass: 7
+done in 100204371701 ns, fence time is 84376, thread: 0, pass: 7
+total run time is 501886870211 ns, thread: 0, pass: 7
+average read latency is 4560 ns, thread: 0, pass: 7
+average write latency is 795 ns, thread: 0, pass: 7
+All nodes synced in 507828 ns
+All nodes synced in 100201910877 ns
+All nodes synced in 100193678591 ns
+All nodes synced in 100194862929 ns
+Pass[8] Node[1]: loading log...
+Thread[0]: loading log...
+finish loading 21039000 logs
+Thread[1]: loading log...
+finish loading 1000 logs
+Thread[2]: loading log...
+finish loading 1000 logs
+Thread[3]: loading log...
+finish loading 1000 logs
+running trace...
+args has len: 21039000
+args has len: 1000
+args has len: 1000
+args has len: 1000
+Allocator created in 87143 ns
+Allocator created in 132733 ns
+Allocator created in 151054 ns
+Allocator created in 224893 ns
+done in 2999873 ns, fence time is 123306, thread: 1, pass: 8
+total run time is 316101154626 ns, thread: 1, pass: 8
+average write latency is 2754 ns, thread: 1, pass: 8
+done in 5448175 ns, fence time is 25318, thread: 2, pass: 8
+total run time is 72254378 ns, thread: 2, pass: 8
+average read latency is 7344 ns, thread: 2, pass: 8
+average write latency is 3296 ns, thread: 2, pass: 8
+done in 7633968 ns, fence time is 7075, thread: 3, pass: 8
+total run time is 635886515 ns, thread: 3, pass: 8
+average read latency is 10879 ns, thread: 3, pass: 8
+average write latency is 3998 ns, thread: 3, pass: 8
+done in 65845771874 ns, fence time is 84833, thread: 0, pass: 8
+total run time is 567732642085 ns, thread: 0, pass: 8
+average read latency is 3927 ns, thread: 0, pass: 8
+average write latency is 865 ns, thread: 0, pass: 8
+All nodes synced in 495990 ns
+All nodes synced in 65843323188 ns
+All nodes synced in 65838488133 ns
+All nodes synced in 65840859680 ns
+Pass[9] Node[1]: loading log...
+Thread[0]: loading log...
+finish loading 37093000 logs
+Thread[1]: loading log...
+finish loading 1000 logs
+Thread[2]: loading log...
+finish loading 1000 logs
+Thread[3]: loading log...
+finish loading 1000 logs
+running trace...
+args has len: 37093000
+args has len: 1000
+args has len: 1000
+args has len: 1000
+Allocator created in 71857 ns
+Allocator created in 104000 ns
+Allocator created in 189276 ns
+Allocator created in 184295 ns
+done in 2825714 ns, fence time is 9326, thread: 3, pass: 9
+total run time is 638712229 ns, thread: 3, pass: 9
+average read latency is 2551 ns, thread: 3, pass: 9
+average write latency is 2852 ns, thread: 3, pass: 9
+done in 3191972 ns, fence time is 10634, thread: 2, pass: 9
+total run time is 75446350 ns, thread: 2, pass: 9
+average read latency is 2744 ns, thread: 2, pass: 9
+average write latency is 3291 ns, thread: 2, pass: 9
+done in 3228611 ns, fence time is 9131, thread: 1, pass: 9
+total run time is 316104383237 ns, thread: 1, pass: 9
+average write latency is 3075 ns, thread: 1, pass: 9
+done in 99621076384 ns, fence time is 72784, thread: 0, pass: 9
+total run time is 667353718469 ns, thread: 0, pass: 9
+average read latency is 3028 ns, thread: 0, pass: 9
+average write latency is 834 ns, thread: 0, pass: 9
+All nodes synced in 99618815349 ns
+All nodes synced in 99618418816 ns
+All nodes synced in 99618390397 ns
+All nodes synced in 561877 ns
+Pass[10] Node[1]: loading log...
+Thread[0]: loading log...
+finish loading 37319000 logs
+Thread[1]: loading log...
+finish loading 1000 logs
+Thread[2]: loading log...
+finish loading 1000 logs
+Thread[3]: loading log...
+finish loading 1000 logs
+running trace...
+args has len: 37319000
+args has len: 1000
+args has len: 1000
+args has len: 1000
+Allocator created in 52950 ns
+Allocator created in 93628 ns
+Allocator created in 93196 ns
+Allocator created in 118559 ns
+done in 3545317 ns, fence time is 1292172, thread: 1, pass: 10
+total run time is 316107928554 ns, thread: 1, pass: 10
+average write latency is 2122 ns, thread: 1, pass: 10
+done in 10698779 ns, fence time is 24499, thread: 2, pass: 10
+total run time is 86145129 ns, thread: 2, pass: 10
+average read latency is 16863 ns, thread: 2, pass: 10
+average write latency is 4070 ns, thread: 2, pass: 10
+done in 10651586 ns, fence time is 7350, thread: 3, pass: 10
+total run time is 649363815 ns, thread: 3, pass: 10
+average read latency is 16917 ns, thread: 3, pass: 10
+average write latency is 3973 ns, thread: 3, pass: 10
+done in 91494538967 ns, fence time is 78630, thread: 0, pass: 10
+total run time is 758848257436 ns, thread: 0, pass: 10
+average read latency is 2696 ns, thread: 0, pass: 10
+average write latency is 856 ns, thread: 0, pass: 10
+All nodes synced in 490294 ns
+All nodes synced in 91484114105 ns
+All nodes synced in 91491437178 ns
+All nodes synced in 91484168811 ns
+Pass[11] Node[1]: loading log...
+Thread[0]: loading log...
+finish loading 32774000 logs
+Thread[1]: loading log...
+finish loading 1000 logs
+Thread[2]: loading log...
+finish loading 1000 logs
+Thread[3]: loading log...
+finish loading 1000 logs
+running trace...
+args has len: 32774000
+args has len: 1000
+args has len: 1000
+args has len: 1000
+Allocator created in 45452 ns
+Allocator created in 80993 ns
+Allocator created in 98456 ns
+Allocator created in 128341 ns
+done in 3995341 ns, fence time is 2748754, thread: 1, pass: 11
+total run time is 316111923895 ns, thread: 1, pass: 11
+average write latency is 1084 ns, thread: 1, pass: 11
+done in 4074273 ns, fence time is 5203, thread: 3, pass: 11
+total run time is 653438088 ns, thread: 3, pass: 11
+average read latency is 5344 ns, thread: 3, pass: 11
+average write latency is 2594 ns, thread: 3, pass: 11
+done in 6093876 ns, fence time is 20913, thread: 2, pass: 11
+total run time is 92239005 ns, thread: 2, pass: 11
+average read latency is 8726 ns, thread: 2, pass: 11
+average write latency is 3152 ns, thread: 2, pass: 11
+done in 78067959243 ns, fence time is 71651, thread: 0, pass: 11
+total run time is 836916216679 ns, thread: 0, pass: 11
+average read latency is 2580 ns, thread: 0, pass: 11
+average write latency is 873 ns, thread: 0, pass: 11
+All nodes synced in 521990 ns
+All nodes synced in 78064543498 ns
+All nodes synced in 78062450028 ns
+All nodes synced in 78064413975 ns
+Pass[12] Node[1]: loading log...
+Thread[0]: loading log...
+finish loading 6267000 logs
+Thread[1]: loading log...
+finish loading 1000 logs
+Thread[2]: loading log...
+finish loading 1000 logs
+Thread[3]: loading log...
+finish loading 1000 logs
+running trace...
+args has len: 6267000
+args has len: 1000
+args has len: 1000
+args has len: 1000
+Allocator created in 72086 ns
+Allocator created in 74131 ns
+Allocator created in 143004 ns
+Allocator created in 197100 ns
+done in 3000254 ns, fence time is 77223, thread: 1, pass: 12
+total run time is 316114924149 ns, thread: 1, pass: 12
+average write latency is 2765 ns, thread: 1, pass: 12
+done in 10859557 ns, fence time is 27358, thread: 3, pass: 12
+total run time is 664297645 ns, thread: 3, pass: 12
+average read latency is 16895 ns, thread: 3, pass: 12
+average write latency is 4362 ns, thread: 3, pass: 12
+done in 11006856 ns, fence time is 7235, thread: 2, pass: 12
+total run time is 103245861 ns, thread: 2, pass: 12
+average read latency is 17492 ns, thread: 2, pass: 12
+average write latency is 4128 ns, thread: 2, pass: 12
