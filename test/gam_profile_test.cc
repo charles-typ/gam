@@ -34,7 +34,7 @@
 #define MAX_NUM_THREAD 4
 #define SLEEP_THRES_NANOS 10
 #define TIMEWINDOW_US 10000000
-#define DEBUG_LEVEL LOG_WARNING
+#define DEBUG_LEVEL LOG_DEBUG
 //#define SYNC_KEY 204800
 #define PASS_KEY 40960000
 #define SYNC_KEY (unsigned long)10 * 1024 * 1024 * 1024 // default: 10 GB

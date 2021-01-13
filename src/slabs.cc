@@ -248,7 +248,7 @@ int SlabAllocator::do_slabs_newslab(const unsigned int id) {
       || (grow_slab_list(id) == 0)
       || ((ptr = (char *) memory_allocate((size_t) len)) == 0)) {
 
-    epicLog(LOG_WARNING, "new slab class %d failed", id);
+    epicLog(LOG_WARNING, "new slab class %d failed, mem limit: %d, mem malloced: %d, len: %d, slabs: %d", id, mem_limit, mem_malloced, len, p->slabs);
     return 0;
   }
 
