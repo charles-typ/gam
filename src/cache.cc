@@ -656,10 +656,9 @@ void Cache::UnLinkLRU(CacheLine* cline) {
 }
 
 void Cache::Evict() {
-  epicLog(LOG_INFO,
+  epicLog(LOG_WARNING,
       "used_bytes = %ld, max_cache_mem = %ld,  BLOCK_SIZE = %ld, th = %lf, to_evicted = %ld",
-      used_bytes.load(), max_cache_mem, BLOCK_SIZE, max_cache_mem,
-      worker->conf->cache_th, to_evicted.load());
+      used_bytes.load(), max_cache_mem, BLOCK_SIZE, worker->conf->cache_th, to_evicted.load());
   long long used = used_bytes - to_evicted * BLOCK_SIZE;
   if (used > 0 && used > max_cache_mem) {
     int n = (used - max_cache_mem) / BLOCK_SIZE;
