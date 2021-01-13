@@ -656,19 +656,19 @@ void Cache::UnLinkLRU(CacheLine* cline) {
 }
 
 void Cache::Evict() {
-  epicLog(LOG_WARNING,
+  epicLog(LOG_INFO,
       "used_bytes = %ld, max_cache_mem = %ld,  BLOCK_SIZE = %ld, th = %lf, to_evicted = %ld",
       used_bytes.load(), max_cache_mem, BLOCK_SIZE, max_cache_mem,
       worker->conf->cache_th, to_evicted.load());
   long long used = used_bytes - to_evicted * BLOCK_SIZE;
   if (used > 0 && used > max_cache_mem) {
     int n = (used - max_cache_mem) / BLOCK_SIZE;
-    epicLog(LOG_WARNING,
+    epicLog(LOG_INFO,
         "tryng to evict %d, used = %ld, max_cache_mem = %ld, used > max_cache_mem = %d",
         n, used, max_cache_mem, used > max_cache_mem);
     int ret = Evict(n);
     if (ret < n) {
-      epicLog(LOG_WARNING, "only able to evict %d, but expect to evict %d", ret, n);
+      epicLog(LOG_INFO, "only able to evict %d, but expect to evict %d", ret, n);
     }
   }
 }
@@ -697,7 +697,7 @@ int Cache::Evict(int n) {
   int i = 0;
   int tries = 1, tried = 0;
   int max_evict = 16;
-  epicLog(LOG_WARNING, "trying to evict %d, but max is %d", n, max_evict);
+  epicLog(LOG_INFO, "trying to evict %d, but max is %d", n, max_evict);
   if (n > max_evict)
     n = max_evict;
   GAddr addr = Gnullptr;
