@@ -213,7 +213,7 @@ void do_log(void *arg) {
       cur = &(trace->logs[i * sizeof(RWlog)]);
       if (op == 'R') {
         struct RWlog *log = (struct RWlog *) cur;
-        interval_between_access(log->usec - old_ts);
+        //interval_between_access(log->usec - old_ts);
         char buf;
         unsigned long addr = log->addr & MMAP_ADDR_MASK;
         //addr = 2590695688178910448 & MMAP_ADDR_MASK;
@@ -229,7 +229,7 @@ void do_log(void *arg) {
 
       } else if (op == 'W') {
         struct RWlog *log = (struct RWlog *) cur;
-        interval_between_access(log->usec - old_ts);
+        //interval_between_access(log->usec - old_ts);
         char buf = '0';
         unsigned long addr = log->addr & MMAP_ADDR_MASK;
         //addr = 2590695688178910448 & MMAP_ADDR_MASK;
@@ -245,18 +245,18 @@ void do_log(void *arg) {
 
       } else if (op == 'M') {
         struct Mlog *log = (struct Mlog *) cur;
-        interval_between_access(log->hdr.usec);
+        //interval_between_access(log->hdr.usec);
         unsigned int len = log->len;
         //GAddr ret_addr = alloc->Malloc(len, REMOTE);
         //len2addr.insert(pair<unsigned int, GAddr>(len, ret_addr));
         old_ts += log->hdr.usec;
       } else if (op == 'B') {
         struct Blog *log = (struct Blog *) cur;
-        interval_between_access(log->usec - old_ts);
+        //interval_between_access(log->usec - old_ts);
         old_ts = log->usec;
       } else if (op == 'U') {
         struct Ulog *log = (struct Ulog *) cur;
-        interval_between_access(log->hdr.usec);
+        //interval_between_access(log->hdr.usec);
         //auto itr = len2addr.find(log->len);
         //if (itr == len2addr.end()) {
           //printf("no memory to free\n");
