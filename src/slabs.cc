@@ -258,6 +258,7 @@ int SlabAllocator::do_slabs_newslab(const unsigned int id) {
 
   p->slab_list[p->slabs++] = ptr;
   mem_malloced += len;
+  epicLog(LOG_WARNING, "new slab class %d allocated, mem limit: %d, mem malloced: %d, len: %d, slabs: %d", id, mem_limit, mem_malloced, len, p->slabs);
   MEMCACHED_SLABS_SLABCLASS_ALLOCATE(id);
 
   return 1;
