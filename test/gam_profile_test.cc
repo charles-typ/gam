@@ -314,14 +314,15 @@ void do_log(void *arg) {
 void standalone(void *arg) {
   //printf("Show the start of standalone\n");
   struct memory_config_t *trace = (struct memory_config_t *) arg;
-  GAlloc *alloc = GAllocFactory::CreateAllocator();
-  for (int i = 1; i <= trace->num_comp_nodes; i++) {
+  //GAlloc *alloc = GAllocFactory::CreateAllocator();
+  //for (int i = 1; i <= trace->num_comp_nodes; i++) {
     //printf("Getting %lld\n", SYNC_KEY + i + 10);
-    int id;
-    alloc->Get(SYNC_KEY + i + 10, &id);
+    //int id;
+    //alloc->Get(SYNC_KEY + i + 10, &id);
     //printf("Get done \n");
-    epicAssert(id == i);
-  }
+    //epicAssert(id == i);
+  //}
+  while(1){}
 }
 
 int load_trace(int fd, struct trace_t *arg, unsigned long ts_limit) {
