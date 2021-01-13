@@ -10,7 +10,7 @@
 #include "hashtable.h"
 #include "lockwrapper.h"
 
-#define ITEM_SIZE_MAX (1024*1024)
+#define ITEM_SIZE_MAX (512*1024)
 
 /* Slab sizing definitions. */
 #define POWER_SMALLEST 1
