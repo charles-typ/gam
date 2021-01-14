@@ -248,7 +248,7 @@ int SlabAllocator::do_slabs_newslab(const unsigned int id) {
       || (grow_slab_list(id) == 0)
       || ((ptr = (char *) memory_allocate((size_t) len)) == 0)) {
 
-    epicLog(LOG_WARNING, "new slab class %d failed, mem limit: %d, mem malloced: %d, len: %d, slabs: %d", id, mem_limit, mem_malloced, len, p->slabs);
+    epicLog(LOG_DEBUG, "new slab class %d failed, mem limit: %d, mem malloced: %d, len: %d, slabs: %d", id, mem_limit, mem_malloced, len, p->slabs);
     return 0;
   }
 
@@ -258,7 +258,7 @@ int SlabAllocator::do_slabs_newslab(const unsigned int id) {
 
   p->slab_list[p->slabs++] = ptr;
   mem_malloced += len;
-  epicLog(LOG_WARNING, "new slab class %d allocated, mem limit: %d, mem malloced: %d, len: %d, slabs: %d, item_size_max: %d", id, mem_limit, mem_malloced, len, p->slabs, item_size_max);
+  epicLog(LOG_DEBUG, "new slab class %d allocated, mem limit: %d, mem malloced: %d, len: %d, slabs: %d, item_size_max: %d", id, mem_limit, mem_malloced, len, p->slabs, item_size_max);
   MEMCACHED_SLABS_SLABCLASS_ALLOCATE(id);
 
   return 1;

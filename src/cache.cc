@@ -42,7 +42,7 @@ int Cache::ReadWrite(WorkRequest* wr) {
     if((cline = GetCLine(i)) && cline->state != CACHE_NOT_CACHE) {
 #else
     if ((cline = GetCLine(i))) {
-      epicLog(LOG_WARNING, "Cache hit here!!!!! %lld , %lld, %lld", wr->addr, start_blk, end_blk);
+      epicLog(LOG_DEBUG, "Cache hit here!!!!! %lld , %lld, %lld", wr->addr, start_blk, end_blk);
 
 #endif
       CacheState state = cline->state;
@@ -225,7 +225,7 @@ int Cache::ReadWrite(WorkRequest* wr) {
         epicAssert(false);
       }
     } else {
-      epicLog(LOG_WARNING, "Cache miss here!!!!! %lld , %lld, %lld", wr->addr, start_blk, end_blk);
+      epicLog(LOG_DEBUG, "Cache miss here!!!!! %lld , %lld, %lld", wr->addr, start_blk, end_blk);
       WorkRequest* lwr = new WorkRequest(*wr);
 #ifdef SELECTIVE_CACHING
       if(!cline) {
@@ -659,13 +659,13 @@ void Cache::UnLinkLRU(CacheLine* cline) {
 }
 
 void Cache::Evict() {
-  epicLog(LOG_WARNING,
+  epicLog(LOG_DEBUG,
       "used_bytes = %ld, max_cache_mem = %ld,  BLOCK_SIZE = %ld, th = %lf, to_evicted = %ld",
       used_bytes.load(), max_cache_mem, BLOCK_SIZE, worker->conf->cache_th, to_evicted.load());
   long long used = used_bytes - to_evicted * BLOCK_SIZE;
   if (used > 0 && used > max_cache_mem) {
     int n = (used - max_cache_mem) / BLOCK_SIZE;
-    epicLog(LOG_WARNING,
+    epicLog(DEBUG,
         "tryng to evict %d, used = %ld, max_cache_mem = %ld, used > max_cache_mem = %d",
         n, used, max_cache_mem, used > max_cache_mem);
     int ret = Evict(n);
