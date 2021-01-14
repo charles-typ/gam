@@ -42,6 +42,8 @@ int Cache::ReadWrite(WorkRequest* wr) {
     if((cline = GetCLine(i)) && cline->state != CACHE_NOT_CACHE) {
 #else
     if ((cline = GetCLine(i))) {
+      epicLog(LOG_WARNING, "Cache hit here!!!!!");
+
 #endif
       CacheState state = cline->state;
       //FIXME: may violate the ordering guarantee of single thread
@@ -223,6 +225,7 @@ int Cache::ReadWrite(WorkRequest* wr) {
         epicAssert(false);
       }
     } else {
+      epicLog(LOG_WARNING, "Cache miss here!!!!!");
       WorkRequest* lwr = new WorkRequest(*wr);
 #ifdef SELECTIVE_CACHING
       if(!cline) {
