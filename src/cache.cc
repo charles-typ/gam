@@ -225,7 +225,7 @@ int Cache::ReadWrite(WorkRequest* wr) {
         epicAssert(false);
       }
     } else {
-      epicLog(LOG_DEBUG, "Cache miss here!!!!! %lld , %lld, %lld", wr->addr, start_blk, end_blk);
+      epicLog(LOG_WARNING, "Cache miss here!!!!! %lld , %lld, %lld", wr->addr, start_blk, end_blk);
       WorkRequest* lwr = new WorkRequest(*wr);
 #ifdef SELECTIVE_CACHING
       if(!cline) {
