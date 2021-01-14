@@ -216,6 +216,8 @@ void do_log(void *arg) {
         //interval_between_access(log->usec - old_ts);
         char buf;
         unsigned long addr = log->addr & MMAP_ADDR_MASK;
+	printf("Address is: %lu\n", addr);
+	fflush(stdout);
         //addr = 2590695688178910448 & MMAP_ADDR_MASK;
         size_t cache_line_block = (addr) / (BLOCK_SIZE * resize_ratio);
         size_t cache_line_offset = (addr) % (BLOCK_SIZE * resize_ratio);
@@ -232,6 +234,8 @@ void do_log(void *arg) {
         //interval_between_access(log->usec - old_ts);
         char buf = '0';
         unsigned long addr = log->addr & MMAP_ADDR_MASK;
+	printf("Address is: %lu\n", addr);
+	fflush(stdout);
         //addr = 2590695688178910448 & MMAP_ADDR_MASK;
         size_t cache_line_block = (addr) / (BLOCK_SIZE * resize_ratio);
         size_t cache_line_offset = (addr) % (BLOCK_SIZE * resize_ratio);
@@ -467,7 +471,7 @@ int main(int argc, char **argv) {
   conf.worker_port = port_worker;
 
   if(is_compute) {
-    conf.cache_th = 1.0;
+    conf.cache_th = 0.0;
     long long size = (long long)((double)benchmark_size / (double)num_comp_nodes * (double)remote_ratio);
     conf.size = size < conf.size ? conf.size : size;
   } else {

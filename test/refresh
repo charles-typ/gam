@@ -2,5 +2,5 @@ git pull origin master
 cd ../src/
 make -j 8
 cd ../test/
-rm benchmark gam_test
+rm benchmark gam_test gam_profile_test
 make -j 8
