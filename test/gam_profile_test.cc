@@ -224,6 +224,8 @@ void do_log(void *arg) {
         long read_start = get_time();
         ret = alloc->Read(remote[cache_line_block] + cache_line_offset, &buf, 1);
         long read_end = get_time();
+	printf("Read time is: %lu\n", read_end - read_start);
+	fflush(stdout);
         trace->read_time += read_end - read_start;
         trace->read_ops += 1;
         assert(ret == 1);
@@ -242,6 +244,8 @@ void do_log(void *arg) {
         long write_start = get_time();
         ret = alloc->Write(remote[cache_line_block] + cache_line_offset, &buf, 1);
         long write_end = get_time();
+	printf("Write time isis: %ld\n", write_end - write_start);
+	fflush(stdout);
         trace->write_time += write_end - write_start;
         trace->write_ops += 1;
         assert(ret == 1);
@@ -471,7 +475,7 @@ int main(int argc, char **argv) {
   conf.worker_port = port_worker;
 
   if(is_compute) {
-    conf.cache_th = 0.0;
+    conf.cache_th = 0.8;
     long long size = (long long)((double)benchmark_size / (double)num_comp_nodes * (double)remote_ratio);
     conf.size = size < conf.size ? conf.size : size;
   } else {
