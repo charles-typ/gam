@@ -19,6 +19,7 @@ int Worker::ProcessLocalRead(WorkRequest* wr) {
   long time_stamp_1 = get_time();
 
   if (likely(IsLocal(wr->addr))) {
+    epicLog(LOG_WARNING, "Why are you here?\n");
     GAddr start = wr->addr;
     GAddr start_blk = TOBLOCK(start);
     GAddr end = GADD(start, wr->size);
