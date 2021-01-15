@@ -115,7 +115,10 @@ int Cache::ReadWrite(WorkRequest* wr) {
         cline->nread++;
         nread++;
 #endif
+        long start_time = get_time();
         memcpy(ls, cs, len);
+        long end_time = get_time();
+        epicLog(LOG_WARNING, "Actual read takes time: %ld", end_time - start_time);
 #ifdef USE_LRU
         UnLinkLRU(cline);
         LinkLRU(cline);
@@ -192,7 +195,10 @@ int Cache::ReadWrite(WorkRequest* wr) {
             memcpy(cs, ls, len);
           }
 #else
+          long start_time = get_time();
           memcpy(cs, ls, len);
+          long end_time = get_time();
+          epicLog(LOG_WARNING, "Actual read takes time: %ld", end_time - start_time);
 #endif
 
           //put submit request at last in case reply comes before we process afterwards works
