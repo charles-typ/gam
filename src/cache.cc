@@ -128,7 +128,7 @@ int Cache::ReadWrite(WorkRequest* wr) {
         UnLinkLRU(cline);
         LinkLRU(cline);
         long time_stamp_6 = get_time();
-        epicLog(LOG_WARNING, "Actual read takes time: %ld 1:%ld 2:%ld 3:%ld 4:%ld 5:%ld 6:%ld\n", end_time - start_time, time_stamp_1 - init_time, time_stamp_2 - time_stamp_1, time_stamp_3 - time_stamp_2, time_stamp_4 - time_stamp_3. time_stamp_5 - time_stamp_4, time_stamp_6 - time_stamp_5);
+        epicLog(LOG_WARNING, "Actual read takes time: %ld 1:%ld 2:%ld 3:%ld 4:%ld 5:%ld 6:%ld\n", end_time - start_time, time_stamp_1 - init_time, time_stamp_2 - time_stamp_1, time_stamp_3 - time_stamp_2, time_stamp_4 - time_stamp_3, time_stamp_5 - time_stamp_4, time_stamp_6 - time_stamp_5);
 #endif
       } else if (WRITE == wr->op) {
 #ifdef SELECTIVE_CACHING
