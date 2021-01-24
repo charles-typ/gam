@@ -326,7 +326,10 @@ int Cache::ReadWrite(WorkRequest* wr) {
 #ifdef USE_LRU
   if (newcline) {
   //if (newcline && !(wr->flag & ASYNC)) {
+    long start_time = get_time();
     Evict(newcline);
+    long end_time = get_time();
+    epicLog(LOG_WARNING, "Eviction takes time %ld\n", end_time - start_time);
   }
 #endif
   return ret;
