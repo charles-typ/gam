@@ -241,6 +241,8 @@ int Cache::ReadWrite(WorkRequest* wr) {
       epicLog(LOG_WARNING, "Cache miss here at time: %ld !!!!! %lld , %lld , %lld\n", get_time() - time_stamp_2, wr->addr, start_blk, end_blk);
       time_stamp_2 =  get_time();
       WorkRequest* lwr = new WorkRequest(*wr);
+      long time_stamp_3 = get_time();
+      epicLog(LOG_WARNING, "Why are you taking so much time? %ld\n", time_stamp_3 - time_stamp_2);
 #ifdef SELECTIVE_CACHING
       if(!cline) {
         newcline++;
@@ -260,7 +262,6 @@ int Cache::ReadWrite(WorkRequest* wr) {
       }
 #else
       newcline++;
-      long time_stamp_3 = get_time();
       cline = SetCLine(i);
       long time_stamp_4 = get_time();
 #endif
