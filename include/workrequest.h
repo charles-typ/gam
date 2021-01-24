@@ -1,4 +1,4 @@
-// Copyright (c) 2018 The GAM Authors 
+// Copyright (c) 2018 The GAM Authors
 
 
 #ifndef INCLUDE_WORKREQUEST_H_
@@ -14,6 +14,7 @@
 #include "lockwrapper.h"
 #include "structure.h"
 #include "zmalloc.h"
+#include "util.h"
 #ifdef GFUNC_SUPPORT
 #include "gfunc.h"
 #endif
