@@ -242,7 +242,7 @@ int Cache::ReadWrite(WorkRequest* wr) {
       time_stamp_2 =  get_time();
       WorkRequest* lwr = new WorkRequest(*wr);
       long time_stamp_3 = get_time();
-      epicLog(LOG_WARNING, "Why are you taking so much time? %ld\n", time_stamp_3 - time_stamp_2);
+      //epicLog(LOG_WARNING, "Why are you taking so much time? %ld\n", time_stamp_3 - time_stamp_2);
 #ifdef SELECTIVE_CACHING
       if(!cline) {
         newcline++;
