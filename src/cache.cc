@@ -1,4 +1,4 @@
-// Copyright (c) 2018 The GAM Authors 
+// Copyright (c) 2018 The GAM Authors
 
 
 #include <cstring>
@@ -128,7 +128,7 @@ int Cache::ReadWrite(WorkRequest* wr) {
         UnLinkLRU(cline);
         LinkLRU(cline);
         long time_stamp_6 = get_time();
-        epicLog(LOG_WARNING, "Actual read takes time: %ld 1:%ld 2:%ld 3:%ld 4:%ld 5:%ld 6:%ld\n", end_time - start_time, time_stamp_1 - init_time, time_stamp_2 - time_stamp_1, time_stamp_3 - time_stamp_2, time_stamp_4 - time_stamp_3, time_stamp_5 - time_stamp_4, time_stamp_6 - time_stamp_5);
+        epicLog(LOG_WARNING, "Actual read hit takes time: %ld 1:%ld 2:%ld 3:%ld 4:%ld 5:%ld 6:%ld\n", end_time - start_time, time_stamp_1 - init_time, time_stamp_2 - time_stamp_1, time_stamp_3 - time_stamp_2, time_stamp_4 - time_stamp_3, time_stamp_5 - time_stamp_4, time_stamp_6 - time_stamp_5);
 #endif
       } else if (WRITE == wr->op) {
 #ifdef SELECTIVE_CACHING
@@ -205,7 +205,7 @@ int Cache::ReadWrite(WorkRequest* wr) {
           long start_time = get_time();
           memcpy(cs, ls, len);
           long end_time = get_time();
-          epicLog(LOG_WARNING, "Actual read takes time: %ld", end_time - start_time);
+          epicLog(LOG_WARNING, "Actual write takes time: %ld", end_time - start_time);
 #endif
 
           //put submit request at last in case reply comes before we process afterwards works
@@ -261,6 +261,7 @@ int Cache::ReadWrite(WorkRequest* wr) {
       newcline++;
       cline = SetCLine(i);
 #endif
+      long time_stamp_3 = get_time();
       lwr->counter = 0;
       lwr->flag |= CACHED;
       lwr->addr = i;
@@ -276,10 +277,12 @@ int Cache::ReadWrite(WorkRequest* wr) {
       }
       lwr->parent = wr;
       wr->counter++;
+      long time_stamp_4;
       //to intermediate state
       if (READ == wr->op) {
         epicAssert(cline->state != CACHE_TO_SHARED);
         ToToShared(cline);
+        time_stamp_4 = get_time();
 #ifdef SELECTIVE_CACHING
         if(lwr->flag & NOT_CACHE) {
           GAddr gs = i > start ? i : start;
@@ -306,7 +309,12 @@ int Cache::ReadWrite(WorkRequest* wr) {
         epicAssert(cline->state != CACHE_TO_DIRTY);
         ToToDirty(cline);
       }
+      long start_time = get_time();
       worker->SubmitRequest(cli, lwr, ADD_TO_PENDING | REQUEST_SEND);
+      long end_time = get_time();
+      if (READ == wr->op) {
+        epicLog(LOG_WARNING, "Actual read miss takes time: %ld 1:%ld 2:%ld 3:%ld 4:%ld 5:%ld 6:%ld\n", end_time - start_time, time_stamp_1 - init_time, time_stamp_2 - time_stamp_1, time_stamp_3 - time_stamp_2, time_stamp_4 - time_stamp_3);
+      }
     }
     unlock(i);
     i = nextb;
@@ -1069,7 +1077,7 @@ bool Cache::IsBlockWLocked(GAddr block) {
 void Cache::InitCacheCLine(CacheLine* cline, bool write) {
   cline->state = CACHE_INVALID;
   cline->line = nullptr;
-  
+
   if (write) return;
 
   caddr ptr = worker->sb.sb_aligned_calloc(1, BLOCK_SIZE + CACHE_LINE_PREFIX);
