@@ -239,9 +239,9 @@ int Cache::ReadWrite(WorkRequest* wr) {
       }
     } else {
       //epicLog(LOG_WARNING, "Cache miss here at time: %ld !!!!! %lld , %lld , %lld\n", get_time() - time_stamp_2, wr->addr, start_blk, end_blk);
-      time_stamp_2 =  get_time();
+      //time_stamp_2 =  get_time();
       WorkRequest* lwr = new WorkRequest(*wr);
-      long time_stamp_3 = get_time();
+      //long time_stamp_3 = get_time();
       //epicLog(LOG_WARNING, "Why are you taking so much time? %ld\n", time_stamp_3 - time_stamp_2);
 #ifdef SELECTIVE_CACHING
       if(!cline) {
@@ -263,7 +263,7 @@ int Cache::ReadWrite(WorkRequest* wr) {
 #else
       newcline++;
       cline = SetCLine(i);
-      long time_stamp_4 = get_time();
+      //long time_stamp_4 = get_time();
 #endif
       lwr->counter = 0;
       lwr->flag |= CACHED;
@@ -280,13 +280,13 @@ int Cache::ReadWrite(WorkRequest* wr) {
       }
       lwr->parent = wr;
       wr->counter++;
-      long time_stamp_5 = get_time();
-      long time_stamp_6;
+      //long time_stamp_5 = get_time();
+      //long time_stamp_6;
       //to intermediate state
       if (READ == wr->op) {
         epicAssert(cline->state != CACHE_TO_SHARED);
         ToToShared(cline);
-        time_stamp_6 = get_time();
+       // time_stamp_6 = get_time();
 #ifdef SELECTIVE_CACHING
         if(lwr->flag & NOT_CACHE) {
           GAddr gs = i > start ? i : start;
@@ -313,12 +313,12 @@ int Cache::ReadWrite(WorkRequest* wr) {
         epicAssert(cline->state != CACHE_TO_DIRTY);
         ToToDirty(cline);
       }
-      long start_time = get_time();
+      //long start_time = get_time();
       worker->SubmitRequest(cli, lwr, ADD_TO_PENDING | REQUEST_SEND);
-      long end_time = get_time();
-      if (READ == wr->op) {
-        epicLog(LOG_WARNING, "Actual read miss takes time: %ld 1:%ld 2:%ld 3:%ld 4:%ld 5:%ld 6:%ld\n", end_time - start_time, time_stamp_1 - init_time, time_stamp_2 - time_stamp_1, time_stamp_3 - time_stamp_2, time_stamp_4 - time_stamp_3, time_stamp_5 - time_stamp_4, time_stamp_6 - time_stamp_5);
-      }
+      //long end_time = get_time();
+      //if (READ == wr->op) {
+      //  epicLog(LOG_WARNING, "Actual read miss takes time: %ld 1:%ld 2:%ld 3:%ld 4:%ld 5:%ld 6:%ld\n", end_time - start_time, time_stamp_1 - init_time, time_stamp_2 - time_stamp_1, time_stamp_3 - time_stamp_2, time_stamp_4 - time_stamp_3, time_stamp_5 - time_stamp_4, time_stamp_6 - time_stamp_5);
+      //}
     }
     unlock(i);
     i = nextb;
@@ -328,10 +328,10 @@ int Cache::ReadWrite(WorkRequest* wr) {
 #ifdef USE_LRU
   if (newcline) {
   //if (newcline && !(wr->flag & ASYNC)) {
-    long start_time = get_time();
+    //long start_time = get_time();
     Evict(newcline);
-    long end_time = get_time();
-    epicLog(LOG_WARNING, "Eviction takes time %ld\n", end_time - start_time);
+    //long end_time = get_time();
+    //epicLog(LOG_WARNING, "Eviction takes time %ld\n", end_time - start_time);
   }
 #endif
   return ret;
