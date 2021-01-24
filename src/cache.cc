@@ -238,7 +238,7 @@ int Cache::ReadWrite(WorkRequest* wr) {
         epicAssert(false);
       }
     } else {
-      epicLog(LOG_WARNING, "Cache miss here at time: %ld !!!!! %lld , %lld , %lld\n", get_time() - time_stamp_2, wr->addr, start_blk, end_blk);
+      //epicLog(LOG_WARNING, "Cache miss here at time: %ld !!!!! %lld , %lld , %lld\n", get_time() - time_stamp_2, wr->addr, start_blk, end_blk);
       time_stamp_2 =  get_time();
       WorkRequest* lwr = new WorkRequest(*wr);
       long time_stamp_3 = get_time();
