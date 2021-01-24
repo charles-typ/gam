@@ -189,7 +189,8 @@ struct WorkRequest {
 #endif
   }
   ;
-  WorkRequest(WorkRequest& wr);bool operator==(const WorkRequest& wr);
+  WorkRequest(WorkRequest& wr);
+  bool operator==(const WorkRequest& wr);
   int Ser(char* buf, int& len);
   int Deser(const char* buf, int& len);
 

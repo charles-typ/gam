@@ -290,7 +290,7 @@ int WorkRequest::Deser(const char* buf, int& len) {
 
 WorkRequest::WorkRequest(WorkRequest& wr) {
   //memcpy(this, &wr, sizeof(WorkRequest));
-  long time_stamp_1 = get_time();
+  //long time_stamp_1 = get_time();
   id = wr.id;  //identifier of the work request
 
   pid = wr.pid;  //identifier of the parent work request (used for FORWARD request)
@@ -306,7 +306,7 @@ WorkRequest::WorkRequest(WorkRequest& wr) {
   flag = wr.flag;
   ptr = wr.ptr;
   fd = wr.fd;
-  long time_stamp_2 = get_time();
+  //long time_stamp_2 = get_time();
 #if	!defined(USE_PIPE_W_TO_H) || !defined(USE_PIPE_H_TO_W)
   notify_buf = wr.notify_buf;
 #endif
@@ -314,13 +314,13 @@ WorkRequest::WorkRequest(WorkRequest& wr) {
   cond_lock = wr.cond_lock;
   cond = wr.cond;
 #endif
-  long time_stamp_3 = get_time();
+  //long time_stamp_3 = get_time();
   wid = wr.wid;
   counter.store(wr.counter);
   parent = wr.parent;
   next = wr.next;
   dup = wr.dup;
-  long time_stamp_4 = get_time();
+  //long time_stamp_4 = get_time();
 
   is_cache_hit_ = wr.is_cache_hit_;
   epicAssert(*this == wr);
@@ -331,15 +331,15 @@ WorkRequest::WorkRequest(WorkRequest& wr) {
    */
   long mask = ~LOCAL_REQUEST;
   this->flag &= mask;
-  long time_stamp_5 = get_time();
+  //long time_stamp_5 = get_time();
 #ifdef GFUNC_SUPPORT
   gfunc = wr.gfunc;
   arg = wr.arg;
   if (flag & GFUNC)
     epicAssert(gfunc);
 #endif
-  long time_stamp_6 = get_time();
-  epicLog(LOG_WARNING, "WorkRequest allocation takes time: %ld, %ld, %ld, %ld, %ld\n", time_stamp_6 - time_stamp_5, time_stamp_5 - time_stamp_4, time_stamp_4 - time_stamp_3, time_stamp_3 - time_stamp_2, time_stamp_2 - time_stamp_1);
+  //long time_stamp_6 = get_time();
+  //epicLog(LOG_WARNING, "WorkRequest allocation takes time: %ld, %ld, %ld, %ld, %ld\n", time_stamp_6 - time_stamp_5, time_stamp_5 - time_stamp_4, time_stamp_4 - time_stamp_3, time_stamp_3 - time_stamp_2, time_stamp_2 - time_stamp_1);
 }
 
 bool WorkRequest::operator==(const WorkRequest& wr) {
