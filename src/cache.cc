@@ -259,9 +259,10 @@ int Cache::ReadWrite(WorkRequest* wr) {
       }
 #else
       newcline++;
-      cline = SetCLine(i);
-#endif
       long time_stamp_3 = get_time();
+      cline = SetCLine(i);
+      long time_stamp_4 = get_time();
+#endif
       lwr->counter = 0;
       lwr->flag |= CACHED;
       lwr->addr = i;
@@ -277,12 +278,13 @@ int Cache::ReadWrite(WorkRequest* wr) {
       }
       lwr->parent = wr;
       wr->counter++;
-      long time_stamp_4;
+      long time_stamp_5 = get_time();
+      long time_stamp_6;
       //to intermediate state
       if (READ == wr->op) {
         epicAssert(cline->state != CACHE_TO_SHARED);
         ToToShared(cline);
-        time_stamp_4 = get_time();
+        time_stamp_6 = get_time();
 #ifdef SELECTIVE_CACHING
         if(lwr->flag & NOT_CACHE) {
           GAddr gs = i > start ? i : start;
