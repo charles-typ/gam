@@ -10,7 +10,7 @@
 
 int Cache::ReadWrite(WorkRequest* wr) {
 
-  long init_time = get_time();
+  //long init_time = get_time();
 #ifdef NOCACHE
   epicLog(LOG_WARNING, "shouldn't come here");
   return 0;
@@ -27,7 +27,7 @@ int Cache::ReadWrite(WorkRequest* wr) {
   GAddr start = wr->addr;
 
   wr->lock();
-  long time_stamp_1 = get_time();
+  //long time_stamp_1 = get_time();
   /*
    * we increase it by 1 before we push to the to_serve_local_request queue
    * so we have to decrease by 1 again
@@ -41,7 +41,7 @@ int Cache::ReadWrite(WorkRequest* wr) {
     GAddr nextb = BADD(i, 1);
     lock(i);
     CacheLine* cline = nullptr;
-    long time_stamp_2 = get_time();
+    //long time_stamp_2 = get_time();
 #ifdef SELECTIVE_CACHING
     if((cline = GetCLine(i)) && cline->state != CACHE_NOT_CACHE) {
 #else
@@ -66,7 +66,7 @@ int Cache::ReadWrite(WorkRequest* wr) {
         i = nextb;
         continue;
       }
-      long time_stamp_3 = get_time();
+      //long time_stamp_3 = get_time();
 
       //special processing when cache is in process of to_to_dirty
       //for WRITE, cannot allow since it may dirty the cacheline before
@@ -85,7 +85,7 @@ int Cache::ReadWrite(WorkRequest* wr) {
         i = nextb;
         continue;
       }
-      long time_stamp_4 = get_time();
+      //long time_stamp_4 = get_time();
       if (unlikely(InTransitionState(state))) {
         epicLog(LOG_INFO, "in transition state while cache read/write(%d)", wr->op);
         //we increase the counter in case
@@ -105,7 +105,7 @@ int Cache::ReadWrite(WorkRequest* wr) {
         //wr->unlock();
         return 1;
       }
-      long time_stamp_5 = get_time();
+      //long time_stamp_5 = get_time();
       epicAssert(state == CACHE_SHARED || state == CACHE_DIRTY);
 
       GAddr gs = i > start ? i : start;
@@ -121,14 +121,14 @@ int Cache::ReadWrite(WorkRequest* wr) {
         cline->nread++;
         nread++;
 #endif
-        long start_time = get_time();
+        //long start_time = get_time();
         memcpy(ls, cs, len);
-        long end_time = get_time();
+        //long end_time = get_time();
 #ifdef USE_LRU
         UnLinkLRU(cline);
         LinkLRU(cline);
-        long time_stamp_6 = get_time();
-        epicLog(LOG_WARNING, "Actual read hit takes time: %ld 1:%ld 2:%ld 3:%ld 4:%ld 5:%ld 6:%ld\n", end_time - start_time, time_stamp_1 - init_time, time_stamp_2 - time_stamp_1, time_stamp_3 - time_stamp_2, time_stamp_4 - time_stamp_3, time_stamp_5 - time_stamp_4, time_stamp_6 - time_stamp_5);
+        //long time_stamp_6 = get_time();
+        //epicLog(LOG_WARNING, "Actual read hit takes time: %ld 1:%ld 2:%ld 3:%ld 4:%ld 5:%ld 6:%ld\n", end_time - start_time, time_stamp_1 - init_time, time_stamp_2 - time_stamp_1, time_stamp_3 - time_stamp_2, time_stamp_4 - time_stamp_3, time_stamp_5 - time_stamp_4, time_stamp_6 - time_stamp_5);
 #endif
       } else if (WRITE == wr->op) {
 #ifdef SELECTIVE_CACHING
@@ -202,10 +202,10 @@ int Cache::ReadWrite(WorkRequest* wr) {
             memcpy(cs, ls, len);
           }
 #else
-          long start_time = get_time();
+          //long start_time = get_time();
           memcpy(cs, ls, len);
-          long end_time = get_time();
-          epicLog(LOG_WARNING, "Actual write takes time: %ld", end_time - start_time);
+          //long end_time = get_time();
+          //epicLog(LOG_WARNING, "Actual write takes time: %ld", end_time - start_time);
 #endif
 
           //put submit request at last in case reply comes before we process afterwards works
