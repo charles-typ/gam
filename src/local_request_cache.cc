@@ -1,9 +1,9 @@
-// Copyright (c) 2018 The GAM Authors 
+// Copyright (c) 2018 The GAM Authors
 
 int Worker::ProcessLocalRead(WorkRequest* wr) {
   epicAssert(wr->addr);
   epicAssert(!(wr->flag & ASYNC));
-  long init_time = get_time();
+  //long init_time = get_time();
   if (!(wr->flag & FENCE)) {
     Fence* fence = fences_.at(wr->fd);
     fence->lock();
@@ -16,7 +16,7 @@ int Worker::ProcessLocalRead(WorkRequest* wr) {
     }
     fence->unlock();
   }
-  long time_stamp_1 = get_time();
+  //long time_stamp_1 = get_time();
 
   if (likely(IsLocal(wr->addr))) {
     epicLog(LOG_WARNING, "Why are you here?\n");
@@ -84,10 +84,10 @@ int Worker::ProcessLocalRead(WorkRequest* wr) {
       wr->unlock();
     }
   } else {
-    long time_stamp_2 = get_time();
+    //long time_stamp_2 = get_time();
     int ret = cache.Read(wr);
-    long time_stamp_3 = get_time();
-    epicLog(LOG_WARNING, "This level read takes time: %ld 1:%ld 2:%ld\n", time_stamp_3 - time_stamp_2, time_stamp_1 - init_time, time_stamp_2 - time_stamp_1);
+    //long time_stamp_3 = get_time();
+    //epicLog(LOG_WARNING, "This level read takes time: %ld 1:%ld 2:%ld\n", time_stamp_3 - time_stamp_2, time_stamp_1 - init_time, time_stamp_2 - time_stamp_1);
     if (ret)
       return REMOTE_REQUEST;
   }

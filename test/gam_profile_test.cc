@@ -216,7 +216,7 @@ void do_log(void *arg) {
         //interval_between_access(log->usec - old_ts);
         char buf;
         unsigned long addr = log->addr & MMAP_ADDR_MASK;
-	printf("Address is: %lu\n", addr);
+	//printf("Address is: %lu\n", addr);
 	fflush(stdout);
         //addr = 2590695688178910448 & MMAP_ADDR_MASK;
         size_t cache_line_block = (addr) / (BLOCK_SIZE * resize_ratio);
@@ -244,7 +244,7 @@ void do_log(void *arg) {
         long write_start = get_time();
         ret = alloc->Write(remote[cache_line_block] + cache_line_offset, &buf, 1);
         long write_end = get_time();
-	printf("Write time isis: %ld\n", write_end - write_start);
+	printf("Write time is: %ld\n", write_end - write_start);
 	fflush(stdout);
         trace->write_time += write_end - write_start;
         trace->write_ops += 1;
