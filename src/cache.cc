@@ -313,7 +313,7 @@ int Cache::ReadWrite(WorkRequest* wr) {
       worker->SubmitRequest(cli, lwr, ADD_TO_PENDING | REQUEST_SEND);
       long end_time = get_time();
       if (READ == wr->op) {
-        epicLog(LOG_WARNING, "Actual read miss takes time: %ld 1:%ld 2:%ld 3:%ld 4:%ld 5:%ld 6:%ld\n", end_time - start_time, time_stamp_1 - init_time, time_stamp_2 - time_stamp_1, time_stamp_3 - time_stamp_2, time_stamp_4 - time_stamp_3);
+        epicLog(LOG_WARNING, "Actual read miss takes time: %ld 1:%ld 2:%ld 3:%ld 4:%ld\n", end_time - start_time, time_stamp_1 - init_time, time_stamp_2 - time_stamp_1, time_stamp_3 - time_stamp_2, time_stamp_4 - time_stamp_3);
       }
     }
     unlock(i);
