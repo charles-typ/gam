@@ -332,13 +332,14 @@ WorkRequest::WorkRequest(WorkRequest& wr) {
   long mask = ~LOCAL_REQUEST;
   this->flag &= mask;
   long time_stamp_5 = get_time();
-  epicLog(LOG_WARNING, "WorkRequest allocation takes time: %ld, %ld, %ld, %ld\n", time_stamp_5 - time_stamp_4, time_stamp_4 - time_stamp_3, time_stamp_3 - time_stamp_2, time_stamp_2 - time_stamp_1);
 #ifdef GFUNC_SUPPORT
   gfunc = wr.gfunc;
   arg = wr.arg;
   if (flag & GFUNC)
     epicAssert(gfunc);
 #endif
+  long time_stamp_6 = get_time();
+  epicLog(LOG_WARNING, "WorkRequest allocation takes time: %ld, %ld, %ld, %ld, %ld\n", time_stamp_6 - time_stamp_5, time_stamp_5 - time_stamp_4, time_stamp_4 - time_stamp_3, time_stamp_3 - time_stamp_2, time_stamp_2 - time_stamp_1);
 }
 
 bool WorkRequest::operator==(const WorkRequest& wr) {
