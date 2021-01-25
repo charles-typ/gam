@@ -1,4 +1,4 @@
-// Copyright (c) 2018 The GAM Authors 
+// Copyright (c) 2018 The GAM Authors
 
 
 #ifndef INCLUDE_CACHE_H_
@@ -106,12 +106,12 @@ class Cache {
     int curClineWR = 0;
 
     int totalInvalid = 0;
-    int curTotalInvalid = 0; 
+    int curTotalInvalid = 0;
     int clineInvalid = 0;
     int curClineInvalid = 0;
 
     double idc = 0;
-    //double thld = 1.236; 
+    //double thld = 1.236;
     double thld = 0.5;
     int lim = 100;
     int limTotalWR = 200;
@@ -127,7 +127,7 @@ class Cache {
       //totalWR = nread + nwrite == 0 ? 1 : nread + nwrite;
       totalWR = nread + nwrite;
       totalWR = totalWR == 0 ? 1 : totalWR;
-      totalInvalid = ntoinvalid; 
+      totalInvalid = ntoinvalid;
       totalInvalid = totalInvalid == 0 ? 1 : totalInvalid;
       clineWR = cline->nwrite + cline->nread;
       curTotalWR = totalWR % limTotalWR;
@@ -146,7 +146,7 @@ class Cache {
         } else {
           return false;
         }
-      } 
+      }
 
     }
   }
@@ -333,6 +333,10 @@ class Cache {
   int Read(WorkRequest* wr);
   int Write(WorkRequest* wr);
   int ReadWrite(WorkRequest* wr);
+
+  Cache_return_t ReadCollect(WorkRequest* wr);
+  Cache_return_t WriteCollect(WorkRequest* wr);
+  Cache_return_t ReadWriteCollect(WorkRequest* wr);
 
   ~Cache() { };  //it is only used when program exits
 

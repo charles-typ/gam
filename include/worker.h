@@ -1,4 +1,4 @@
-// Copyright (c) 2018 The GAM Authors 
+// Copyright (c) 2018 The GAM Authors
 
 #ifndef INCLUDE_WORKER_H_
 #define INCLUDE_WORKER_H_
@@ -40,6 +40,12 @@
 #define REQUEST_ASYNC 1 << 6
 
 class Cache;
+
+struct Cache_return_t {
+    int original_ret;
+    int mode;
+    long time;
+}
 
 struct Fence {
   bool sfenced = false;bool mfenced = false;
@@ -177,6 +183,23 @@ class Worker : public Server {
   atomic<Size> no_remote_writes_hit_;
   atomic<Size> no_remote_writes_direct_hit_;
 
+  atomic<Size> cache_read_hit_case1_;
+  atomic<Size> cache_read_hit_case1_time_;
+  atomic<Size> cache_read_hit_case2_;
+  atomic<Size> cache_read_hit_case2_time_;
+  atomic<Size> cache_read_hit_case3_;
+  atomic<Size> cache_read_hit_case3_time_;
+  atomic<Size> cache_read_hit_case4_;
+  atomic<Size> cache_read_hit_case4_time_;
+  atomic<Size> cache_write_hit_case1_;
+  atomic<Size> cache_write_hit_case1_time_;
+  atomic<Size> cache_write_hit_case2_;
+  atomic<Size> cache_write_hit_case2_time_;
+  atomic<Size> cache_read_miss_;
+  atomic<Size> cache_read_miss_time_;
+  atomic<Size> cache_write_miss_;
+  atomic<Size> cache_write_miss_time_;
+
   // logging
   void logWrite(GAddr addr, Size sz, const void* content) {
     //log->logWrite(addr, sz, content);
@@ -185,7 +208,7 @@ class Worker : public Server {
   void logOwner(int id, GAddr addr) {
     //log->logOwner(id, addr);
   }
-  
+
 
   SlabAllocator sb;
   /*
