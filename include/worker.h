@@ -42,6 +42,7 @@
 class Cache;
 
 struct Cache_return_t {
+    enum // FIXME
     int original_ret;
     int mode;
     long time;
