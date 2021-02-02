@@ -85,7 +85,51 @@ int Worker::ProcessLocalRead(WorkRequest* wr) {
     }
   } else {
     //long time_stamp_2 = get_time();
-    int ret = cache.Read(wr);
+    Cache_return_t new_ret = cache.ReadCollect(wr);
+    switch(new_ret.Cache_op) {
+      case CACHE_READ_HIT:
+        switch(new_ret.mode) {
+          case 1:
+            ++cache_read_hit_case1_;
+            cache_read_hit_case1_time_ += new_ret.time;
+            break;
+          case 2:
+            ++cache_read_hit_case2_;
+            cache_read_hit_case2_time_ += new_ret.time;
+            break;
+          case 3:
+            ++cache_read_hit_case3_;
+            cache_read_hit_case3_time_ += new_ret.time;
+            break;
+          case 4:
+            ++cache_read_hit_case4_;
+            cache_read_hit_case4_time_ += new_ret.time;
+            break;
+        }
+        break;
+      case CACHE_READ_MISS:
+        ++cache_read_miss_;
+        cache_read_miss_time_ += new_ret.time;
+        break;
+      case CACHE_WRITE_MISS:
+        ++cache_write_miss_;
+        cache_write_miss_time_ += new_ret.time;
+        break;
+      case CACHE_WRITE_HIT:
+        switch(new_ret.mode) {
+          case 1:
+            ++cache_write_hit_case1_;
+            cache_write_hit_case1_time_ += new_ret.time;
+            break;
+          case 2:
+            ++cache_write_hit_case2_;
+            cache_write_hit_case2_time_ += new_ret.time;
+            break;
+        }
+        break;
+    }
+    int ret = new_ret.original_ret;
+    //int ret = cache.Read(wr);
     //long time_stamp_3 = get_time();
     //epicLog(LOG_WARNING, "This level read takes time: %ld 1:%ld 2:%ld\n", time_stamp_3 - time_stamp_2, time_stamp_1 - init_time, time_stamp_2 - time_stamp_1);
     if (ret)
@@ -258,7 +302,50 @@ int Worker::ProcessLocalWrite(WorkRequest* wr) {
       wr->unlock();
     }
   } else {
-    int ret = cache.Write(wr);
+    Cache_return_t new_ret = cache.WriteCollect(wr);
+    switch(new_ret.Cache_op) {
+      case CACHE_READ_HIT:
+        switch(new_ret.mode) {
+          case 1:
+            ++cache_read_hit_case1_;
+            cache_read_hit_case1_time_ += new_ret.time;
+            break;
+          case 2:
+            ++cache_read_hit_case2_;
+            cache_read_hit_case2_time_ += new_ret.time;
+            break;
+          case 3:
+            ++cache_read_hit_case3_;
+            cache_read_hit_case3_time_ += new_ret.time;
+            break;
+          case 4:
+            ++cache_read_hit_case4_;
+            cache_read_hit_case4_time_ += new_ret.time;
+            break;
+        }
+        break;
+      case CACHE_READ_MISS:
+        ++cache_read_miss_;
+        cache_read_miss_time_ += new_ret.time;
+        break;
+      case CACHE_WRITE_MISS:
+        ++cache_write_miss_;
+        cache_write_miss_time_ += new_ret.time;
+        break;
+      case CACHE_WRITE_HIT:
+        switch(new_ret.mode) {
+          case 1:
+            ++cache_write_hit_case1_;
+            cache_write_hit_case1_time_ += new_ret.time;
+            break;
+          case 2:
+            ++cache_write_hit_case2_;
+            cache_write_hit_case2_time_ += new_ret.time;
+            break;
+        }
+        break;
+    }
+    int ret = new_ret.original_ret;
     if (ret) {
       return REMOTE_REQUEST;
     }

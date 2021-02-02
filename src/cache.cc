@@ -323,9 +323,15 @@ int Cache::ReadWrite(WorkRequest* wr) {
       //long start_time = get_time();
       worker->SubmitRequest(cli, lwr, ADD_TO_PENDING | REQUEST_SEND); // FIXME: Guess: this pending is for serializing requests on same address
       if (READ == wr->op) {
-        epicLog(LOG_WARNING, "Read miss at time: %ld\n", get_time() - init_time);
+        new_ret.op = CACHE_READ_MISS;
+        new_ret.mode = 0;
+        new_ret.time = get_time() - init_time;
+        epicLog(LOG_DEBUG, "Read miss at time: %ld\n", get_time() - init_time);
       } else {
-        epicLog(LOG_WARNING, "Write miss at time: %ld\n", get_time() - init_time);
+        new_ret.op = CACHE_WRITE_MISS;
+        new_ret.mode = 0;
+        new_ret.time = get_time() - init_time;
+        epicLog(LOG_DEBUG, "Write miss at time: %ld\n", get_time() - init_time);
       }
       //long end_time = get_time();
       //if (READ == wr->op) {
@@ -346,7 +352,8 @@ int Cache::ReadWrite(WorkRequest* wr) {
     //epicLog(LOG_WARNING, "Eviction takes time %ld\n", end_time - start_time);
   }
 #endif
-  return ret;
+  new_ret.original_ret = ret;
+  return new_ret;
 }
 
 int Cache::Lock(WorkRequest* wr) {
@@ -1111,6 +1118,21 @@ void Cache::InitCacheCLineIfNeeded(CacheLine* cline) {
 }
 #endif
 
+/**
+enum Cache_op {
+  CACHE_READ_HIT,
+  CACHE_READ_MISS,
+  CACHE_WRITE_HIT,
+  CACHE_WRITE_MISS
+};
+
+struct Cache_return_t {
+    Cache_op op;
+    int original_ret;
+    int mode;
+    long time;
+}
+*/
 
 
 Cache_return_t Cache::ReadWriteCollect(WorkRequest* wr) {
@@ -1170,7 +1192,10 @@ Cache_return_t Cache::ReadWriteCollect(WorkRequest* wr) {
         memcpy(ls, cs, len);
         unlock(i);
         i = nextb;
-        epicLog(LOG_WARNING, "Read hit case 1 at time: %ld\n", get_time() - init_time);
+        new_ret.op = CACHE_READ_HIT;
+        new_ret.mode = 1;
+        new_ret.time = get_time() - init_time;
+        epicLog(LOG_DEBUG, "Read hit case 1 at time: %ld\n", get_time() - init_time);
         continue;
       }
       //long time_stamp_3 = get_time();
@@ -1190,7 +1215,10 @@ Cache_return_t Cache::ReadWriteCollect(WorkRequest* wr) {
         memcpy(ls, cs, len);
         unlock(i);
         i = nextb;
-        epicLog(LOG_WARNING, "Read hit case 2 at time: %ld\n", get_time() - init_time);
+        new_ret.op = CACHE_READ_HIT;
+        new_ret.mode = 2;
+        new_ret.time = get_time() - init_time;
+        epicLog(LOG_DEBUG, "Read hit case 2 at time: %ld\n", get_time() - init_time);
         continue;
       }
       //long time_stamp_4 = get_time();
@@ -1211,8 +1239,12 @@ Cache_return_t Cache::ReadWriteCollect(WorkRequest* wr) {
         worker->AddToServeLocalRequest(i, wr);
         unlock(i);
         //wr->unlock();
+        new_ret.op = CACHE_READ_HIT;
+        new_ret.mode = 3;
+        new_ret.time = get_time() - init_time;
+        new_ret.original_ret = 1;
         epicLog(LOG_WARNING, "Read hit case 3 at time: %ld\n", get_time() - init_time);
-        return 1;
+        return new_ret;
       }
       //long time_stamp_5 = get_time();
       epicAssert(state == CACHE_SHARED || state == CACHE_DIRTY);
@@ -1238,7 +1270,10 @@ Cache_return_t Cache::ReadWriteCollect(WorkRequest* wr) {
         LinkLRU(cline);
         //long time_stamp_6 = get_time();
         //epicLog(LOG_WARNING, "Actual read hit takes time: %ld 1:%ld 2:%ld 3:%ld 4:%ld 5:%ld 6:%ld\n", end_time - start_time, time_stamp_1 - init_time, time_stamp_2 - time_stamp_1, time_stamp_3 - time_stamp_2, time_stamp_4 - time_stamp_3, time_stamp_5 - time_stamp_4, time_stamp_6 - time_stamp_5);
-        epicLog(LOG_WARNING, "Read hit case 4 at time: %ld\n", get_time() - init_time);
+        new_ret.op = CACHE_READ_HIT;
+        new_ret.mode = 4;
+        new_ret.time = get_time() - init_time;
+        epicLog(LOG_DEBUG, "Read hit case 4 at time: %ld\n", get_time() - init_time);
 #endif
       } else if (WRITE == wr->op) {
 #ifdef SELECTIVE_CACHING
@@ -1320,7 +1355,10 @@ Cache_return_t Cache::ReadWriteCollect(WorkRequest* wr) {
 
           //put submit request at last in case reply comes before we process afterwards works
           worker->SubmitRequest(cli, lwr, ADD_TO_PENDING | REQUEST_SEND);
-          epicLog(LOG_WARNING, "Write hit case 1 at time: %ld\n", get_time() - init_time);
+          epicLog(LOG_DEBUG, "Write hit case 1 at time: %ld\n", get_time() - init_time);
+          new_ret.op = CACHE_WRITE_HIT;
+          new_ret.mode = 1;
+          new_ret.time = get_time() - init_time;
         } else {
 #ifdef GFUNC_SUPPORT
           if (wr->flag & GFUNC) {
@@ -1343,7 +1381,10 @@ Cache_return_t Cache::ReadWriteCollect(WorkRequest* wr) {
           UnLinkLRU(cline);
           LinkLRU(cline);
 #endif
-          epicLog(LOG_WARNING, "Write hit case 2 at time: %ld\n", get_time() - init_time);
+          epicLog(LOG_DEBUG, "Write hit case 2 at time: %ld\n", get_time() - init_time);
+          new_ret.op = CACHE_WRITE_HIT;
+          new_ret.mode = 2;
+          new_ret.time = get_time() - init_time;
         }
       } else {
         epicLog(LOG_WARNING, "unknown op in cache operations %d", wr->op);
@@ -1429,6 +1470,9 @@ Cache_return_t Cache::ReadWriteCollect(WorkRequest* wr) {
       //long start_time = get_time();
       worker->SubmitRequest(cli, lwr, ADD_TO_PENDING | REQUEST_SEND); // FIXME: Guess: this pending is for serializing requests on same address
       if (READ == wr->op) {
+        new_ret.op = CACHE_WRITE_HIT;
+        new_ret.mode = 2;
+        new_ret.time = get_time() - init_time;
         epicLog(LOG_WARNING, "Read miss at time: %ld\n", get_time() - init_time);
       } else {
         epicLog(LOG_WARNING, "Write miss at time: %ld\n", get_time() - init_time);

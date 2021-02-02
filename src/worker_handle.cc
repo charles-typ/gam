@@ -225,6 +225,30 @@ void WorkerHandle::ReportCacheStatistics() {
                        , worker->no_remote_writes_direct_hit_.load());
 }
 
+void WorkerHandle::CollectCacheStatistics() {
+  epicLog(LOG_WARNING, "Cache Statistics");
+  fprintf(stdout, "rh1 rh2 rh3 rh4 wh1 wh2 rm wm\n");
+  fprintf(stdout, "%lu\t%lu\t%lu\t%lu\t%lu\t%lu\t%lu\t%lu\t%lu\n"
+      , worker->cache_read_hit_case1_.load()
+      , worker->cache_read_hit_case2_.load()
+      , worker->cache_read_hit_case3_.load()
+      , worker->cache_read_hit_case4_.load()
+      , worker->cache_write_hit_case1_.load()
+      , worker->cache_write_hit_case2_.load()
+      , worker->cache_read_miss_.load()
+      , worker->cache_write_miss_.load());
+  fprintf(stdout, "Time for: rh1 rh2 rh3 rh4 wh1 wh2 rm wm\n");
+  fprintf(stdout, "%lu\t%lu\t%lu\t%lu\t%lu\t%lu\t%lu\t%lu\t%lu\n"
+      , worker->cache_read_hit_case1_time_.load()
+      , worker->cache_read_hit_case2_time_.load()
+      , worker->cache_read_hit_case3_time_.load()
+      , worker->cache_read_hit_case4_time_.load()
+      , worker->cache_write_hit_case1_time_.load()
+      , worker->cache_write_hit_case2_time_.load()
+      , worker->cache_read_miss_time_.load()
+      , worker->cache_write_miss_time_.load());
+}
+
 void WorkerHandle::ResetCacheStatistics() {
 
     worker->no_local_reads_ = 0;

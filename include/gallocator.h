@@ -105,6 +105,9 @@ class GAlloc {
   void ReportCacheStatistics() {
     wh->ReportCacheStatistics();
   }
+  void CollectCacheStatistics() {
+    wh->ReportCacheStatistics();
+  }
 
   void ResetCacheStatistics() {
     wh->ResetCacheStatistics();

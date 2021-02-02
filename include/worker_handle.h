@@ -42,6 +42,7 @@ class WorkerHandle {
   }
 
   void ReportCacheStatistics();
+  void CollectCacheStatistics();
   void ResetCacheStatistics();
 
   ~WorkerHandle();
