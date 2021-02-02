@@ -86,7 +86,7 @@ int Worker::ProcessLocalRead(WorkRequest* wr) {
   } else {
     //long time_stamp_2 = get_time();
     Cache_return_t new_ret = cache.ReadCollect(wr);
-    switch(new_ret.Cache_op) {
+    switch(new_ret.op) {
       case CACHE_READ_HIT:
         switch(new_ret.mode) {
           case 1:
@@ -303,7 +303,7 @@ int Worker::ProcessLocalWrite(WorkRequest* wr) {
     }
   } else {
     Cache_return_t new_ret = cache.WriteCollect(wr);
-    switch(new_ret.Cache_op) {
+    switch(new_ret.op) {
       case CACHE_READ_HIT:
         switch(new_ret.mode) {
           case 1:
