@@ -41,20 +41,6 @@
 
 class Cache;
 
-enum Cache_op {
-  CACHE_READ_HIT,
-  CACHE_READ_MISS,
-  CACHE_WRITE_HIT,
-  CACHE_WRITE_MISS
-};
-
-typedef struct {
-    Cache_op op;
-    int original_ret;
-    int mode;
-    long time;
-} Cache_return_t;
-
 struct Fence {
   bool sfenced = false;bool mfenced = false;
   atomic<int> pending_writes;

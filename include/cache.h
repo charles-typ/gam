@@ -17,6 +17,20 @@
 
 class Worker;
 
+enum Cache_op {
+  CACHE_READ_HIT,
+  CACHE_READ_MISS,
+  CACHE_WRITE_HIT,
+  CACHE_WRITE_MISS
+};
+
+typedef struct {
+  Cache_op op;
+  int original_ret;
+  int mode;
+  long time;
+} Cache_return_t;
+
 //we assume the base address is also BLOCK-aligned
 #define GTOBLOCK(x) TOBLOCK(x)
 
