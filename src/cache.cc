@@ -9,7 +9,6 @@
 #include "kernel.h"
 
 int Cache::ReadWrite(WorkRequest* wr) {
-
   long init_time = get_time();
 #ifdef NOCACHE
   epicLog(LOG_WARNING, "shouldn't come here");
@@ -323,15 +322,9 @@ int Cache::ReadWrite(WorkRequest* wr) {
       //long start_time = get_time();
       worker->SubmitRequest(cli, lwr, ADD_TO_PENDING | REQUEST_SEND); // FIXME: Guess: this pending is for serializing requests on same address
       if (READ == wr->op) {
-        new_ret.op = CACHE_READ_MISS;
-        new_ret.mode = 0;
-        new_ret.time = get_time() - init_time;
-        epicLog(LOG_DEBUG, "Read miss at time: %ld\n", get_time() - init_time);
+        epicLog(LOG_WARNING, "Read miss at time: %ld\n", get_time() - init_time);
       } else {
-        new_ret.op = CACHE_WRITE_MISS;
-        new_ret.mode = 0;
-        new_ret.time = get_time() - init_time;
-        epicLog(LOG_DEBUG, "Write miss at time: %ld\n", get_time() - init_time);
+        epicLog(LOG_WARNING, "Write miss at time: %ld\n", get_time() - init_time);
       }
       //long end_time = get_time();
       //if (READ == wr->op) {
@@ -1469,12 +1462,15 @@ Cache_return_t Cache::ReadWriteCollect(WorkRequest* wr) {
       //long start_time = get_time();
       worker->SubmitRequest(cli, lwr, ADD_TO_PENDING | REQUEST_SEND); // FIXME: Guess: this pending is for serializing requests on same address
       if (READ == wr->op) {
-        new_ret.op = CACHE_WRITE_HIT;
-        new_ret.mode = 2;
+        new_ret.op = CACHE_READ_MISS;
+        new_ret.mode = 0;
         new_ret.time = get_time() - init_time;
-        epicLog(LOG_WARNING, "Read miss at time: %ld\n", get_time() - init_time);
+        epicLog(LOG_DEBUG, "Read miss at time: %ld\n", get_time() - init_time);
       } else {
-        epicLog(LOG_WARNING, "Write miss at time: %ld\n", get_time() - init_time);
+        new_ret.op = CACHE_WRITE_MISS;
+        new_ret.mode = 0;
+        new_ret.time = get_time() - init_time;
+        epicLog(LOG_DEBUG, "Write miss at time: %ld\n", get_time() - init_time);
       }
       //long end_time = get_time();
       //if (READ == wr->op) {
