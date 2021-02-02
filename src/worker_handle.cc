@@ -213,7 +213,7 @@ int WorkerHandle::SendRequest(WorkRequest* wr) {
 void WorkerHandle::ReportCacheStatistics() {
     epicLog(LOG_WARNING, "Cache Statistics");
     fprintf(stdout, "lread lrhit lwrite lwhit rread rrhit rwrite rwhit\n");
-    fprintf(stdout, "%lu\t%lu\t%lu\t%lu\t%lu\t%lu\t%lu\t%lu\t%lu\n"
+    fprintf(stdout, "%lld\t%lld\t%lld\t%lld\t%lld\t%lld\t%lld\t%lld\t%lld\n"
                        , worker->no_local_reads_.load()
                        , worker->no_local_reads_hit_.load()
                        , worker->no_local_writes_.load()
