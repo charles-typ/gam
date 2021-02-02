@@ -352,8 +352,7 @@ int Cache::ReadWrite(WorkRequest* wr) {
     //epicLog(LOG_WARNING, "Eviction takes time %ld\n", end_time - start_time);
   }
 #endif
-  new_ret.original_ret = ret;
-  return new_ret;
+  return ret;
 }
 
 int Cache::Lock(WorkRequest* wr) {
@@ -1496,7 +1495,8 @@ Cache_return_t Cache::ReadWriteCollect(WorkRequest* wr) {
     //epicLog(LOG_WARNING, "Eviction takes time %ld\n", end_time - start_time);
   }
 #endif
-  return ret;
+  new_ret.original_ret = ret;
+  return new_ret;
 }
 
 Cache_return_t Cache::ReadCollect(WorkRequest* wr) {
