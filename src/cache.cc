@@ -1235,7 +1235,7 @@ Cache_return_t Cache::ReadWriteCollect(WorkRequest* wr) {
         new_ret.mode = 3;
         new_ret.time = get_time() - init_time;
         new_ret.original_ret = 1;
-        epicLog(LOG_WARNING, "Read hit case 3 at time: %ld\n", get_time() - init_time);
+        epicLog(LOG_DEBUG, "Read hit case 3 at time: %ld\n", get_time() - init_time);
         return new_ret;
       }
       //long time_stamp_5 = get_time();
