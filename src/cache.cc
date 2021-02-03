@@ -704,7 +704,7 @@ void Cache::Evict() {
   long long used = used_bytes - to_evicted * BLOCK_SIZE;
   if (used > 0 && used > max_cache_mem) {
     int n = (used - max_cache_mem) / BLOCK_SIZE;
-    epicLog(LOG_WARNING,
+    epicLog(LOG_DEBUG,
         "tryng to evict %d, used = %ld, max_cache_mem = %ld, used > max_cache_mem = %d",
         n, used, max_cache_mem, used > max_cache_mem);
     int ret = Evict(n);
