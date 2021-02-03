@@ -56,5 +56,8 @@ gam_test: gam_test.cc
 gam_profile_test: gam_profile_test.cc
 	$(CPP) $(CFLAGS) $(INCLUDE) -o $@ $^ $(LIBS)
 
+gam_log_test: gam_log_test.cc
+	$(CPP) $(CFLAGS) $(INCLUDE) -o $@ $^ $(LIBS)
+
 clean:
-	rm -rf example example-r worker master slab_test rw_test lock_test lru_test fence_test benchmark hashtable_test hashtable_throw_test garray_test cs_test gfunc_test gam_test gam_profile_test
+	rm -rf example example-r worker master slab_test rw_test lock_test lru_test fence_test benchmark hashtable_test hashtable_throw_test garray_test cs_test gfunc_test gam_test gam_profile_test gam_log_test
