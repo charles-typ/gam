@@ -204,6 +204,7 @@ void do_log(void *arg) {
   unsigned long i = 0;
 
   long pass_start = get_time();
+  long total_interval = 0;
   char *cur;
 
   if (trace->is_compute) {
@@ -213,11 +214,12 @@ void do_log(void *arg) {
       cur = &(trace->logs[i * sizeof(RWlog)]);
       if (op == 'R') {
         struct RWlog *log = (struct RWlog *) cur;
+        total_interval += log->usec - old_ts;
         interval_between_access(log->usec - old_ts);
         char buf;
         unsigned long addr = log->addr & MMAP_ADDR_MASK;
 	//printf("Address is: %lu\n", addr);
-	fflush(stdout);
+	//fflush(stdout);
         //addr = 2590695688178910448 & MMAP_ADDR_MASK;
         size_t cache_line_block = (addr) / (BLOCK_SIZE * resize_ratio);
         size_t cache_line_offset = (addr) % (BLOCK_SIZE * resize_ratio);
@@ -225,7 +227,7 @@ void do_log(void *arg) {
         ret = alloc->Read(remote[cache_line_block] + cache_line_offset, &buf, 1);
         long read_end = get_time();
 	//printf("Read time is: %lu\n", read_end - read_start);
-	fflush(stdout);
+	//fflush(stdout);
         trace->read_time += read_end - read_start;
         trace->read_ops += 1;
         assert(ret == 1);
@@ -233,11 +235,12 @@ void do_log(void *arg) {
 
       } else if (op == 'W') {
         struct RWlog *log = (struct RWlog *) cur;
+        total_interval += log->usec - old_ts;
         interval_between_access(log->usec - old_ts);
         char buf = '0';
         unsigned long addr = log->addr & MMAP_ADDR_MASK;
 	//printf("Address is: %lu\n", addr);
-	fflush(stdout);
+	//fflush(stdout);
         //addr = 2590695688178910448 & MMAP_ADDR_MASK;
         size_t cache_line_block = (addr) / (BLOCK_SIZE * resize_ratio);
         size_t cache_line_offset = (addr) % (BLOCK_SIZE * resize_ratio);
@@ -245,7 +248,7 @@ void do_log(void *arg) {
         ret = alloc->Write(remote[cache_line_block] + cache_line_offset, &buf, 1);
         long write_end = get_time();
 	//printf("Write time is: %ld\n", write_end - write_start);
-	fflush(stdout);
+	//fflush(stdout);
         trace->write_time += write_end - write_start;
         trace->write_ops += 1;
         assert(ret == 1);
@@ -253,6 +256,7 @@ void do_log(void *arg) {
 
       } else if (op == 'M') {
         struct Mlog *log = (struct Mlog *) cur;
+        total_interval += log->hdr.usec;
         interval_between_access(log->hdr.usec);
         unsigned int len = log->len;
         //GAddr ret_addr = alloc->Malloc(len, REMOTE);
@@ -261,10 +265,12 @@ void do_log(void *arg) {
       } else if (op == 'B') {
         struct Blog *log = (struct Blog *) cur;
         interval_between_access(log->usec - old_ts);
+        total_interval += log->usec - old_ts;
         old_ts = log->usec;
       } else if (op == 'U') {
         struct Ulog *log = (struct Ulog *) cur;
         interval_between_access(log->hdr.usec);
+        total_interval += log->hdr.usec;
         //auto itr = len2addr.find(log->len);
         //if (itr == len2addr.end()) {
           //printf("no memory to free\n");
@@ -284,7 +290,7 @@ void do_log(void *arg) {
     long pass_end = get_time();
 
     alloc->CollectCacheStatistics();
-    printf("done in %ld ns, fence time is %ld, thread: %d, pass: %d\n", pass_end - pass_start, pass_end - fence_start, trace->tid, trace->pass);
+    printf("done in %ld ns, fence time is %ld, sleep time is %ld, thread: %d, pass: %d\n", pass_end - pass_start, pass_end - fence_start, total_interval, trace->tid, trace->pass);
     trace->time += pass_end - pass_start;
     printf("total run time is %ld ns, thread: %d, pass: %d\n", trace->time, trace->tid, trace->pass);
     if(trace->read_ops)
