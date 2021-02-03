@@ -213,7 +213,7 @@ void do_log(void *arg) {
       cur = &(trace->logs[i * sizeof(RWlog)]);
       if (op == 'R') {
         struct RWlog *log = (struct RWlog *) cur;
-        //interval_between_access(log->usec - old_ts);
+        interval_between_access(log->usec - old_ts);
         char buf;
         unsigned long addr = log->addr & MMAP_ADDR_MASK;
 	//printf("Address is: %lu\n", addr);
@@ -233,7 +233,7 @@ void do_log(void *arg) {
 
       } else if (op == 'W') {
         struct RWlog *log = (struct RWlog *) cur;
-        //interval_between_access(log->usec - old_ts);
+        interval_between_access(log->usec - old_ts);
         char buf = '0';
         unsigned long addr = log->addr & MMAP_ADDR_MASK;
 	//printf("Address is: %lu\n", addr);
@@ -253,18 +253,18 @@ void do_log(void *arg) {
 
       } else if (op == 'M') {
         struct Mlog *log = (struct Mlog *) cur;
-        //interval_between_access(log->hdr.usec);
+        interval_between_access(log->hdr.usec);
         unsigned int len = log->len;
         //GAddr ret_addr = alloc->Malloc(len, REMOTE);
         //len2addr.insert(pair<unsigned int, GAddr>(len, ret_addr));
         old_ts += log->hdr.usec;
       } else if (op == 'B') {
         struct Blog *log = (struct Blog *) cur;
-        //interval_between_access(log->usec - old_ts);
+        interval_between_access(log->usec - old_ts);
         old_ts = log->usec;
       } else if (op == 'U') {
         struct Ulog *log = (struct Ulog *) cur;
-        //interval_between_access(log->hdr.usec);
+        interval_between_access(log->hdr.usec);
         //auto itr = len2addr.find(log->len);
         //if (itr == len2addr.end()) {
           //printf("no memory to free\n");
@@ -478,6 +478,7 @@ int main(int argc, char **argv) {
     conf.cache_th = 1.0;
     long long size = (long long)((double)benchmark_size / (double)num_comp_nodes * (double)remote_ratio);
     conf.size = size < conf.size ? conf.size : size;
+    conf.size = 1024 * 1024 * 1024 * 6L;
   } else {
     conf.cache_th = 0.0;
     //this is for voltDB 10GB
