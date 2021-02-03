@@ -216,10 +216,6 @@ void do_log(void *arg) {
         //interval_between_access(log->usec - old_ts);
         char buf;
         unsigned long addr = log->addr & MMAP_ADDR_MASK;
-        if(addr > 3221225472) {
-          printf("Fuck this addr: %lu\n", addr);
-          throw std::invalid_argument( "Addr too large" );
-        }
 	//printf("Address is: %lu\n", addr);
 	fflush(stdout);
         //addr = 2590695688178910448 & MMAP_ADDR_MASK;
@@ -240,10 +236,6 @@ void do_log(void *arg) {
         //interval_between_access(log->usec - old_ts);
         char buf = '0';
         unsigned long addr = log->addr & MMAP_ADDR_MASK;
-        if(addr > 3221225472) {
-          printf("Fuck this addr: %lu\n", addr);
-          throw std::invalid_argument( "Addr too large" );
-        }
 	//printf("Address is: %lu\n", addr);
 	fflush(stdout);
         //addr = 2590695688178910448 & MMAP_ADDR_MASK;
