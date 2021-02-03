@@ -34,10 +34,10 @@
 //#define SYNC_KEY 204800
 #define PASS_KEY 40960000
 #define SYNC_KEY (unsigned long)10 * 1024 * 1024 * 1024 // default: 10 GB
+#define BLOCK_SIZE 4096
 //#define num_comp_nodes 4
 //#define NUM_MEM_NODES 2
 
-int addr_size = sizeof(GAddr);
 
 // Test configuration
 //#define single_thread_test
@@ -184,7 +184,6 @@ void do_log(void *arg) {
   unsigned long old_ts = 0;
   unsigned long i = 0;
 
-  long pass_start = get_time();
   long total_interval = 0;
   char *cur;
 
