@@ -293,7 +293,8 @@ void do_log(void *arg) {
         printf("unexpected log: %c at line: %lu\n", op, i);
       }
     }
-    long fence_start = get_time();
+    //long fence_start = get_time();
+    long fence_start = 0;
     alloc->MFence();
     alloc->WLock(remote[0], BLOCK_SIZE * resize_ratio);
     alloc->UnLock(remote[0], BLOCK_SIZE * resize_ratio);
