@@ -19,10 +19,6 @@
 #include <cstring>
 #include <mutex>
 
-#include "../include/lockwrapper.h"
-#include "zmalloc.h"
-#include "util.h"
-#include "gallocator.h"
 
 #define TEST_ALLOC_FLAG MAP_PRIVATE|MAP_ANONYMOUS    // default: 0xef
 #define TEST_INIT_ALLOC_SIZE (unsigned long)9 * 1024 * 1024 * 1024 // default: 16 GB
@@ -136,7 +132,7 @@ int num_nodes;
 int num_comp_nodes;
 int node_id = -1;
 int num_threads;
-GAddr *remote;
+
 int resize_ratio = 1;
 
 
@@ -182,25 +178,9 @@ void do_log(void *arg) {
   struct trace_t *trace = (struct trace_t *) arg;
 
 
-  //printf("Remote step to be %d\n", remote_step);
-
-  //printf("Creating the Allocator in node: %d, in thread: %d\n", trace->node_idx, trace->tid);
-  long allocator_start = get_time();
-  GAlloc *alloc = GAllocFactory::CreateAllocator();
-  long allocator_end = get_time();
-  printf("Allocator created in %ld ns\n", allocator_end - allocator_start);
-  //printf("Finish creating the Allocator in node: %d, in thread: %d\n", trace->node_idx, trace->tid);
-
-
   int ret;
 
-
-  //pin to core first
-  pin_to_core(trace->tid);
-
   unsigned len = trace->len;
-
-  multimap<unsigned int, GAddr> len2addr;
   unsigned long old_ts = 0;
   unsigned long i = 0;
 
@@ -221,17 +201,8 @@ void do_log(void *arg) {
         unsigned long addr = log->addr & MMAP_ADDR_MASK;
 	//printf("Address is: %lu\n", addr);
 	//fflush(stdout);
-        //addr = 2590695688178910448 & MMAP_ADDR_MASK;
         size_t cache_line_block = (addr) / (BLOCK_SIZE * resize_ratio);
         size_t cache_line_offset = (addr) % (BLOCK_SIZE * resize_ratio);
-        long read_start = get_time();
-        ret = alloc->Read(remote[cache_line_block] + cache_line_offset, &buf, 1);
-        long read_end = get_time();
-	//printf("Read time is: %lu\n", read_end - read_start);
-	//fflush(stdout);
-        trace->read_time += read_end - read_start;
-        trace->read_ops += 1;
-        assert(ret == 1);
         old_ts = log->usec;
 
       } else if (op == 'W') {
@@ -242,17 +213,8 @@ void do_log(void *arg) {
         unsigned long addr = log->addr & MMAP_ADDR_MASK;
 	//printf("Address is: %lu\n", addr);
 	//fflush(stdout);
-        //addr = 2590695688178910448 & MMAP_ADDR_MASK;
         size_t cache_line_block = (addr) / (BLOCK_SIZE * resize_ratio);
         size_t cache_line_offset = (addr) % (BLOCK_SIZE * resize_ratio);
-        long write_start = get_time();
-        ret = alloc->Write(remote[cache_line_block] + cache_line_offset, &buf, 1);
-        long write_end = get_time();
-	//printf("Write time is: %ld\n", write_end - write_start);
-	//fflush(stdout);
-        trace->write_time += write_end - write_start;
-        trace->write_ops += 1;
-        assert(ret == 1);
         old_ts = log->usec;
 
       } else if (op == 'M') {
@@ -260,8 +222,6 @@ void do_log(void *arg) {
         total_interval += log->hdr.usec;
         interval_between_access(log->hdr.usec);
         unsigned int len = log->len;
-        //GAddr ret_addr = alloc->Malloc(len, REMOTE);
-        //len2addr.insert(pair<unsigned int, GAddr>(len, ret_addr));
         old_ts += log->hdr.usec;
       } else if (op == 'B') {
         struct Blog *log = (struct Blog *) cur;
@@ -272,58 +232,15 @@ void do_log(void *arg) {
         struct Ulog *log = (struct Ulog *) cur;
         interval_between_access(log->hdr.usec);
         total_interval += log->hdr.usec;
-        //auto itr = len2addr.find(log->len);
-        //if (itr == len2addr.end()) {
-          //printf("no memory to free\n");
-        //} else {
-          //alloc->Free(itr->second);
-          //len2addr.erase(itr);
-        //}
         old_ts += log->hdr.usec;
       } else {
         printf("unexpected log: %c at line: %lu\n", op, i);
       }
     }
-    long fence_start = get_time();
-    alloc->MFence();
-    alloc->WLock(remote[0], BLOCK_SIZE * resize_ratio);
-    alloc->UnLock(remote[0], BLOCK_SIZE * resize_ratio);
-    long pass_end = get_time();
 
-    alloc->CollectCacheStatistics();
-    printf("done in %ld ns, fence time is %ld, sleep time is %ld, thread: %d, pass: %d\n", pass_end - pass_start, pass_end - fence_start, total_interval, trace->tid, trace->pass);
-    trace->time += pass_end - pass_start;
-    printf("total run time is %ld ns, thread: %d, pass: %d\n", trace->time, trace->tid, trace->pass);
-    if(trace->read_ops)
-      printf("average read latency is %ld ns, thread: %d, pass: %d\n", trace->read_time/trace->read_ops, trace->tid, trace->pass);
-    if(trace->write_ops)
-      printf("average write latency is %ld ns, thread: %d, pass: %d\n", trace->write_time/trace->write_ops, trace->tid, trace->pass);
-    trace->write_time = 0;
-    trace->read_time = 0;
-    trace->read_ops = 0;
-    trace->write_ops = 0;
+    printf("sleep time is %ld\n", total_interval);
     fflush(stdout);
   }
-
-  //FIXME warm up here?
-  //make sure all the requests are complete
-  long sync_start = get_time();
-  uint64_t SYNC_RUN_BASE = SYNC_KEY + trace->num_nodes * 2;
-  uint64_t sync_id = SYNC_RUN_BASE + trace->num_nodes * node_id + trace->tid + PASS_KEY * trace->pass;
-  //printf("Putting node_id: %d, thread id: %d, pass: %d, key: %lld, value: %lld\n", node_id, trace->tid, trace->pass, sync_id, sync_id);
-  alloc->Put(sync_id, &sync_id, sizeof(uint64_t));
-  for (int i = 1; i <= trace->num_comp_nodes; i++) {
-    for (int j = 0; j < trace->num_threads; j++) {
-      //epicLog(LOG_WARNING, "waiting for node %d, thread %d", i, j);
-      alloc->Get(SYNC_RUN_BASE + trace->num_nodes * i + j + PASS_KEY * trace->pass, &sync_id);
-      //epicLog(LOG_WARNING, "get sync_id %lld from node %d, thread %d, should be: %lld", sync_id, i,
-              //j, SYNC_RUN_BASE + trace->num_nodes * i + j + PASS_KEY * trace->pass);
-      epicAssert(sync_id == SYNC_RUN_BASE + trace->num_nodes * i + j + PASS_KEY * trace->pass);
-    }
-  }
-  long sync_end = get_time();
-  printf("All nodes synced in %ld ns\n", sync_end - sync_start);
-
 }
 
 void standalone(void *arg) {
@@ -441,82 +358,7 @@ int main(int argc, char **argv) {
     return 1;
   }
 #endif
-  /**
-   *	struct Conf {
-   * 	bool is_master = true;  //mark whether current process is the master (obtained from conf and the current ip)
-   * 	int master_port = 12345;
-   * 	std::string master_ip = "localhost";
-   * 	std::string master_bindaddr;
-   * 	int worker_port = 12346;
-   * 	std::string worker_bindaddr;
-   * 	std::string worker_ip = "localhost";
-   * 	Size size = 1024 * 1024L * 512;  //per-server size of memory pre-allocated
-   * 	Size ghost_th = 1024 * 1024;
-   * 	double cache_th = 0.15;  //if free mem is below this threshold, we start to allocate memory from remote nodes
-   * 	int unsynced_th = 1;
-   * 	double factor = 1.25;
-   * 	int maxclients = 1024;
-   * 	int maxthreads = 10;
-   * 	int backlog = TCP_BACKLOG;
-   * 	int loglevel = LOG_WARNING;
-   * 	std::string* logfile = nullptr;
-   * 	int timeout = 10;  //ms
-   * 	int eviction_period = 100;  //ms
-   *	};
-  **/
 
-  // Global configuration here
-
-  printf("Currently configuration is: ");
-  printf(
-      "master: %s:%d, worker: %s:%d, is_master: %s, size to allocate: %ld\n",
-      ip_master.c_str(), port_master, ip_worker.c_str(), port_worker,
-      is_master == 1 ? "true" : "false", benchmark_size / num_nodes);
-
-  Conf conf;
-  conf.loglevel = DEBUG_LEVEL;
-  conf.is_master = is_master;
-  conf.master_ip = ip_master;
-  conf.master_port = port_master;
-  conf.worker_ip = ip_worker;
-  conf.worker_port = port_worker;
-
-  if(is_compute) {
-    conf.cache_th = 1.0;
-    long long size = (long long)((double)benchmark_size / (double)num_comp_nodes * (double)remote_ratio);
-    conf.size = size < conf.size ? conf.size : size;
-    conf.size = 1024 * 1024 * 1024 * 6L;
-  } else {
-    conf.cache_th = 0.0;
-    //this is for voltDB 10GB
-    conf.size = 1024 * 1024 * 1024 * 10L;
-    //this is for tensorflow 4GB
-    //conf.size = 1024 * 1024 * 1024 * 4L;
-  }
-  printf("Size to allocate: %ld\n", conf.size);
-
-  // Global memory allocator
-  printf("Start the allocator here !!!!!!!!!\n");
-  GAlloc *alloc = GAllocFactory::CreateAllocator(&conf);
-  printf("End the allocator here !!!!!!!!!\n");
-  sleep(1);
-  fflush(stdout);
-
-  //sync with all the other workers
-  //check all the workers are started
-  int id;
-  node_id = alloc->GetID();
-  printf("Waiting for all the nodes !!!!!!!!!\n");
-  printf("Putting %lld, %lld\n", SYNC_KEY + node_id, node_id);
-  alloc->Put(SYNC_KEY + node_id, &node_id, sizeof(int));
-  printf("Put done\n");
-  for (int i = 1; i <= num_nodes; i++) {
-    printf("Gettting %lld\n", SYNC_KEY + i);
-    alloc->Get(SYNC_KEY + i, &id);
-    printf("Get done \n");
-    epicAssert(id == i);
-  }
-  fflush(stdout);
   //open files
   if(is_compute) {
     int *fd = new int[num_threads];
@@ -535,49 +377,6 @@ int main(int argc, char **argv) {
       int size = read(fd[i], &first_log, sizeof(RWlog));
       start_ts = min(start_ts, first_log.usec);
     }
-    printf("start ts is: %lu\n", start_ts);
-
-    int remote_step = benchmark_size / BLOCK_SIZE / resize_ratio;
-    remote = (GAddr *) malloc(sizeof(GAddr) * remote_step);
-    //GAddr *remote;
-    long alloc_start = get_time();
-
-    if(is_compute) {
-      if (is_master) {
-        //printf("Master malloc the remote memory in slices: %d, node: %d, in thread: %d\n",
-        //remote_step,
-        //trace->node_idx,
-        //trace->tid);
-        for (int i = 0; i < remote_step; i++) {
-          remote[i] = alloc->Malloc(BLOCK_SIZE * resize_ratio, REMOTE);
-          alloc->Put(i, &remote[i], addr_size);
-        }
-        //printf("Finish malloc the remote memory in slices node: %d, in thread: %d\n",
-        //trace->node_idx,
-        //trace->tid);
-      } else {
-        //printf("Worker malloc the remote memory in slices node: %d, in thread: %d\n",
-        //trace->node_idx,
-        //trace->tid);
-        for (int i = 0; i < remote_step; i++) {
-          GAddr addr;
-          int ret = alloc->Get(i, &addr);
-          epicAssert(ret == addr_size);
-          remote[i] = addr;
-        }
-        //printf("Finish worker malloc the remote memory in slices node: %d, in thread: %d\n",
-        //trace->node_idx,
-        //trace->tid);
-      }
-      //for (int i = 0; i < remote_step; i++) {
-      //  printf("Addr is: %lu\n", remote[i]);
-      //}
-
-    }
-    long alloc_end = get_time();
-    printf("allocate is %ld ns\n", alloc_end - alloc_start);
-    fflush(stdout);
-
 
     for (int i = 0; i < num_threads; ++i) {
       args[i].num_threads = num_threads;
@@ -653,15 +452,11 @@ int main(int argc, char **argv) {
         break;
       }
     }
-    //printf("Putting %lld, %lld\n", SYNC_KEY + node_id + 10, node_id);
-    alloc->Put(SYNC_KEY + node_id + 10, &node_id, sizeof(int));
-    //printf("Put done\n");
 
     for (int i = 0; i < num_threads; ++i) {
       close(fd[i]);
     }
     delete[] fd;
-    free(remote);
   } else {
     pthread_t memory_thread;
     memory_args.num_comp_nodes = num_comp_nodes;
