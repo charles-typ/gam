@@ -216,6 +216,10 @@ void do_log(void *arg) {
         //interval_between_access(log->usec - old_ts);
         char buf;
         unsigned long addr = log->addr & MMAP_ADDR_MASK;
+        if(addr > 3221225472) {
+          printf("Fuck this addr: %lu\n", addr);
+          throw std::invalid_argument( "Addr too large" );
+        }
 	//printf("Address is: %lu\n", addr);
 	fflush(stdout);
         //addr = 2590695688178910448 & MMAP_ADDR_MASK;
@@ -236,6 +240,10 @@ void do_log(void *arg) {
         //interval_between_access(log->usec - old_ts);
         char buf = '0';
         unsigned long addr = log->addr & MMAP_ADDR_MASK;
+        if(addr > 3221225472) {
+          printf("Fuck this addr: %lu\n", addr);
+          throw std::invalid_argument( "Addr too large" );
+        }
 	//printf("Address is: %lu\n", addr);
 	fflush(stdout);
         //addr = 2590695688178910448 & MMAP_ADDR_MASK;
@@ -561,9 +569,9 @@ int main(int argc, char **argv) {
         //trace->node_idx,
         //trace->tid);
       }
-      for (int i = 0; i < remote_step; i++) {
-        printf("Addr is: %lu\n", remote[i]);
-      }
+      //for (int i = 0; i < remote_step; i++) {
+      //  printf("Addr is: %lu\n", remote[i]);
+      //}
 
     }
     long alloc_end = get_time();
