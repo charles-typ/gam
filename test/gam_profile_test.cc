@@ -552,8 +552,7 @@ int main(int argc, char **argv) {
         //trace->node_idx,
         //trace->tid);
         for (int i = 0; i < remote_step; i++) {
-          print("Addr is: %lu", remote[i]);
-          remote[i] = addr;
+          printf("Addr is: %lu", remote[i]);
         }
         //printf("Finish worker malloc the remote memory in slices node: %d, in thread: %d\n",
         //trace->node_idx,
