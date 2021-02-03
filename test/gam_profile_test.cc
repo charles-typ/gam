@@ -552,14 +552,18 @@ int main(int argc, char **argv) {
         //trace->node_idx,
         //trace->tid);
         for (int i = 0; i < remote_step; i++) {
-          GAddr addr;
-          int ret = alloc->Get(i, &addr);
-          epicAssert(ret == addr_size);
+          print("Addr is: %lu", remote[i]);
           remote[i] = addr;
         }
         //printf("Finish worker malloc the remote memory in slices node: %d, in thread: %d\n",
         //trace->node_idx,
         //trace->tid);
+      }
+      for (int i = 0; i < remote_step; i++) {
+        GAddr addr;
+        int ret = alloc->Get(i, &addr);
+        epicAssert(ret == addr_size);
+        remote[i] = addr;
       }
     }
     long alloc_end = get_time();
