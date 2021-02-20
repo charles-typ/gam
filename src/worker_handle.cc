@@ -92,6 +92,7 @@ int WorkerHandle::SendRequest(WorkRequest* wr) {
       worker->GetWorkerId(), *wr->notify_buf, wr->op, wr->flag, wr->status,
       wr->addr, wr->size, wr->fd);
   int ret = worker->ProcessLocalRequest(wr);  //not complete due to remote or previously-sent similar requests
+  long start_time = get_time();
   if (ret) {  //not complete due to remote or previously-sent similar requests
     if (wr->flag & ASYNC) {
       return SUCCESS;
@@ -112,6 +113,12 @@ int WorkerHandle::SendRequest(WorkRequest* wr) {
 #else
       epicLog(LOG_DEBUG, "Waiting for remote reply");
       while (*notify_buf != 2);
+      long end_time = get_time();
+      if(wr->op == READ) {
+        worker->cache_read_miss_time_ += end_time - start_time;
+      } else if (wr->op == WRITE) {
+        worker->cache_write_miss_time_ += end_time - start_time;
+      }
       epicLog(LOG_DEBUG, "get notified via buf");
 #endif
       return wr->status;
