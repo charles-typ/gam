@@ -1148,7 +1148,7 @@ Cache_return_t Cache::ReadWriteCollect(WorkRequest* wr) {
   GAddr start = wr->addr;
 
   wr->lock();
-  //long time_stamp_1 = get_time();
+  long time_stamp_1 = get_time();
   /*
    * we increase it by 1 before we push to the to_serve_local_request queue
    * so we have to decrease by 1 again
