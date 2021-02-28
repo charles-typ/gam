@@ -219,10 +219,10 @@ void do_log(void *arg) {
         long read_start = get_time();
         ret = alloc->Read(remote[cache_line_block] + cache_line_offset, &buf, 1);
         long read_end = get_time();
-	    printf("Read time is: %lu\n", read_end - read_start);
-	    fflush(stdout);
-        //trace->read_time += read_end - read_start;
-        //trace->read_ops += 1;
+	    //printf("Read time is: %lu\n", read_end - read_start);
+	    //fflush(stdout);
+        trace->read_time += read_end - read_start;
+        trace->read_ops += 1;
         assert(ret == 1);
         old_ts = log->usec;
 
@@ -239,10 +239,10 @@ void do_log(void *arg) {
         long write_start = get_time();
         ret = alloc->Write(remote[cache_line_block] + cache_line_offset, &buf, 1);
         long write_end = get_time();
-	    printf("Write time is: %ld\n", write_end - write_start);
-	    fflush(stdout);
-        //trace->write_time += write_end - write_start;
-        //trace->write_ops += 1;
+	    //printf("Write time is: %ld\n", write_end - write_start);
+	    //fflush(stdout);
+        trace->write_time += write_end - write_start;
+        trace->write_ops += 1;
         assert(ret == 1);
         old_ts = log->usec;
 
@@ -292,10 +292,10 @@ void do_log(void *arg) {
     printf("done in %ld ns, fence time is %ld, sleep time is %ld, thread: %d, pass: %d\n", pass_end - pass_start, pass_end - fence_start, total_interval, trace->tid, trace->pass);
     trace->time += pass_end - pass_start;
     printf("total run time is %ld ns, thread: %d, pass: %d\n", trace->time, trace->tid, trace->pass);
-    //if(trace->read_ops)
-      //printf("average read latency is %ld ns, thread: %d, pass: %d\n", trace->read_time/trace->read_ops, trace->tid, trace->pass);
-    //if(trace->write_ops)
-      //printf("average write latency is %ld ns, thread: %d, pass: %d\n", trace->write_time/trace->write_ops, trace->tid, trace->pass);
+    if(trace->read_ops)
+      printf("total read time is %ld ns, thread: %d, pass: %d\n", trace->read_time, trace->tid, trace->pass);
+    if(trace->write_ops)
+      printf("total write time is %ld ns, thread: %d, pass: %d\n", trace->write_time, trace->tid, trace->pass);
     //trace->write_time = 0;
     //trace->read_time = 0;
     //trace->read_ops = 0;
