@@ -112,6 +112,8 @@ struct trace_t {
   long read_ops;
   long write_time;
   long write_ops;
+  long total_interval;
+  long total_fence;
   unsigned long benchmark_size;
   double remote_ratio;
   bool is_master;
@@ -199,7 +201,7 @@ void do_log(void *arg) {
   unsigned long i = 0;
 
   long pass_start = get_time();
-  long total_interval = 0;
+  //long total_interval = 0;
   char *cur;
 
   if (trace->is_compute) {
@@ -209,7 +211,7 @@ void do_log(void *arg) {
       if (op == 'R') {
         struct RWlog *log = (struct RWlog *) cur;
         if(log->usec - old_ts <= 999999999) {
-          total_interval += log->usec - old_ts;
+          trace->total_interval += log->usec - old_ts;
         }
         interval_between_access(log->usec - old_ts);
         char buf;
@@ -229,7 +231,7 @@ void do_log(void *arg) {
       } else if (op == 'W') {
         struct RWlog *log = (struct RWlog *) cur;
         if(log->usec - old_ts <= 999999999) {
-          total_interval += log->usec - old_ts;
+          trace->total_interval += log->usec - old_ts;
         }
         interval_between_access(log->usec - old_ts);
         char buf = '0';
@@ -249,7 +251,7 @@ void do_log(void *arg) {
       } else if (op == 'M') {
         struct Mlog *log = (struct Mlog *) cur;
         if(log->hdr.usec <= 999999999) {
-          total_interval += log->hdr.usec;
+          trace->total_interval += log->hdr.usec;
         }
         interval_between_access(log->hdr.usec);
         unsigned int len = log->len;
@@ -260,14 +262,14 @@ void do_log(void *arg) {
         struct Blog *log = (struct Blog *) cur;
         interval_between_access(log->usec - old_ts);
         if(log->usec - old_ts <= 999999999) {
-          total_interval += log->usec - old_ts;
+          trace->total_interval += log->usec - old_ts;
         }
         old_ts = log->usec;
       } else if (op == 'U') {
         struct Ulog *log = (struct Ulog *) cur;
         interval_between_access(log->hdr.usec);
         if(log->hdr.usec <= 999999999) {
-          total_interval += log->hdr.usec;
+          trace->total_interval += log->hdr.usec;
         }
         //auto itr = len2addr.find(log->len);
         //if (itr == len2addr.end()) {
@@ -291,7 +293,8 @@ void do_log(void *arg) {
 #endif
     printf("done in %ld ns, fence time is %ld, sleep time is %ld, thread: %d, pass: %d\n", pass_end - pass_start, pass_end - fence_start, total_interval, trace->tid, trace->pass);
     trace->time += pass_end - pass_start;
-    printf("total run time is %ld ns, thread: %d, pass: %d\n", trace->time, trace->tid, trace->pass);
+    trace->total_fence += pass_end - fence_start;
+    printf("total run time is %ld ns, fence_time is %ld, sleep time is %ld, thread: %d, pass: %d\n", trace->time, trace->total_fence, trace->total_interval, trace->tid, trace->pass);
     if(trace->read_ops)
       printf("total read time is %ld ns, thread: %d, pass: %d\n", trace->read_time, trace->tid, trace->pass);
     if(trace->write_ops)
