@@ -218,13 +218,13 @@ void do_log(void *arg) {
         unsigned long addr = log->addr & MMAP_ADDR_MASK;
         size_t cache_line_block = (addr) / (BLOCK_SIZE * resize_ratio);
         size_t cache_line_offset = (addr) % (BLOCK_SIZE * resize_ratio);
-        long read_start = get_time();
+        //long read_start = get_time();
         ret = alloc->Read(remote[cache_line_block] + cache_line_offset, &buf, 1);
-        long read_end = get_time();
+        //long read_end = get_time();
 	    //printf("Read time is: %lu\n", read_end - read_start);
 	    //fflush(stdout);
-        trace->read_time += read_end - read_start;
-        trace->read_ops += 1;
+        //trace->read_time += read_end - read_start;
+        //trace->read_ops += 1;
         assert(ret == 1);
         old_ts = log->usec;
 
@@ -238,13 +238,13 @@ void do_log(void *arg) {
         unsigned long addr = log->addr & MMAP_ADDR_MASK;
         size_t cache_line_block = (addr) / (BLOCK_SIZE * resize_ratio);
         size_t cache_line_offset = (addr) % (BLOCK_SIZE * resize_ratio);
-        long write_start = get_time();
+        //long write_start = get_time();
         ret = alloc->Write(remote[cache_line_block] + cache_line_offset, &buf, 1);
-        long write_end = get_time();
+        //long write_end = get_time();
 	    //printf("Write time is: %ld\n", write_end - write_start);
 	    //fflush(stdout);
-        trace->write_time += write_end - write_start;
-        trace->write_ops += 1;
+        //trace->write_time += write_end - write_start;
+        //trace->write_ops += 1;
         assert(ret == 1);
         old_ts = log->usec;
 
@@ -283,7 +283,7 @@ void do_log(void *arg) {
         printf("unexpected log: %c at line: %lu\n", op, i);
       }
     }
-    long fence_start = get_time();
+    //long fence_start = get_time();
     alloc->MFence();
     alloc->WLock(remote[0], BLOCK_SIZE * resize_ratio);
     alloc->UnLock(remote[0], BLOCK_SIZE * resize_ratio);
@@ -293,8 +293,9 @@ void do_log(void *arg) {
 #endif
     printf("done in %ld ns, thread: %d, pass: %d\n", pass_end - pass_start, trace->tid, trace->pass);
     trace->time += pass_end - pass_start;
-    trace->total_fence += pass_end - fence_start;
-    printf("total run time is %ld ns, fence_time is %ld, sleep time is %ld, thread: %d, pass: %d\n", trace->time, trace->total_fence, trace->total_interval, trace->tid, trace->pass);
+    //trace->total_fence += pass_end - fence_start;
+    //printf("total run time is %ld ns, fence_time is %ld, sleep time is %ld, thread: %d, pass: %d\n", trace->time, trace->total_fence, trace->total_interval, trace->tid, trace->pass);
+    printf("total run time is %ld ns, thread: %d, pass: %d\n", trace->time, trace->tid, trace->pass);
     if(trace->read_ops)
       printf("total read time is %ld ns, thread: %d, pass: %d\n", trace->read_time, trace->tid, trace->pass);
     if(trace->write_ops)
