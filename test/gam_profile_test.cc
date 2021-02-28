@@ -291,7 +291,7 @@ void do_log(void *arg) {
 #ifdef PROFILE_LATENCY
     alloc->CollectCacheStatistics();
 #endif
-    printf("done in %ld ns, fence time is %ld, sleep time is %ld, thread: %d, pass: %d\n", pass_end - pass_start, pass_end - fence_start, total_interval, trace->tid, trace->pass);
+    printf("done in %ld ns, thread: %d, pass: %d\n", pass_end - pass_start, trace->tid, trace->pass);
     trace->time += pass_end - pass_start;
     trace->total_fence += pass_end - fence_start;
     printf("total run time is %ld ns, fence_time is %ld, sleep time is %ld, thread: %d, pass: %d\n", trace->time, trace->total_fence, trace->total_interval, trace->tid, trace->pass);
