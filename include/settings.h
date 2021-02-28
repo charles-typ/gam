@@ -107,4 +107,10 @@ using namespace std;
  */
 #define GID_INDEX 3
 
+/**
+ * Profile test configuration
+ */
+//#define PROFILE_LATENCY
+
+
 #endif /* INCLUDE_SETTINGS_H_ */

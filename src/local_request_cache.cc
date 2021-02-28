@@ -85,6 +85,7 @@ int Worker::ProcessLocalRead(WorkRequest* wr) {
     }
   } else {
     //long time_stamp_2 = get_time();
+#ifdef PROFILE_LATENCY
     Cache_return_t new_ret = cache.ReadCollect(wr);
     switch(new_ret.op) {
       case CACHE_READ_HIT:
@@ -129,7 +130,9 @@ int Worker::ProcessLocalRead(WorkRequest* wr) {
         break;
     }
     int ret = new_ret.original_ret;
-    //int ret = cache.Read(wr);
+#else
+    int ret = cache.Read(wr);
+#endif
     //long time_stamp_3 = get_time();
     //epicLog(LOG_WARNING, "This level read takes time: %ld 1:%ld 2:%ld\n", time_stamp_3 - time_stamp_2, time_stamp_1 - init_time, time_stamp_2 - time_stamp_1);
     if (ret)
@@ -302,6 +305,7 @@ int Worker::ProcessLocalWrite(WorkRequest* wr) {
       wr->unlock();
     }
   } else {
+#ifdef PROFILE_LATENCY
     Cache_return_t new_ret = cache.WriteCollect(wr);
     switch(new_ret.op) {
       case CACHE_READ_HIT:
@@ -346,6 +350,9 @@ int Worker::ProcessLocalWrite(WorkRequest* wr) {
         break;
     }
     int ret = new_ret.original_ret;
+#else
+    int ret = cache.Write(wr);
+#endif
     if (ret) {
       return REMOTE_REQUEST;
     }

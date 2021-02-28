@@ -1148,7 +1148,7 @@ Cache_return_t Cache::ReadWriteCollect(WorkRequest* wr) {
   GAddr start = wr->addr;
 
   wr->lock();
-  long time_stamp_1 = get_time();
+  //long time_stamp_1 = get_time();
   /*
    * we increase it by 1 before we push to the to_serve_local_request queue
    * so we have to decrease by 1 again
@@ -1162,7 +1162,7 @@ Cache_return_t Cache::ReadWriteCollect(WorkRequest* wr) {
     GAddr nextb = BADD(i, 1);
     lock(i);
     CacheLine* cline = nullptr;
-    long time_stamp_2 = get_time();
+    //long time_stamp_2 = get_time();
 #ifdef SELECTIVE_CACHING
     if((cline = GetCLine(i)) && cline->state != CACHE_NOT_CACHE) {
 #else
@@ -1191,7 +1191,7 @@ Cache_return_t Cache::ReadWriteCollect(WorkRequest* wr) {
         //epicLog(LOG_DEBUG, "Read hit case 1 at time: %ld\n", get_time() - init_time);
         continue;
       }
-      long time_stamp_3 = get_time();
+      //long time_stamp_3 = get_time();
 
       //special processing when cache is in process of to_to_dirty
       //for WRITE, cannot allow since it may dirty the cacheline before
@@ -1214,7 +1214,7 @@ Cache_return_t Cache::ReadWriteCollect(WorkRequest* wr) {
         //epicLog(LOG_DEBUG, "Read hit case 2 at time: %ld\n", get_time() - init_time);
         continue;
       }
-      long time_stamp_4 = get_time();
+      //long time_stamp_4 = get_time();
       if (unlikely(InTransitionState(state))) {
         epicLog(LOG_INFO, "in transition state while cache read/write(%d)", wr->op);
         //we increase the counter in case
@@ -1239,7 +1239,7 @@ Cache_return_t Cache::ReadWriteCollect(WorkRequest* wr) {
         //epicLog(LOG_DEBUG, "Read hit case 3 at time: %ld\n", get_time() - init_time);
         return new_ret;
       }
-      long time_stamp_5 = get_time();
+
       epicAssert(state == CACHE_SHARED || state == CACHE_DIRTY);
 
       GAddr gs = i > start ? i : start;
@@ -1258,11 +1258,12 @@ Cache_return_t Cache::ReadWriteCollect(WorkRequest* wr) {
         long start_time = get_time();
         memcpy(ls, cs, len);
         long end_time = get_time();
+        //long time_stamp_5 = get_time();
 #ifdef USE_LRU
         UnLinkLRU(cline);
         LinkLRU(cline);
-        long time_stamp_6 = get_time();
-        epicLog(LOG_WARNING, "Actual read hit takes time: %ld 1:%ld 2:%ld 3:%ld 4:%ld 5:%ld 6:%ld\n", end_time - start_time, time_stamp_1 - init_time, time_stamp_2 - time_stamp_1, time_stamp_3 - time_stamp_2, time_stamp_4 - time_stamp_3, time_stamp_5 - time_stamp_4, time_stamp_6 - time_stamp_5);
+        //long time_stamp_6 = get_time();
+        //epicLog(LOG_WARNING, "Actual read hit takes time: %ld 1:%ld 2:%ld 3:%ld 4:%ld 5:%ld 6:%ld\n", end_time - start_time, time_stamp_1 - init_time, time_stamp_2 - time_stamp_1, time_stamp_3 - time_stamp_2, time_stamp_4 - time_stamp_3, time_stamp_5 - time_stamp_4, time_stamp_6 - time_stamp_5);
         new_ret.op = CACHE_READ_HIT;
         new_ret.mode = 4;
         new_ret.time = get_time() - init_time;

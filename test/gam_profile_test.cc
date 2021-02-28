@@ -20,6 +20,7 @@
 #include <mutex>
 
 #include "../include/lockwrapper.h"
+#include "../include/settings.h"
 #include "zmalloc.h"
 #include "util.h"
 #include "gallocator.h"
@@ -177,18 +178,12 @@ inline void interval_between_access(long delta_time_usec) {
 }
 
 void do_log(void *arg) {
-  //printf("Show the start of do_log\n");
   struct trace_t *trace = (struct trace_t *) arg;
 
-
-  //printf("Remote step to be %d\n", remote_step);
-
-  //printf("Creating the Allocator in node: %d, in thread: %d\n", trace->node_idx, trace->tid);
   long allocator_start = get_time();
   GAlloc *alloc = GAllocFactory::CreateAllocator();
   long allocator_end = get_time();
   printf("Allocator created in %ld ns\n", allocator_end - allocator_start);
-  //printf("Finish creating the Allocator in node: %d, in thread: %d\n", trace->node_idx, trace->tid);
 
 
   int ret;
@@ -208,7 +203,6 @@ void do_log(void *arg) {
   char *cur;
 
   if (trace->is_compute) {
-    //printf("This is a compute node, run everything here!\n");
     for (i = 0; i < trace->len; ++i) {
       volatile char op = trace->logs[i * sizeof(RWlog)];
       cur = &(trace->logs[i * sizeof(RWlog)]);
@@ -220,16 +214,13 @@ void do_log(void *arg) {
         interval_between_access(log->usec - old_ts);
         char buf;
         unsigned long addr = log->addr & MMAP_ADDR_MASK;
-	//printf("Address is: %lu\n", addr);
-	//fflush(stdout);
-        //addr = 2590695688178910448 & MMAP_ADDR_MASK;
         size_t cache_line_block = (addr) / (BLOCK_SIZE * resize_ratio);
         size_t cache_line_offset = (addr) % (BLOCK_SIZE * resize_ratio);
-        //long read_start = get_time();
+        long read_start = get_time();
         ret = alloc->Read(remote[cache_line_block] + cache_line_offset, &buf, 1);
-        //long read_end = get_time();
-	//printf("Read time is: %lu\n", read_end - read_start);
-	//fflush(stdout);
+        long read_end = get_time();
+	    printf("Read time is: %lu\n", read_end - read_start);
+	    fflush(stdout);
         //trace->read_time += read_end - read_start;
         //trace->read_ops += 1;
         assert(ret == 1);
@@ -243,16 +234,13 @@ void do_log(void *arg) {
         interval_between_access(log->usec - old_ts);
         char buf = '0';
         unsigned long addr = log->addr & MMAP_ADDR_MASK;
-	//printf("Address is: %lu\n", addr);
-	//fflush(stdout);
-        //addr = 2590695688178910448 & MMAP_ADDR_MASK;
         size_t cache_line_block = (addr) / (BLOCK_SIZE * resize_ratio);
         size_t cache_line_offset = (addr) % (BLOCK_SIZE * resize_ratio);
-        //long write_start = get_time();
+        long write_start = get_time();
         ret = alloc->Write(remote[cache_line_block] + cache_line_offset, &buf, 1);
-        //long write_end = get_time();
-	//printf("Write time is: %ld\n", write_end - write_start);
-	//fflush(stdout);
+        long write_end = get_time();
+	    printf("Write time is: %ld\n", write_end - write_start);
+	    fflush(stdout);
         //trace->write_time += write_end - write_start;
         //trace->write_ops += 1;
         assert(ret == 1);
@@ -293,14 +281,14 @@ void do_log(void *arg) {
         printf("unexpected log: %c at line: %lu\n", op, i);
       }
     }
-    //long fence_start = get_time();
-    long fence_start = 0;
+    long fence_start = get_time();
     alloc->MFence();
     alloc->WLock(remote[0], BLOCK_SIZE * resize_ratio);
     alloc->UnLock(remote[0], BLOCK_SIZE * resize_ratio);
     long pass_end = get_time();
-
+#ifdef PROFILE_LATENCY
     alloc->CollectCacheStatistics();
+#endif
     printf("done in %ld ns, fence time is %ld, sleep time is %ld, thread: %d, pass: %d\n", pass_end - pass_start, pass_end - fence_start, total_interval, trace->tid, trace->pass);
     trace->time += pass_end - pass_start;
     printf("total run time is %ld ns, thread: %d, pass: %d\n", trace->time, trace->tid, trace->pass);
@@ -312,7 +300,6 @@ void do_log(void *arg) {
     //trace->read_time = 0;
     //trace->read_ops = 0;
     //trace->write_ops = 0;
-    fflush(stdout);
   }
 
   //FIXME warm up here?
