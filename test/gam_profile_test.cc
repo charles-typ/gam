@@ -296,6 +296,7 @@ void do_log(void *arg) {
       printf("total read time is %ld ns, thread: %d, pass: %d\n", trace->read_time, trace->tid, trace->pass);
     if(trace->write_ops)
       printf("total write time is %ld ns, thread: %d, pass: %d\n", trace->write_time, trace->tid, trace->pass);
+    fflush(stdout);
     //trace->write_time = 0;
     //trace->read_time = 0;
     //trace->read_ops = 0;
