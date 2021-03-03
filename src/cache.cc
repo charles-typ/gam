@@ -215,7 +215,7 @@ int Cache::ReadWrite(WorkRequest* wr) {
           long submit_start_time = get_time();
           worker->SubmitRequest(cli, lwr, ADD_TO_PENDING | REQUEST_SEND);
           long submit_end_time = get_time();
-          epicLog(LOG_DEBUG, "Write hit case 1 at time: %ld %ld \n", submit_start_time - init_time, submit_end_time - submit_start_time);
+          epicLog(LOG_WARNING, "Write hit case 1 at time: %ld %ld \n", submit_start_time - init_time, submit_end_time - submit_start_time);
         } else {
 #ifdef GFUNC_SUPPORT
           if (wr->flag & GFUNC) {
@@ -326,7 +326,7 @@ int Cache::ReadWrite(WorkRequest* wr) {
       worker->SubmitRequest(cli, lwr, ADD_TO_PENDING | REQUEST_SEND); // FIXME: Guess: this pending is for serializing requests on same address
       long submit_end_time = get_time();
       if (WRITE == wr->op) {
-        epicLog(LOG_DEBUG,
+        epicLog(LOG_WARNING,
                 "Write miss at time: %ld %ld \n",
                 submit_start_time - init_time,
                 submit_end_time - submit_start_time);
