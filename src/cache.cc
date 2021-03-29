@@ -9,7 +9,7 @@
 #include "kernel.h"
 
 int Cache::ReadWrite(WorkRequest* wr) {
-  //long init_time = get_time();
+  long init_time = get_time();
 #ifdef NOCACHE
   epicLog(LOG_WARNING, "shouldn't come here");
   return 0;
@@ -212,8 +212,10 @@ int Cache::ReadWrite(WorkRequest* wr) {
 #endif
 
           //put submit request at last in case reply comes before we process afterwards works
+          long submit_start_time = get_time();
           worker->SubmitRequest(cli, lwr, ADD_TO_PENDING | REQUEST_SEND);
-          //epicLog(LOG_DEBUG, "Write hit case 1 at time: %ld\n", get_time() - init_time);
+          long submit_end_time = get_time();
+          epicLog(LOG_WARNING, "Write hit case 1 at time: %ld %ld \n", submit_start_time - init_time, submit_end_time - submit_start_time);
         } else {
 #ifdef GFUNC_SUPPORT
           if (wr->flag & GFUNC) {
@@ -320,8 +322,16 @@ int Cache::ReadWrite(WorkRequest* wr) {
         ToToDirty(cline);
       }
       //long start_time = get_time();
+      long submit_start_time = get_time();
       worker->SubmitRequest(cli, lwr, ADD_TO_PENDING | REQUEST_SEND); // FIXME: Guess: this pending is for serializing requests on same address
-      //if (READ == wr->op) {
+      long submit_end_time = get_time();
+      if (WRITE == wr->op) {
+        epicLog(LOG_WARNING,
+                "Write miss at time: %ld %ld \n",
+                submit_start_time - init_time,
+                submit_end_time - submit_start_time);
+      }
+        //if (READ == wr->op) {
       //  epicLog(LOG_DEBUG, "Read miss at time: %ld\n", get_time() - init_time);
       //} else {
       //  epicLog(LOG_DEBUG, "Write miss at time: %ld\n", get_time() - init_time);
