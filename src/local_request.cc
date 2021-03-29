@@ -98,7 +98,7 @@ int Worker::ProcessLocalMalloc(WorkRequest* wr) {
     Client* cli = GetClient();
     cli->lock();
     if (cli) {
-      epicLog(LOG_DEBUG, "allocate remotely at worker %d", cli->GetWorkerId());
+      epicLog(LOG_WARNING, "allocate remotely at worker %d", cli->GetWorkerId());
       Size free = cli->GetFreeMem();
       cli->SetMemStat(cli->GetTotalMem(), free - wr->size);  //update memory stats
       cli->unlock();

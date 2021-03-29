@@ -486,8 +486,8 @@ int main(int argc, char **argv) {
   if(is_compute) {
     conf.cache_th = 1.0;
     long long size = (long long)((double)benchmark_size / (double)num_comp_nodes * (double)remote_ratio);
-    conf.size = size < conf.size ? conf.size : size;
-    conf.size = 1024 * 1024 * 1024 * 6L;
+    //conf.size = size < conf.size ? conf.size : size;
+    //conf.size = 1024 * 1024 * 1024 * 6L;
   } else {
     conf.cache_th = 0.0;
     //this is for voltDB 10GB

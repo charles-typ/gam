@@ -86,8 +86,8 @@ class Cache {
   //following are performance statistics
   atomic<long> read_miss;
   atomic<long> write_miss;
-  atomic<size_t> used_bytes;
-  size_t max_cache_mem = 0;
+  atomic<Size> used_bytes;
+  Size max_cache_mem = 0;
 
 #ifdef USE_LRU
   //LRU list

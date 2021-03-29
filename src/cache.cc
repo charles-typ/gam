@@ -580,11 +580,13 @@ Cache::Cache(Worker* w)
       {
   this->worker = w;
   max_cache_mem = w->conf->cache_th * w->conf->size;
+  epicLog(LOG_WARNING, "setting max cache mem to %lld %lf %lld",max_cache_mem, w->conf->cache_th, w->conf->size);
 }
 
 void Cache::SetWorker(Worker* w) {
   this->worker = w;
   max_cache_mem = w->conf->cache_th * w->conf->size;
+  epicLog(LOG_WARNING, "setting max cache mem to %lld %lf %lld",max_cache_mem, w->conf->cache_th, w->conf->size);
 }
 
 void* Cache::GetLine(GAddr addr) {
@@ -702,8 +704,9 @@ void Cache::Evict() {
       "used_bytes = %ld, max_cache_mem = %ld,  BLOCK_SIZE = %ld, th = %lf, to_evicted = %ld",
       used_bytes.load(), max_cache_mem, BLOCK_SIZE, worker->conf->cache_th, to_evicted.load());
   long long used = used_bytes - to_evicted * BLOCK_SIZE;
-  if (used > 0 && used > max_cache_mem) {
-    int n = (used - max_cache_mem) / BLOCK_SIZE;
+  double evict_th = 0.9;
+  if (used > 0 && used > max_cache_mem * evict_th) {
+    int n = (used - max_cache_mem * evict_th) / BLOCK_SIZE;
     epicLog(LOG_DEBUG,
         "tryng to evict %d, used = %ld, max_cache_mem = %ld, used > max_cache_mem = %d",
         n, used, max_cache_mem, used > max_cache_mem);
@@ -720,11 +723,12 @@ void Cache::Evict() {
  * 		   false if we don't have enough free space for n more cache lines
  */
 int Cache::Evict(int n) {
+  double evict_th = 0.9;
   long long used = used_bytes - to_evicted * BLOCK_SIZE;
-  if (used < 0 || used <= max_cache_mem)
+  if (used < 0 || used <= max_cache_mem * evict_th)
     return 0;
 
-  int max = (used - max_cache_mem) / BLOCK_SIZE;
+  int max = (used - max_cache_mem * evict_th) / BLOCK_SIZE;
   n = n > max ? max : n;
 #ifdef USE_APPR_LRU
   int i = 0;
@@ -845,7 +849,7 @@ CacheLine* Cache::SetCLine(GAddr addr, void* line) {
       caddr ptr = worker->sb.sb_aligned_calloc(1,
                                                BLOCK_SIZE + CACHE_LINE_PREFIX);
       used_bytes += (BLOCK_SIZE + CACHE_LINE_PREFIX);
-//      epicLog(LOG_WARNING, "Used bytes set to be: %ld", used_bytes.load());
+      epicLog(LOG_DEBUG, "Used bytes set to be: %ld for addr: %lld", used_bytes.load(), block);
       //*(byte*) ptr = CACHE_INVALID;
       ptr = (byte*) ptr + CACHE_LINE_PREFIX;
       cl->line = ptr;
