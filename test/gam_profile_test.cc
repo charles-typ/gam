@@ -296,10 +296,10 @@ void do_log(void *arg) {
     //trace->total_fence += pass_end - fence_start;
     //printf("total run time is %ld ns, fence_time is %ld, sleep time is %ld, thread: %d, pass: %d\n", trace->time, trace->total_fence, trace->total_interval, trace->tid, trace->pass);
     printf("total run time is %ld ns, thread: %d, pass: %d\n", trace->time, trace->tid, trace->pass);
-    if(trace->read_ops)
-      printf("total read time is %ld ns, thread: %d, pass: %d\n", trace->read_time, trace->tid, trace->pass);
-    if(trace->write_ops)
-      printf("total write time is %ld ns, thread: %d, pass: %d\n", trace->write_time, trace->tid, trace->pass);
+    //if(trace->read_ops)
+    //  printf("total read time is %ld ns, thread: %d, pass: %d\n", trace->read_time, trace->tid, trace->pass);
+    //if(trace->write_ops)
+    //  printf("total write time is %ld ns, thread: %d, pass: %d\n", trace->write_time, trace->tid, trace->pass);
     fflush(stdout);
     //trace->write_time = 0;
     //trace->read_time = 0;
