@@ -30,11 +30,11 @@
 #define TEST_METADATA_SIZE 16
 
 #define LOG_NUM_ONCE (unsigned long)1000
-#define LOG_NUM_TOTAL (unsigned long)50000000
+#define LOG_NUM_TOTAL (unsigned long)500000//00
 #define MMAP_ADDR_MASK 0xffffffffffff
-#define MAX_NUM_THREAD 4
+#define MAX_NUM_THREAD 16
 #define SLEEP_THRES_NANOS 10
-#define TIMEWINDOW_US 10000000
+#define TIMEWINDOW_US 100000//00
 #define DEBUG_LEVEL LOG_WARNING
 //#define SYNC_KEY 204800
 #define PASS_KEY 40960000
@@ -487,6 +487,7 @@ int main(int argc, char **argv) {
     conf.cache_th = 1.0;
     long long size = (long long)((double)benchmark_size / (double)num_comp_nodes * (double)remote_ratio);
     //conf.size = size < conf.size ? conf.size : size;
+    conf.size = size;
     //conf.size = 1024 * 1024 * 1024 * 6L;
   } else {
     conf.cache_th = 0.0;
