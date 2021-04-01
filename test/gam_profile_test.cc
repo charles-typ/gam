@@ -187,7 +187,7 @@ void do_log(void *arg) {
   //GAlloc *alloc = GAllocFactory::CreateAllocator();
   //long allocator_end = get_time();
   GAlloc *alloc = trace->alloc;
-  printf("Allocator created in %ld ns\n", allocator_end - allocator_start);
+  //printf("Allocator created in %ld ns\n", allocator_end - allocator_start);
 
 
   int ret;
