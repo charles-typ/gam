@@ -120,6 +120,7 @@ struct trace_t {
   bool is_compute;
   int num_threads;
   int pass;
+  GAlloc *alloc;
 };
 
 struct memory_config_t {
@@ -182,9 +183,10 @@ inline void interval_between_access(long delta_time_usec) {
 void do_log(void *arg) {
   struct trace_t *trace = (struct trace_t *) arg;
 
-  long allocator_start = get_time();
-  GAlloc *alloc = GAllocFactory::CreateAllocator();
-  long allocator_end = get_time();
+  //long allocator_start = get_time();
+  //GAlloc *alloc = GAllocFactory::CreateAllocator();
+  //long allocator_end = get_time();
+  GAlloc *alloc = trace->alloc;
   printf("Allocator created in %ld ns\n", allocator_end - allocator_start);
 
 
@@ -593,6 +595,7 @@ int main(int argc, char **argv) {
       args[i].tid = i;
       args[i].logs = (char *) malloc(LOG_NUM_TOTAL * sizeof(RWlog)); // This should be allocated locally
       args[i].benchmark_size = benchmark_size;
+      args[i].alloc = GAllocFactory::CreateAllocator();
       if (!args[i].logs)
         printf("fail to alloc buf to hold logs\n");
     }
