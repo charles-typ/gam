@@ -710,14 +710,14 @@ void Cache::UnLinkLRU(CacheLine* cline) {
 }
 
 void Cache::Evict() {
-  epicLog(LOG_DEBUG,
+  epicLog(LOG_WARNING,
       "used_bytes = %ld, max_cache_mem = %ld,  BLOCK_SIZE = %ld, th = %lf, to_evicted = %ld",
       used_bytes.load(), max_cache_mem, BLOCK_SIZE, worker->conf->cache_th, to_evicted.load());
   long long used = used_bytes - to_evicted * BLOCK_SIZE;
-  double evict_th = 0.9;
+  double evict_th = 0.8;
   if (used > 0 && used > max_cache_mem * evict_th) {
     int n = (used - max_cache_mem * evict_th) / BLOCK_SIZE;
-    epicLog(LOG_DEBUG,
+    epicLog(LOG_WARNING,
         "tryng to evict %d, used = %ld, max_cache_mem = %ld, used > max_cache_mem = %d",
         n, used, max_cache_mem, used > max_cache_mem);
     int ret = Evict(n);
@@ -733,7 +733,7 @@ void Cache::Evict() {
  * 		   false if we don't have enough free space for n more cache lines
  */
 int Cache::Evict(int n) {
-  double evict_th = 0.9;
+  double evict_th = 0.8;
   long long used = used_bytes - to_evicted * BLOCK_SIZE;
   if (used < 0 || used <= max_cache_mem * evict_th)
     return 0;
@@ -751,7 +751,7 @@ int Cache::Evict(int n) {
 #else
   int i = 0;
   int tries = 1, tried = 0;
-  int max_evict = 16;
+  int max_evict = 128;
   epicLog(LOG_INFO, "trying to evict %d, but max is %d", n, max_evict);
   if (n > max_evict)
     n = max_evict;
