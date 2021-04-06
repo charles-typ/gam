@@ -608,7 +608,7 @@ void Worker::ProcessRemoteWriteCache(Client* client, WorkRequest* wr) {
         wr->op = PENDING_INVALIDATE;
         AddToPending(wr->id, wr);
         cache.ToToInvalid(cline);
-    	epicLog(LOG_WARNING, "FETCH AND INVALID");
+    	epicLog(LOG_DEBUG, "FETCH AND INVALID");
         epicAssert(BLOCK_ALIGNED(wr->addr) || wr->size < BLOCK_SIZE);
         client->WriteWithImm(wr->ptr, cline->line, wr->size, orig_id, wr->id,
             true);
@@ -669,7 +669,7 @@ void Worker::ProcessRemoteWriteCache(Client* client, WorkRequest* wr) {
         wr->op = PENDING_INVALIDATE;
         AddToPending(wr->id, wr);
         cache.ToToInvalid(cline);
-    	epicLog(LOG_WARNING, "WRITE FORWARD");
+    	epicLog(LOG_DEBUG, "WRITE FORWARD");
 #ifdef SELECTIVE_CACHING
         if(wr->flag & NOT_CACHE) {
           epicAssert(BLOCK_ALIGNED(wr->addr));

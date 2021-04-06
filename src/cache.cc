@@ -760,7 +760,7 @@ int Cache::Evict(int n) {
     int lru_no = GetRandom(0, LRU_NUM);
     if (lru_locks_[lru_no].try_lock()) {
       if (!tails[lru_no]) {
-        epicLog(LOG_WARNING, "No cache exists");
+        epicLog(LOG_INFO, "No cache exists");
         lru_locks_[lru_no].unlock();
         return 0;
       }
@@ -984,7 +984,7 @@ void Cache::ToToShared(GAddr addr) {
  */
 void Cache::ToToInvalid(GAddr addr) {
   epicAssert(addr == GTOBLOCK(addr));
-  epicLog(LOG_WARNING, "Fuck why are you using this function?");
+  epicLog(LOG_WARNING, "Why are you using this function?");
   GAddr block = GTOBLOCK(addr);
   try {
     CacheLine* cline = caches.at(block);
