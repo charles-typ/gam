@@ -710,14 +710,14 @@ void Cache::UnLinkLRU(CacheLine* cline) {
 }
 
 void Cache::Evict() {
-  epicLog(LOG_WARNING,
+  epicLog(LOG_DEBUG,
       "used_bytes = %ld, max_cache_mem = %ld,  BLOCK_SIZE = %ld, th = %lf, to_evicted = %ld",
       used_bytes.load(), max_cache_mem, BLOCK_SIZE, worker->conf->cache_th, to_evicted.load());
   long long used = used_bytes - to_evicted * BLOCK_SIZE;
   double evict_th = 0.8;
   if (used > 0 && used > max_cache_mem * evict_th) {
     int n = (used - max_cache_mem * evict_th) / BLOCK_SIZE;
-    epicLog(LOG_WARNING,
+    epicLog(LOG_DEBUG,
         "tryng to evict %d, used = %ld, max_cache_mem = %ld, used > max_cache_mem = %d",
         n, used, max_cache_mem, used > max_cache_mem);
     int ret = Evict(n);
@@ -752,7 +752,7 @@ int Cache::Evict(int n) {
   int i = 0;
   int tries = 1, tried = 0;
   int max_evict = 128;
-  epicLog(LOG_WARNING, "trying to evict %d, but max is %d", n, max_evict);
+  epicLog(LOG_DEBUG, "trying to evict %d, but max is %d", n, max_evict);
   if (n > max_evict)
     n = max_evict;
   GAddr addr = Gnullptr;
@@ -804,7 +804,7 @@ int Cache::Evict(int n) {
 }
 
 void Cache::Evict(CacheLine* cline) {
-  epicLog(LOG_WARNING, "evicting %lx", cline->addr);
+  epicLog(LOG_DEBUG, "evicting %lx", cline->addr);
   epicAssert(cline->addr == TOBLOCK(cline->addr));
   epicAssert(!IsBlockLocked(cline->addr));
   epicAssert(!InTransitionState(cline));
@@ -816,14 +816,14 @@ void Cache::Evict(CacheLine* cline) {
   wr->ptr = cline->line;
   Client* cli = worker->GetClient(cline->addr);
   if (CACHE_SHARED == state) {
-    epicLog(LOG_WARNING, "CACHE SHARED EVICT");
+    epicLog(LOG_DEBUG, "CACHE SHARED EVICT");
     wr->op = ACTIVE_INVALIDATE;
     ToInvalid(cline);
     worker->SubmitRequest(cli, wr);
     delete wr;
     wr = nullptr;
   } else if (CACHE_DIRTY == state) {
-    epicLog(LOG_WARNING, "CACHE DIRTY EVICT");
+    epicLog(LOG_DEBUG, "CACHE DIRTY EVICT");
     wr->op = WRITE_BACK;
     cli->Write(cli->ToLocal(wr->addr), cline->line, BLOCK_SIZE);
     ToToInvalid(cline);

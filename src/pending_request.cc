@@ -488,7 +488,7 @@ void Worker::ProcessPendingWriteForward(Client* cli, WorkRequest* wr) {
 
 void Worker::ProcessPendingEvictDirty(Client* cil, WorkRequest* wr) {
   //cache.to_evicted--;
-  epicLog(LOG_WARNING, "evicting this cache entry");
+  //epicLog(LOG_WARNING, "evicting this cache entry");
   cache.lock(wr->addr);
   cache.ToInvalid(wr->addr);
   cache.unlock(wr->addr);
