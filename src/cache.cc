@@ -752,7 +752,7 @@ int Cache::Evict(int n) {
   int i = 0;
   int tries = 1, tried = 0;
   int max_evict = 128;
-  epicLog(LOG_INFO, "trying to evict %d, but max is %d", n, max_evict);
+  epicLog(LOG_WARNING, "trying to evict %d, but max is %d", n, max_evict);
   if (n > max_evict)
     n = max_evict;
   GAddr addr = Gnullptr;
@@ -760,7 +760,7 @@ int Cache::Evict(int n) {
     int lru_no = GetRandom(0, LRU_NUM);
     if (lru_locks_[lru_no].try_lock()) {
       if (!tails[lru_no]) {
-        epicLog(LOG_INFO, "No cache exists");
+        epicLog(LOG_WARNING, "No cache exists");
         lru_locks_[lru_no].unlock();
         return 0;
       }
@@ -804,7 +804,7 @@ int Cache::Evict(int n) {
 }
 
 void Cache::Evict(CacheLine* cline) {
-  epicLog(LOG_INFO, "evicting %lx", cline->addr);
+  epicLog(LOG_WARNING, "evicting %lx", cline->addr);
   epicAssert(cline->addr == TOBLOCK(cline->addr));
   epicAssert(!IsBlockLocked(cline->addr));
   epicAssert(!InTransitionState(cline));
@@ -816,12 +816,14 @@ void Cache::Evict(CacheLine* cline) {
   wr->ptr = cline->line;
   Client* cli = worker->GetClient(cline->addr);
   if (CACHE_SHARED == state) {
+    epicLog(LOG_WARNING, "CACHE SHARED EVICT");
     wr->op = ACTIVE_INVALIDATE;
     ToInvalid(cline);
     worker->SubmitRequest(cli, wr);
     delete wr;
     wr = nullptr;
   } else if (CACHE_DIRTY == state) {
+    epicLog(LOG_WARNING, "CACHE DIRTY EVICT");
     wr->op = WRITE_BACK;
     cli->Write(cli->ToLocal(wr->addr), cline->line, BLOCK_SIZE);
     ToToInvalid(cline);
@@ -979,6 +981,7 @@ void Cache::ToToShared(GAddr addr) {
  */
 void Cache::ToToInvalid(GAddr addr) {
   epicAssert(addr == GTOBLOCK(addr));
+  epicLog(LOG_WARNING, "Fuck why are you using this function?");
   GAddr block = GTOBLOCK(addr);
   try {
     CacheLine* cline = caches.at(block);
