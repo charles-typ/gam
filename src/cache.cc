@@ -918,6 +918,9 @@ void Cache::ToInvalid(CacheLine* cline) {
   void* line = cline->line;
   worker->sb.sb_free((char*) line - CACHE_LINE_PREFIX);
   used_bytes -= (BLOCK_SIZE + CACHE_LINE_PREFIX);
+  if(cline->state == CACHE_TO_INVALID) {
+    to_evicted--;
+  }
 
   epicAssert(!IsBlockLocked(cline));
 
