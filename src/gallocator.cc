@@ -153,7 +153,7 @@ int GAlloc::Write(const GAddr addr, const Size offset, void* buf,
   WorkRequest wr { };
   wr.op = WRITE;
   //wr.flag = flag | ASYNC;
-  wr.flag = flag | ASYNC;
+  wr.flag = flag;
   wr.size = count;
   wr.addr = GADD(addr, offset);
   wr.ptr = buf;
