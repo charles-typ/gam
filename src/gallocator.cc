@@ -152,8 +152,8 @@ int GAlloc::Write(const GAddr addr, const Size offset, void* buf,
   //for asynchronous request, we must ensure the WorkRequest is valid after this function returns
   WorkRequest wr { };
   wr.op = WRITE;
-  //wr.flag = flag | ASYNC;
-  wr.flag = flag;
+  wr.flag = flag | ASYNC;
+  //wr.flag = flag;
   wr.size = count;
   wr.addr = GADD(addr, offset);
   wr.ptr = buf;
