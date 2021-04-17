@@ -1,0 +1,1000 @@
+ 1004  watch tail profile_result3
+ 1005  df
+ 1006  f
+ 1007  df
+ 1008  vi profile_result3 
+ 1009  watch tail profile_result3
+ 1010  vi profile_result3 
+ 1011  grep "Used byte" profile_result3 | wc
+ 1012  vi profile_result3 
+ 1013  watch tail profile_result4
+ 1014  vi profile_result4
+ 1015  watch tail profile_result4
+ 1016  vi profile_result4
+ 1017  git pull
+ 1018  ./refresh
+ 1019  watch tail profile_result4
+ 1020  vi profile_result4
+ 1021  vi gam_profile_test.cc 
+ 1022  ./refresh
+ 1023  watch tail profile_result4
+ 1024  vi gam_profile_test.cc 
+ 1025  vi profile_result4
+ 1026  git pull
+ 1027  ./refresh
+ 1028  watch tail profile_result4
+ 1029  ag Fuck
+ 1030  watch tail profile_result4
+ 1031  ag Fuck
+ 1032  watch tail profile_result4
+ 1033  ag Fuck
+ 1034  watch tail profile_result4
+ 1035  df
+ 1036  watch tail profile_result4
+ 1037  vi profile_result4
+ 1038  watch tail profile_result4
+ 1039  ./refresh
+ 1040  watch tail profile_result4
+ 1041  vi profile_result4
+ 1042  watch tail profile_result4
+ 1043  watch tail single_thread_profile 
+ 1044  exit
+ 1045  cd gam/test/
+ 1046  vi sleep_profile 
+ 1047  cat sleep_profile | grep "Nano" | awk '{SUM+=$5}END{print SUM}'
+ 1048  vi sleep_profile 
+ 1049  git diff
+ 1050  git add -u
+ 1051  git commit -m "Fix"
+ 1052  git push origin master
+ 1053  git pull
+ 1054  make gam_log_test.cc
+ 1055  make gam_log_test
+ 1056  wc sleep_profile 
+ 1057  vi sleep_profile 
+ 1058  exit
+ 1059  cd gam/
+ 1060  cd test/
+ 1061  sudo ./gam_log_test 5 1 10.10.10.231 10.10.10.231 1231 1234 1 1 1.0 39029320 4 /tensorflow/tensorflow_0_0 
+ 1062  sudo ./gam_log_test 5 1 10.10.10.231 10.10.10.231 1231 1234 1 1 1.0 39029320 4 /tensorflow/tensorflow_0_0  > sleep_profile
+ 1063  df
+ 1064  df | more
+ 1065  sudo ./gam_log_test 5 1 10.10.10.231 10.10.10.231 1231 1234 1 1 1.0 39029320 4 /tensorflow/tensorflow_0_0  > sleep_profile
+ 1066  df
+ 1067  exit
+ 1068  cd gam
+ 1069  cd test/
+ 1070  ls
+ 1071  vi single_thread_profile
+ 1072  exit
+ 1073  cd gam
+ 1074  cd test/
+ 1075  git pull
+ 1076  make
+ 1077  vi Makefile 
+ 1078  make gam_log_test
+ 1079  vi gam_log_test.cc 
+ 1080  make
+ 1081  make gam_log_test
+ 1082  vi gam_log_test.cc 
+ 1083  make gam_log_test
+ 1084  ping 192.168.122.1
+ 1085  cd gam/
+ 1086  cd test/
+ 1087  ls
+ 1088  clear
+ 1089  ls
+ 1090  cd ../src/
+ 1091  make
+ 1092  vi profile_result 
+ 1093  vi ../include/cache.h 
+ 1094  make
+ 1095  make clean
+ 1096  make -j 8
+ 1097  git status
+ 1098  git checkout ../include/cache.h
+ 1099  git checkout ../include/worker.h
+ 1100  git pull
+ 1101  make -j 8
+ 1102  make
+ 1103  make clean
+ 1104  make
+ 1105  vi ../include/worker.h
+ 1106  vi ../include/cache.h 
+ 1107  make
+ 1108  vi test.cpp
+ 1109  g++ test.cpp 
+ 1110  ./a.out 
+ 1111  vi test.cpp 
+ 1112  git pull
+ 1113  git checkout ../include/cache.h
+ 1114  git pull
+ 1115  make
+ 1116  make -j8
+ 1117  vi cache.cc 
+ 1118  git pull
+ 1119  make -j8
+ 1120  git pull
+ 1121  makke
+ 1122  make
+ 1123  make -j8
+ 1124  git pull
+ 1125  make -j 8
+ 1126  cd ../test/
+ 1127  ./refresh
+ 1128  sudo mount 192.168.122.1:/home/yanpeng/2020_11_25_tensorflow/partitioned /tensorflow/
+ 1129  sudo ~/.new_enable_ip.sh 
+ 1130  sudo ./gam_profile_test 2 1 10.10.10.201 10.10.10.201 1231 1234 1 1 0.25 8589934592 1 /tensorflow/tensorflow_0_0  &> profile_result
+ 1131  vi gam_profile_test.cc 
+ 1132  sudo ./gam_profile_test 2 1 10.10.10.201 10.10.10.201 1231 1234 1 1 1.0 8589934592 1 /tensorflow/tensorflow_0_0  &> profile_result
+ 1133  ulimit -n 65536
+ 1134  sudo ./gam_profile_test 2 1 10.10.10.201 10.10.10.201 1231 1234 1 1 1.0 8589934592 1 /tensorflow/tensorflow_0_0  &> profile_result
+ 1135  sudo ./gam_profile_test 2 1 10.10.10.201 10.10.10.201 1231 1234 1 1 1.0 8589934592 1 /tensorflow/tensorflow_0_0  &> profile_result2
+ 1136  vi gam_profile_test.cc 
+ 1137  make
+ 1138  sudo ./gam_profile_test 2 1 10.10.10.201 10.10.10.201 1231 1234 1 1 1.0 8589934592 1 /tensorflow/tensorflow_0_0  &> profile_result3
+ 1139  git pull
+ 1140  ./refresh
+ 1141  sudo ./gam_profile_test 2 1 10.10.10.201 10.10.10.201 1231 1234 1 1 1.0 3221225472 1 /tensorflow/tensorflow_0_0  &> profile_result3
+ 1142  vi gam_profile_test.cc 
+ 1143  make
+ 1144  sudo ./gam_profile_test 2 1 10.10.10.201 10.10.10.201 1231 1234 1 1 1.0 3221225472 1 /tensorflow/tensorflow_0_0  &> profile_result3
+ 1145  git diff
+ 1146  git checkout gam_profile_test.cc
+ 1147  ./refresh
+ 1148  sudo ./gam_profile_test 2 1 10.10.10.201 10.10.10.201 1231 1234 1 1 1.0 3221225472 1 /tensorflow/tensorflow_0_0  &> profile_result4
+ 1149  ./refresh
+ 1150  git pull
+ 1151  ./refresh
+ 1152  cd ../src/
+ 1153  make clean
+ 1154  make -j8
+ 1155  cd ../test/
+ 1156  ./refresh
+ 1157  sudo ./gam_profile_test 2 1 10.10.10.201 10.10.10.201 1231 1234 1 1 1.0 3221225472 1 /tensorflow/tensorflow_0_0  &> profile_result4
+ 1158  watch tail single_thread_profile 
+ 1159  watch tail single_thread_profile2
+ 1160  vi single_thread_profile2 
+ 1161  watch tail single_thread_profile2
+ 1162  vi single_thread_profile2 
+ 1163  watch tail single_thread_profile2
+ 1164  watch tail single_thread_profile3
+ 1165  watch tail single_thread_profile4
+ 1166  tmux ls
+ 1167  ls
+ 1168  tmux ls
+ 1169  git pull
+ 1170  ls
+ 1171  cd gam/
+ 1172  ls
+ 1173  git pull
+ 1174  cd tre
+ 1175  cd test/
+ 1176  ./refresh
+ 1177  vi ../include/worker.h 
+ 1178  ./refresh
+ 1179  vi ~/.new_enable_ip.sh 
+ 1180  ifconfig
+ 1181  vi .ne
+ 1182  vi ~/.new_enable_ip.sh w
+ 1183  sudo ~/.enable_ip.sh 
+ 1184  ifconfig ens8
+ 1185  ifconfig ens9
+ 1186  ifconfig ens10
+ 1187  vi .ne
+ 1188  vi ~/,e
+ 1189  vi ~.new
+ 1190  vi ~/.new_enable_ip.sh 
+ 1191  sudo ~/.new_enable_ip.sh 
+ 1192  ping 10.10.10.202
+ 1193  ping 10.10.10.203
+ 1194  ping 10.10.10.204
+ 1195  ping 10.10.10.221
+ 1196  ping 10.10.10.222
+ 1197  vi ~/.new_enable_ip.sh 
+ 1198  arp
+ 1199  ping 10.10.10.202
+ 1200  ping 10.10.10.222
+ 1201  sudo ./gam_profile_test 5 1 10.10.10.201 10.10.10.201 1231 1234 1 1 1.0 8589934592 4 /tensorflow/tensorflow_0_0 &> single_thread_profile
+ 1202  ls
+ 1203  ./refresh
+ 1204  sudo ./gam_profile_test 5 1 10.10.10.201 10.10.10.201 1231 1234 1 1 1.0 8589934592 4 /tensorflow/tensorflow_0_0 &> single_thread_profile
+ 1205  ulimit -n 65536]
+ 1206  ulimit -n 65536
+ 1207  sudo ./gam_profile_test 5 1 10.10.10.201 10.10.10.201 1231 1234 1 1 1.0 8589934592 4 /tensorflow/tensorflow_0_0 &> single_thread_profile2
+ 1208  ./refresh
+ 1209  sudo ./gam_profile_test 5 1 10.10.10.201 10.10.10.201 1231 1234 1 1 1.0 8589934592 4 /tensorflow/tensorflow_0_0 &> single_thread_profile3
+ 1210  df
+ 1211  ./re
+ 1212  ./refresh
+ 1213  sudo ./gam_profile_test 5 1 10.10.10.201 10.10.10.201 1231 1234 1 1 1.0 8589934592 4 /tensorflow/tensorflow_0_0 &> single_thread_profile4
+ 1214  ./refresh
+ 1215  sudo ./gam_profile_test 5 1 10.10.10.201 10.10.10.201 1231 1234 1 1 1.0 8589934592 4 /tensorflow/tensorflow_0_0 &> single_thread_profile4
+ 1216  ./refresh
+ 1217  sudo ./gam_profile_test 5 1 10.10.10.201 10.10.10.201 1231 1234 1 1 1.0 8589934592 4 /tensorflow/tensorflow_0_0 &> single_thread_profile4
+ 1218  ./refresh
+ 1219  ls
+ 1220  scp ./single_thread_profile3 yupeng@192.168.122.1:~/single1
+ 1221  ls
+ 1222  ls
+ 1223  cd gam/
+ 1224  cd test/
+ 1225  ls
+ 1226  vi profile_result3 
+ 1227  vi single_thread_profile3 
+ 1228  vi single_thread_profile4
+ 1229  cd gam/test/
+ 1230  watch tail single_thread_profile4 
+ 1231  exit
+ 1232  cd gam/test/
+ 1233  watch tail single_thread_profile4 
+ 1234  htop
+ 1235  watch tail single_thread_profile4 
+ 1236  vi single_thread_profile4 
+ 1237  git status | more
+ 1238  git log
+ 1239  git push origin master
+ 1240  vi single_thread_profile4 
+ 1241  exit
+ 1242  ls
+ 1243  cd gam/
+ 1244  ls
+ 1245  git sttus
+ 1246  git status
+ 1247  git log
+ 1248  git oull
+ 1249  git pull
+ 1250  git status | more
+ 1251  cd src/
+ 1252  ls
+ 1253  make clean && make -j 8
+ 1254  cd ../
+ 1255  ls
+ 1256  cd test/e
+ 1257  cd test/
+ 1258  ls
+ 1259  ./refresh
+ 1260  ls
+ 1261  ~/.new_enable_ip.sh 
+ 1262  sudo ~/.new_enable_ip.sh 
+ 1263  sudo ./gam_profile_test 5 1 10.10.10.201 10.10.10.201 1231 1234 1 1 1.0 8589934592 4 /tensorflow/tensorflow_0_0 &> single_thread_profile4
+ 1264  sudo mount 192.168.122.1:/home/yanpeng/2020_11_25_tensorflow/partitioned /tensorflow/
+ 1265  sudo ./gam_profile_test 5 1 10.10.10.201 10.10.10.201 1231 1234 1 1 1.0 8589934592 4 /tensorflow/tensorflow_0_0 &> single_thread_profile4
+ 1266  sudo ~/.new_enable_ip.sh 
+ 1267  cd gam/test/
+ 1268  ls
+ 1269  vi tensorflow_4 
+ 1270  vi single_thread_profile4 
+ 1271  vi single_thread_profile3
+ 1272  git log 
+ 1273  git reset --hard 103ffbc728bbe8e9ccb863398f9b4ec9376e2ba4 
+ 1274  cd ../src && make -j8
+ 1275  cd ls
+ 1276  df
+ 1277  cd gam/test
+ 1278  ls
+ 1279  ls  -al | more
+ 1280  vi single_thread_profile7
+ 1281  rm single_thread_profile7
+ 1282  ls
+ 1283  df
+ 1284  ls
+ 1285  df
+ 1286  vi re
+ 1287  vi read
+ 1288  rm read
+ 1289  vi read_t
+ 1290  vi read_tf 
+ 1291  ls
+ 1292  rm read_t
+ 1293  rm read_tf
+ 1294  ls
+ 1295  vi read_time
+ 1296  rm read_time
+ 1297  ls
+ 1298  rm read_not_sorted
+ 1299  rm read_not_sorted*
+ 1300  ls
+ 1301  ./refresh
+ 1302  git pull
+ 1303  ifdef
+ 1304  ping www.github.com
+ 1305  ls
+ 1306  ifconfig
+ 1307  sudo ~/.new_enable_ip.sh 
+ 1308  vi ~/.new_enable_ip.sh 
+ 1309  ping www.github.com
+ 1310  reboot
+ 1311  sudo reboot
+ 1312  ls
+ 1313  cd gam/
+ 1314  ls
+ 1315  cd test/
+ 1316  ls
+ 1317  vi single_thread_profile7 
+ 1318  exit
+ 1319  ls
+ 1320  cd gam/test/
+ 1321  watch df
+ 1322  ls
+ 1323  watch tail single_thread_profile7
+ 1324  watch df
+ 1325  watch tail single_thread_profile7
+ 1326  vi single_thread_profile7
+ 1327  watch tail single_thread_profile7
+ 1328  watch tail single_thread_profile7 | grep "Read|Write"
+ 1329  cat single_thread_profile7 | grep "Read|Write"
+ 1330  cat single_thread_profile7 | grep "Read\|Write"
+ 1331  cat single_thread_profile7 | grep "Read\|Write" | sort -n -k 4 | head
+ 1332  cat single_thread_profile7 | grep "Read\|Write" | sort -n -k 4 | tail
+ 1333  cat single_thread_profile7 | grep "Read\|Write" | sort -n -k 4 | tail -100
+ 1334  watch tail profile_result4 
+ 1335  df
+ 1336  vi profile_result4 
+ 1337  cat single_thread_profile7 | grep "Read\|Write" | wc
+ 1338  cat profile_result4 | grep "Read\|Write" | wc
+ 1339  vi profile_result4 
+ 1340  cat profile_result4 | grep "Read\|Write" | sort -n -k 4 | tail -100
+ 1341  cat profile_result4 | grep "Read\|Write" | sort -n -k 4 | tail -100 > 2
+ 1342  ls
+ 1343  vi profile_result4 
+ 1344  vi single_thread_profile7
+ 1345  ls
+ 1346  cd ../src/
+ 1347  make clean && make -j 8
+ 1348  cd ../test/
+ 1349  ls
+ 1350  rm gam_profile_test
+ 1351  make
+ 1352  vi profile_res4
+ 1353  vi profile_result4
+ 1354  watch tail profile_result4 
+ 1355  watch wc profile_result4 
+ 1356  vi profile_result4 
+ 1357  watch wc profile_result4 
+ 1358  wc single_thread_profile7 
+ 1359  cat profile_result4 | grep "Read\|Write" | sort -n -k 4 | tail -100 > 2
+ 1360  vi 2
+ 1361  ls
+ 1362  watch tail single_thread_profile7
+ 1363  wc single_thread_profile7
+ 1364  watch wc single_thread_profile7 
+ 1365  df
+ 1366  ls
+ 1367  vi single_thread_profile7 
+ 1368  cat single_thread_profile7 | grep "Read\|Write" | sort -n -k 4 | tail -100 > 1
+ 1369  vi -O2 1 2
+ 1370  ls
+ 1371  vi single_thread_profile7 
+ 1372  watch tail single_thread_profile7 
+ 1373  vi single_thread_profile7 
+ 1374  watch tail single_thread_profile7 
+ 1375  watch tail single_thread_profile8
+ 1376  exit
+ 1377  ping www.github.com
+ 1378  cd gam/test/
+ 1379  ./refresh
+ 1380  sudo mount 192.168.122.1:/home/yanpeng/2020_11_25_tensorflow/partitioned /tensorflow/
+ 1381  clear
+ 1382  ls
+ 1383  sudo ~/.new_enable_ip.sh 
+ 1384  sudo ./gam_profile_test 5 1 10.10.10.201 10.10.10.201 1231 1234 1 1 1.0 8589934592 4 /tensorflow/tensorflow_0_0 &> single_thread_profile7
+ 1385  sudo ./gam_profile_test 2 1 10.10.10.201 10.10.10.201 1231 1234 1 1 1.0 3221225472 1 /tensorflow/tensorflow_0_0  &> profile_result4
+ 1386  vi profile_result4 
+ 1387  ./refresh
+ 1388  sudo ./gam_profile_test 2 1 10.10.10.201 10.10.10.201 1231 1234 1 1 1.0 3221225472 1 /tensorflow/tensorflow_0_0  &> profile_result4
+ 1389  sudo ./gam_profile_test 5 1 10.10.10.201 10.10.10.201 1231 1234 1 1 1.0 8589934592 4 /tensorflow/tensorflow_0_0 &> single_thread_profile7
+ 1390  git status
+ 1391  git status | more
+ 1392  ls
+ 1393  mv single_thread_profile* profile_res/
+ 1394  mv profile_result* profile_res
+ 1395  ls
+ 1396  cd profile_res/
+ 1397  ls
+ 1398  git status | more
+ 1399  git add profile_res
+ 1400  cd ..
+ 1401  git add profile_res/
+ 1402  git commit -m "Update result"
+ 1403  git push origin main
+ 1404  git push
+ 1405  ls
+ 1406  cd profile_res/
+ 1407  ls
+ 1408  df
+ 1409  cd ..
+ 1410  cp -r profile_res/ ~/
+ 1411  cd profile_res/
+ 1412  ls
+ 1413  cd ..
+ 1414  mkdir profile_res_new
+ 1415  mv profile_res/single_thread_profile6 profile_res_new/
+ 1416  mv profile_res/single_thread_profile7 profile_res_new/
+ 1417  mv profile_res/profile_result4 profile_res_new/
+ 1418  ls
+ 1419  rm -r profile_res
+ 1420  git add -u
+ 1421  git add profile_res_new/
+ 1422  git commit -m "Update result"
+ 1423  git push
+ 1424  git push origin master
+ 1425  ls
+ 1426  cd profile_res_new/
+ 1427  ls
+ 1428  ls -al
+ 1429  cat single_thread_profile7 | head -1115600 > single
+ 1430  ls
+ 1431  cat profile_result4 | head -1115600 profile
+ 1432  ls
+ 1433  cat profile_result4 | head -1115600 > profile
+ 1434  ls
+ 1435  ls -al
+ 1436  vi single_thread_profile6
+ 1437  ls
+ 1438  ls -ak
+ 1439  ls
+ 1440  ls -al
+ 1441  rm profile_result4 
+ 1442  rm single_thread_profile7
+ 1443  ls
+ 1444  git status
+ 1445  ls -al
+ 1446  cd ..
+ 1447  git add -u
+ 1448  git commit -m "Fixe"
+ 1449  git log
+ 1450  cp -r profile_res_new/ ~
+ 1451  git reset --hard 6a9cfb3be41225794b947d5339af59714ef2de23
+ 1452  git pull
+ 1453  ls
+ 1454  cd profile_res
+ 1455  ls
+ 1456  cd ..
+ 1457  rm -rf profile_res
+ 1458  cd profile_res_new/
+ 1459  ls
+ 1460  ls -al
+ 1461  cd ..
+ 1462  ls
+ 1463  cp ~/profile_res/single_thread_profile6 ./profile_res_new/
+ 1464  ls
+ 1465  git add profile_res_new/
+ 1466  git commit -m "update result"
+ 1467  git push origin master
+ 1468  ls
+ 1469  git pull
+ 1470  ./refresh
+ 1471  sudo ./gam_profile_test 5 1 10.10.10.201 10.10.10.201 1231 1234 1 1 1.0 8589934592 4 /tensorflow/tensorflow_0_0 &> single_thread_profile7
+ 1472  ./refresh
+ 1473  sudo ./gam_profile_test 5 1 10.10.10.201 10.10.10.201 1231 1234 1 1 1.0 8589934592 4 /tensorflow/tensorflow_0_0 &> single_thread_profile7
+ 1474  ./refresh
+ 1475  sudo ./gam_profile_test 5 1 10.10.10.201 10.10.10.201 1231 1234 1 1 1.0 8589934592 4 /tensorflow/tensorflow_0_0 &> single_thread_profile7
+ 1476  ./refresh
+ 1477  sudo ./gam_profile_test 5 1 10.10.10.201 10.10.10.201 1231 1234 1 1 1.0 8589934592 4 /tensorflow/tensorflow_0_0 &> single_thread_profile8
+ 1478  ls
+ 1479  cd profile_res_new/
+ 1480  ls
+ 1481  cd ..
+ 1482  ls
+ 1483  cd profile_res
+ 1484  ls
+ 1485  cd ..
+ 1486  exit
+ 1487  cd profile_res
+ 1488  ls
+ 1489  vi single_thread_profile7 
+ 1490  exit
+ 1491  ls
+ 1492  cd Disaggregated_mem_benchmark/
+ 1493  ls
+ 1494  cd ..
+ 1495  cd gam/
+ 1496  ls
+ 1497  cd test/
+ 1498  ls
+ 1499  vi gam_profile_test.cc 
+ 1500  ifconfig
+ 1501  cd
+ 1502  vi ~/.new_enable_ip.sh 
+ 1503  cp ~/.new_enable_ip.sh .single_node.sh
+ 1504  vi .single_node.sh 
+ 1505  ifconfig ens9
+ 1506  vi .single_node.sh 
+ 1507  sudo chmod +x .single_node.sh 
+ 1508  sudo ./.single_node.sh 
+ 1509  sudo mount 192.168.122.1:/home/yanpeng/2020_11_25_tensorflow/partitioned /tensorflow/
+ 1510  cd gam/test/
+ 1511  ls
+ 1512  vi gam_profile_test.cc 
+ 1513  make
+ 1514  sudo ./gam_profile_test 2 2 10.10.10.201 10.10.10.201 1231 1234 1 1 1.0 719407022 1 /tensorflow/tensorflow_0_0 /tensorflow/tensorflow_1_0 &> 1C_1M_2T
+ 1515  sudo ./gam_profile_test 2 2 10.10.10.201 10.10.10.201 1231 1234 1 1 1.0 1793148846 1 /tensorflow/tensorflow_0_0 /tensorflow/tensorflow_1_0 &> 1C_1M_2T
+ 1516  sudo ./gam_profile_test 1 2 10.10.10.201 10.10.10.201 1231 1234 1 1 1.0 1793148846 1 /tensorflow/tensorflow_0_0 &> 1C_1M_2T
+ 1517  sudo ./gam_profile_test 2 1 10.10.10.201 10.10.10.201 1231 1234 1 1 1.0 1793148846 1 /tensorflow/tensorflow_0_0 &> 1C_1M_2T
+ 1518  vi gam_profile_test.cc 
+ 1519  make
+ 1520  vi gam_profile_test.cc 
+ 1521  make
+ 1522  sudo ./gam_profile_test 2 1 10.10.10.201 10.10.10.201 1231 1234 1 1 1.0 1793148846 1 /tensorflow/tensorflow_0_0 &> 1C_1M_2T
+ 1523  vi gam_profile_test.cc 
+ 1524  sudo ./gam_profile_test 2 1 10.10.10.201 10.10.10.201 1231 1234 1 1 1.0 6442450944 1 /tensorflow/tensorflow_0_0 &> 1C_1M_2T
+ 1525  sudo ./gam_profile_test 2 1 10.10.10.201 10.10.10.201 1231 1234 1 1 0.33 2147483648 1 /tensorflow/tensorflow_0_0 &> 1C_1M_2T
+ 1526  sudo ./gam_profile_test 2 1 10.10.10.201 10.10.10.201 1231 1234 1 1 0.11 6442450944 1 /tensorflow/tensorflow_0_0 &> 1C_1M_2T
+ 1527  sudo ./gam_profile_test 2 2 10.10.10.201 10.10.10.201 1231 1234 1 1 0.11 6442450944 1 /tensorflow/tensorflow_0_0 /tensorflow/tensorflow_1_0 &> 1C_1M_2T
+ 1528  :q
+ 1529  ulimit -n 65536
+ 1530  sudo ./gam_profile_test 2 2 10.10.10.201 10.10.10.201 1231 1234 1 1 0.11 6442450944 1 /tensorflow/tensorflow_0_0 /tensorflow/tensorflow_1_0 &> 1C_1M_2T
+ 1531  sudo ulimit -n 65536
+ 1532  sudo ./gam_profile_test 2 2 10.10.10.201 10.10.10.201 1231 1234 1 1 0.11 6442450944 1 /tensorflow/tensorflow_0_0 /tensorflow/tensorflow_1_0 &> 1C_1M_2T
+ 1533  cd gam/test/
+ 1534  watch tail 1C_1M_2T 
+ 1535  vi 1C_1M_2T 
+ 1536  vi gam_profile_test
+ 1537  vi gam_profile_test.cc 
+ 1538  watch tail 1C_1M_2T 
+ 1539  :q
+ 1540  vi 1C_1M_2T 
+ 1541  watch tail 1C_1M_2T 
+ 1542  ifconfig
+ 1543  ibv_rc_pingpong -d mlx5_0 -g 3
+ 1544  ibv_rc_pingpong -d mlx5_0 -g 3 10.10.10.221
+ 1545  vi 1C_1M_2T 
+ 1546  watch tail 1C_1M_2T 
+ 1547  vi 1C_1M_2T 
+ 1548  watch tail 1C_1M_2T 
+ 1549  vi 1C_1M_2T 
+ 1550  clear
+ 1551  ls
+ 1552  cd gam/
+ 1553  ls
+ 1554  lscpu
+ 1555  exit
+ 1556  ls
+ 1557  git status
+ 1558  git pull origin master
+ 1559  cd gam/
+ 1560  git pull origin master
+ 1561  git diff
+ 1562  git status
+ 1563  git checkout gam_profile_test.c
+ 1564  git checkout gam_profile_test.cc
+ 1565  cd test/
+ 1566  git checkout gam_profile_test.cc
+ 1567  git pull origin master
+ 1568  ls
+ 1569  git status
+ 1570  git status | ,pre
+ 1571  git status | more
+ 1572  vi gam_profile_test
+ 1573  vi gam_profile_test.cc 
+ 1574  git status
+ 1575  git checkout ../profile_res
+ 1576  cd ..
+ 1577  cd test/
+ 1578  git checkout profile_res
+ 1579  git status
+ 1580  git add -u
+ 1581  git commit -m "Update"
+ 1582  git push origin master
+ 1583  ;s
+ 1584  ls
+ 1585  git status
+ 1586  clear
+ 1587  ls
+ 1588  cd ../src/
+ 1589  make clean && make  -j 8
+ 1590  cd ../test/
+ 1591  make clean && make -j 12
+ 1592  ls
+ 1593  exit
+ 1594  sudo mount 192.168.122.1:/media/data_ssds/tf_logs_test /tensorflow/
+ 1595  ls
+ 1596  cd /tensorflow/
+ 1597  ls
+ 1598  ls -al
+ 1599  ifconfig
+ 1600  ifconfig ens9
+ 1601  cd
+ 1602  vi .single_node.sh 
+ 1603  ifconfig ens9
+ 1604  sudo ./.single_node.sh 
+ 1605  cd ./gam/test/
+ 1606  cd ./re
+ 1607  ./refresh
+ 1608  cd ../src/
+ 1609  git pull origin master
+ 1610  make clean && make -j12
+ 1611  cd ../test/
+ 1612  ls
+ 1613  make
+ 1614  make -j112
+ 1615  make -j12
+ 1616  git status
+ 1617  sudo ./gam_profile_test 3 1 10.10.10.201 10.10.10.201 1231 1234 1 1 0.11 6442450944 2 /tensorflow/tensorflow_1_0 &> 2C_1M_1T
+ 1618  sudo ./gam_profile_test 2 1 10.10.10.201 10.10.10.201 1231 1234 1 1 0.11 6442450944 1 /tensorflow/tensorflow_1_0 &> 2C_1M_1T
+ 1619  ls
+ 1620  cat /tensorflow/tensorflow_1_0  | head
+ 1621  sudo cat /tensorflow/tensorflow_1_0 | head
+ 1622  sudo ./gam_profile_test 2 1 10.10.10.201 10.10.10.201 1231 1234 1 1 0.11 6442450944 1 /tensorflow/tensorflow_1_0 &> 2C_1M_1T
+ 1623  vi gam_profile_test.cc 
+ 1624  make
+ 1625  sudo ./gam_profile_test 2 1 10.10.10.201 10.10.10.201 1231 1234 1 1 0.11 6442450944 1 /tensorflow/tensorflow_1_0 &> 2C_1M_1T
+ 1626  vi gam_profile_test.cc 
+ 1627  make
+ 1628  vi gam_profile_test.cc 
+ 1629  make
+ 1630  sudo ./gam_profile_test 2 1 10.10.10.201 10.10.10.201 1231 1234 1 1 0.11 6442450944 1 /tensorflow/tensorflow_1_0 &> 2C_1M_1T
+ 1631  cd gam/test/
+ 1632  watch tail 2C_1M_1T 
+ 1633  git clone https://github.com/shsym/Disaggregated_mem_vLinux.git --branch DEV_debug_cache --single-branch
+ 1634  exit
+ 1635  ls
+ 1636  cd Disaggregated_mem_vLinux/
+ 1637  git branch
+ 1638  git pull 
+ 1639  cd test_programs/04_macro_benchmark/
+ 1640  ls
+ 1641  vi Makefile 
+ 1642  make run_tf_debug_1t
+ 1643  vi Makefile 
+ 1644  ifconfig
+ 1645  sudo ./.single_node.sh 
+ 1646  cd
+ 1647  sudo ./.single_node.sh 
+ 1648  ~/Disaggregated_mem_vLinux/test_programs/04_macro_benchmark
+ 1649  cd  ~/Disaggregated_mem_vLinux/test_programs/04_macro_benchmark
+ 1650  make run_tf_debug_1t
+ 1651  ifconfig
+ 1652  ping 192.168.122.1
+ 1653  sudo mount 192.168.122.1:/media/data_ssds/tf_logs_test /tensorflow/
+ 1654  ls
+ 1655  tmux
+ 1656  exit
+ 1657  cd /te
+ 1658  cd /tensorflow/
+ 1659  ls
+ 1660  htop
+ 1661  cd
+ 1662  cd Disaggregated_mem_vLinux/test_programs/04_macro_benchmark/
+ 1663  tail run_log_10 
+ 1664  vi run_log_10 
+ 1665  tail run_log_10 
+ 1666  vi run_log_10 
+ 1667  vi run_log
+ 1668  vi run_log_10 
+ 1669  exit
+ 1670  ls
+ 1671  clear
+ 1672  ls
+ 1673  vi Makefile
+ 1674  make
+ 1675  vi Makefile 
+ 1676  make run_tf_debug_1t
+ 1677  sudo -u user /tmp_test/test_protocol_debug 1 0 1 /tmp_test/ /tensorflow/tensorflow_$((10 * 0))_0
+ 1678  vi test_program_fastswap.cpp 
+ 1679  sudo -u
+ 1680  man sudo
+ 1681  vi Makefile 
+ 1682  make run_tf_debug_1t
+ 1683  make run_tf_debug_1t &> run_log
+ 1684  vi run_log 
+ 1685  vi test_program_fastswap.cpp 
+ 1686  vi Makefile 
+ 1687  make run_tf_debug_10t &> run_log_10
+ 1688  vi run_log
+ 1689  exit
+ 1690  tmux attach
+ 1691  exit
+ 1692  ls
+ 1693  ifconfig
+ 1694  ls
+ 1695  sudo virsh list --all
+ 1696  ls
+ 1697  sudo ./.single_node.sh 
+ 1698  cd gam/test/
+ 1699  sudo ./gam_profile_test 2 1 10.10.10.201 10.10.10.201 1231 1234 1 1 0.11 6442450944 1 /tensorflow/tensorflow_1_0 &> 2C_1M_1T
+ 1700  ibv_rc_pingpong -d mlx5_0 -g 3 10.10.10.221
+ 1701  htop
+ 1702  htop
+ 1703  ls
+ 1704  htop
+ 1705  ifconfig
+ 1706  exit
+ 1707  lscpu
+ 1708  sudo ./.single_node.sh 
+ 1709  ls
+ 1710  cd gam/test/
+ 1711  sudo ./gam_profile_test 2 1 10.10.10.201 10.10.10.201 1231 1234 1 1 0.11 6442450944 1 /tensorflow/tensorflow_1_0 &> 2C_1M_1T
+ 1712  sudo mount 192.168.122.1:/media/data_ssds/tf_logs_test /tensorflow/
+ 1713  sudo ./gam_profile_test 2 1 10.10.10.201 10.10.10.201 1231 1234 1 1 0.11 6442450944 1 /tensorflow/tensorflow_1_0 &> 2C_1M_1T
+ 1714  vi gam_profile_test.cc 
+ 1715  sudo ./gam_profile_test 2 1 10.10.10.201 10.10.10.201 1231 1234 1 1 0.07 6442450944 1 /tensorflow/tensorflow_1_0 &> 1C_1M_1T
+ 1716  make
+ 1717  sudo ./gam_profile_test 2 1 10.10.10.201 10.10.10.201 1231 1234 1 1 0.07 6442450944 1 /tensorflow/tensorflow_1_0 &> 1C_1M_1T
+ 1718  vi gam_profile_test.cc 
+ 1719  sudo ./gam_profile_test 2 1 10.10.10.201 10.10.10.201 1231 1234 1 1 0.07 6442450944 1 /tensorflow/tensorflow_1_0 &> 1C_1M_1T
+ 1720  vi gam_profile_test.cc 
+ 1721  make
+ 1722  sudo ./gam_profile_test 2 1 10.10.10.201 10.10.10.201 1231 1234 1 1 0.07 6442450944 1 /tensorflow/tensorflow_1_0 &> 1C_1M_1T
+ 1723  vi gam_profile_test.cc 
+ 1724  make
+ 1725  sudo ./gam_profile_test 2 1 10.10.10.201 10.10.10.201 1231 1234 1 1 0.07 6442450944 1 /tensorflow/tensorflow_1_0 &> 1C_1M_1T
+ 1726  sudo ./gam_profile_test 2 1 10.10.10.201 10.10.10.201 1231 1234 1 1 0.07 6442450944 1 /tensorflow/tensorflow_0_0 &> 1C_1M_1T
+ 1727  sudo ulimit -n 65536
+ 1728  ulimit -n 65536
+ 1729  sudo ulimit
+ 1730  ulimit
+ 1731  ulimit -n
+ 1732  sudo ulimit
+ 1733  sudo ./gam_profile_test 2 1 10.10.10.201 10.10.10.201 1231 1234 1 1 0.07 6442450944 1 /tensorflow/tensorflow_0_0 &> 1C_1M_1T
+ 1734  cat /proc/sys/fs/file-max
+ 1735  ulimit -nS
+ 1736  ulimit -n 1632018
+ 1737  ulimit –nS
+ 1738  ulimit -nH
+ 1739  ulimit
+ 1740  man ulimit
+ 1741  man 2 ulimit 
+ 1742  man 3 ulimit 
+ 1743  man 1 ulimit 
+ 1744  man ulimit
+ 1745  man 4 ulimit
+ 1746  sudo vi /etc/security/limits.conf
+ 1747  ulimit -n
+ 1748  sudo vi /etc/security/limits.conf
+ 1749  exit
+ 1750  ulimit -n
+ 1751  sudo vi /etc/security/limits.conf
+ 1752  ulimit -n
+ 1753  vi  /etc/security/limits.conf
+ 1754  sudo vi /etc/security/limits.conf
+ 1755  exit
+ 1756  ulimit -n
+ 1757  sudo vi /etc/security/limits.conf
+ 1758  sudo vi /etc/pam.d/common-session
+ 1759  sudo vi /etc/sysctl.conf 
+ 1760  cat /proc/sys/fs/file-max
+ 1761  ulimit -Hn
+ 1762  ulimit -Sn
+ 1763  sudo ulimit -Sn
+ 1764  exit
+ 1765  ulimit -n
+ 1766  exit
+ 1767  cat /proc/sys/fs/file-max
+ 1768  ulimit -Hn
+ 1769  ulimit -a
+ 1770  ulimit -Sa
+ 1771  ulimit -Ha
+ 1772  sudo vi /etc/security/limits.conf.
+ 1773  sudo vi /etc/security/limits.conf
+ 1774  bash
+ 1775  exit
+ 1776  sudo virsh list --all
+ 1777  cd gam/test/
+ 1778  watch tail 2C_1M_1T 
+ 1779  watch tail 1C_1M_
+ 1780  watch tail 1C_1M_1T 
+ 1781  vi 1C_1M_2T 
+ 1782  vi 1C_1M_1T 
+ 1783  ulimit -n 
+ 1784  exit
+ 1785  whoami && ulimit -Hn
+ 1786  exit
+ 1787  ulimit -n
+ 1788  ulimit -Sn
+ 1789  ulimit -Hn
+ 1790  sudo vi /etc/ssh/sshd_config 
+ 1791  su
+ 1792  sudo passwd
+ 1793  su
+ 1794  su - user
+ 1795  sudo vi /etc/ssh/sshd_config 
+ 1796  sudo vi /etc/security/limits.conf
+ 1797  sudo vi /etc/pam.d/common-session
+ 1798  whoami && ulimit -Hn
+ 1799  su -
+ 1800  su - user
+ 1801  sudo vi /etc/systemd/system.conf 
+ 1802  exot
+ 1803  exit
+ 1804  ls
+ 1805  pgrep gam
+ 1806  htop
+ 1807  pgrep gam
+ 1808  prlimit  --nofile --output RESOURCE,SOFT,HARD --pid 2043
+ 1809  sudo prlimit  --nofile --output RESOURCE,SOFT,HARD --pid 2043
+ 1810  prlimit --nofile=500000:500000 --pid 2043
+ 1811  sudo prlimit --nofile=500000:500000 --pid 2043
+ 1812  sudo prlimit  --nofile --output RESOURCE,SOFT,HARD --pid 2043
+ 1813  pgrep gam
+ 1814  sudo prlimit --nofile=500000:500000 --pid 2717
+ 1815  exit
+ 1816  ulimit -n
+ 1817  sudo ./.single_node.sh 
+ 1818  cd gam/test/
+ 1819  sudo ./gam_profile_test 2 1 10.10.10.201 10.10.10.201 1231 1234 1 1 0.07 6442450944 1 /tensorflow/tensorflow_0_0 &> 1C_1M_1T
+ 1820  sudo mount 192.168.122.1:/media/data_ssds/tf_logs_test /tensorflow/
+ 1821  sudo ./gam_profile_test 2 1 10.10.10.201 10.10.10.201 1231 1234 1 1 0.07 6442450944 1 /tensorflow/tensorflow_0_0 &> 1C_1M_1T
+ 1822  exit
+ 1823  cd gam/test/
+ 1824  watch tail 1C_1M_1T 
+ 1825  vi 1C_1M_1T 
+ 1826  watch tail 1C_1M_1T 
+ 1827  vi 1C_1M_1T 
+ 1828  exit
+ 1829  ls
+ 1830  cd gam/test/
+ 1831  sudo prlimit  --nofile --output RESOURCE,SOFT,HARD --pid 2043
+ 1832  history
+ 1833  pgrep gam
+ 1834  sudo prlimit  --nofile --output RESOURCE,SOFT,HARD --pid 2172
+ 1835  prlimit --nofile=500000:500000 --pid 2172
+ 1836  sudo prlimit --nofile=500000:500000 --pid 2172
+ 1837  sudo prlimit  --nofile --output RESOURCE,SOFT,HARD --pid 2172
+ 1838  pgrep gam
+ 1839  sudo prlimit  --nofile --output RESOURCE,SOFT,HARD --pid 2532
+ 1840  sudo prlimit --nofile=500000:500000 --pid 2532
+ 1841  history > prlimit_history
+ 1842  ls
+ 1843  exit
+ 1844  cd gam/test/
+ 1845  htop
+ 1846  exit
+ 1847  cd gam/test/
+ 1848  watch tail 1C_1M_1T 
+ 1849  watch tail 1C_1M_10T 
+ 1850  vi 1C_1M_10T 
+ 1851  vi gam_profile_test.cc 
+ 1852  make
+ 1853  vi gam_profile_test.cc 
+ 1854  watch tail 1C_1M_10T 
+ 1855  watch -n 10 tail 1C_1M_10T 
+ 1856  watch -n 60 tail 1C_1M_10T 
+ 1857  vi 1C_1M_10T 
+ 1858  exit
+ 1859  cd gam/test/
+ 1860  sudo mount 192.168.122.1:/media/data_ssds/tf_logs_test /tensorflow/
+ 1861  cd
+ 1862  sudo ./.single_node.sh 
+ 1863  ls
+ 1864  cd gam/test/
+ 1865  sudo ./gam_profile_test 2 10 10.10.10.201 10.10.10.201 1231 1234 1 1 0.07 6442450944 1 /tensorflow/tensorflow_0_0 /tensorflow/tensorflow_1_0 /tensorflow/tensorflow_2_0 /tensorflow/tensorflow_3_0 /tensorflow/tensorflow_4_0 /tensorflow/tensorflow_5_0 /tensorflow/tensorflow_6_0 /tensorflow/tensorflow_7_0 /tensorflow/tensorflow_8_0 /tensorflow/tensorflow_9_0 &> 1C_1M_10T
+ 1866  make
+ 1867  sudo ./gam_profile_test 2 10 10.10.10.201 10.10.10.201 1231 1234 1 1 0.07 6442450944 1 /tensorflow/tensorflow_0_0 /tensorflow/tensorflow_1_0 /tensorflow/tensorflow_2_0 /tensorflow/tensorflow_3_0 /tensorflow/tensorflow_4_0 /tensorflow/tensorflow_5_0 /tensorflow/tensorflow_6_0 /tensorflow/tensorflow_7_0 /tensorflow/tensorflow_8_0 /tensorflow/tensorflow_9_0 &> 1C_1M_10T
+ 1868  exit
+ 1869  ls
+ 1870  exit
+ 1871  ls
+ 1872  ifconfig
+ 1873  virsh list
+ 1874  cd gam/test/
+ 1875  watch -n 60 tail 1C_1M_10T 
+ 1876  vi 1C_1M_10T 
+ 1877  watch -n 60 tail 1C_1M_10T 
+ 1878  watch tail 1C_1M_10T 
+ 1879  vi 1C_1M_1T
+ 1880  watch tail 1C_1M_10T 
+ 1881  vi 1C_1M_10T 
+ 1882  cd gam/test/
+ 1883  cat prlimit_history 
+ 1884  pgrep gam
+ 1885  sudo prlimit  --nofile --output RESOURCE,SOFT,HARD --pid 2575
+ 1886  sudo prlimit --nofile=1000000:1000000 --pid 2575
+ 1887  sudo prlimit  --nofile --output RESOURCE,SOFT,HARD --pid 2575
+ 1888  pgrep gam
+ 1889  sudo prlimit  --nofile --output RESOURCE,SOFT,HARD --pid 2629
+ 1890  sudo prlimit --nofile=1000000:1000000 --pid 2629
+ 1891  sudo prlimit  --nofile --output RESOURCE,SOFT,HARD --pid 2629
+ 1892  vim gam_profile_test.cc 
+ 1893  vi benchmark.cc 
+ 1894  vim gam_profile_test.cc 
+ 1895  ibv_rc_pingpong -d mlx5_0 -g 3 10.10.10.221
+ 1896  ps aux | grep gam
+ 1897  lsof -p 2629
+ 1898  sudo lsof -p 2629
+ 1899  sudo lsof -p 2629 | wc
+ 1900  sudo lsof -p 2628 | wc
+ 1901  cd /proc/2628
+ 1902  ls
+ 1903  cd fd
+ 1904  ls -l | wc -l
+ 1905  sudo ls -l | wc -l
+ 1906  lsof | wc -l
+ 1907  sudo lsof | wc -l
+ 1908  cd
+ 1909  cd gam/test/
+ 1910  ks
+ 1911  ibv_rc_pingpong -d mlx5_0 -g 3 10.10.10.221
+ 1912  ls
+ 1913  tmux ls
+ 1914  tmux
+ 1915  clear
+ 1916  ls
+ 1917  sudo virt-manager
+ 1918  ls
+ 1919  cd gam/test/
+ 1920  git status
+ 1921  git diff
+ 1922  git add -u
+ 1923  git commit -m "Update"
+ 1924  git push origin master
+ 1925  git pull
+ 1926  make
+ 1927  vi gam_profile_test.cc 
+ 1928  make
+ 1929  cd
+ 1930  sudo ./.single_node.sh 
+ 1931  cd gam/test/
+ 1932  sudo ./gam_profile_test 2 10 10.10.10.201 10.10.10.201 1231 1234 1 1 0.07 6442450944 1 /tensorflow/tensorflow_0_0 /tensorflow/tensorflow_1_0 /tensorflow/tensorflow_2_0 /tensorflow/tensorflow_3_0 /tensorflow/tensorflow_4_0 /tensorflow/tensorflow_5_0 /tensorflow/tensorflow_6_0 /tensorflow/tensorflow_7_0 /tensorflow/tensorflow_8_0 /tensorflow/tensorflow_9_0 &> 1C_1M_10T
+ 1933  sudo mount 192.168.122.1:/media/data_ssds/tf_logs_test /tensorflow/
+ 1934  sudo ./gam_profile_test 2 10 10.10.10.201 10.10.10.201 1231 1234 1 1 0.07 6442450944 1 /tensorflow/tensorflow_0_0 /tensorflow/tensorflow_1_0 /tensorflow/tensorflow_2_0 /tensorflow/tensorflow_3_0 /tensorflow/tensorflow_4_0 /tensorflow/tensorflow_5_0 /tensorflow/tensorflow_6_0 /tensorflow/tensorflow_7_0 /tensorflow/tensorflow_8_0 /tensorflow/tensorflow_9_0 &> 1C_1M_10T
+ 1935  ls
+ 1936  cd gam/test/
+ 1937  ls
+ 1938  vi 1C_1M_10T 
+ 1939  exit
+ 1940  ls
+ 1941  cd gam/test/
+ 1942  git status
+ 1943  git diff
+ 1944  git add -u
+ 1945  git commit -m "Bug fix"
+ 1946  git push origin master
+ 1947  ls
+ 1948  ifconfig
+ 1949  cd
+ 1950  cp .single_node.sh .two_node.sh
+ 1951  vi .two_node.sh 
+ 1952  cat .two_node.sh 
+ 1953  vi .two_node.sh 
+ 1954  sudo ./.single_node.sh 
+ 1955  sudo mount 192.168.122.1:/media/data_ssds/tf_logs_test /tensorflow/
+ 1956  cd gam/test/
+ 1957  sudo ./gam_profile_test 3 10 10.10.10.201 10.10.10.201 1231 1234 1 1 0.07 6442450944 2 /tensorflow/tensorflow_0_0 /tensorflow/tensorflow_1_0 /tensorflow/tensorflow_2_0 /tensorflow/tensorflow_3_0 /tensorflow/tensorflow_4_0 /tensorflow/tensorflow_5_0 /tensorflow/tensorflow_6_0 /tensorflow/tensorflow_7_0 /tensorflow/tensorflow_8_0 /tensorflow/tensorflow_9_0 &> 2C_1M_10T
+ 1958  ./refresh
+ 1959  cd ../scripts/
+ 1960  ls
+ 1961  vi disagg_benchmark.sh 
+ 1962  ls
+ 1963  vi set-ulimit.sh
+ 1964  chmod +x set-ulimit.sh 
+ 1965  ls
+ 1966  cd ../test/
+ 1967  sudo ./gam_profile_test 3 10 10.10.10.201 10.10.10.201 1231 1234 1 1 0.07 6442450944 2 /tensorflow/tensorflow_0_0 /tensorflow/tensorflow_1_0 /tensorflow/tensorflow_2_0 /tensorflow/tensorflow_3_0 /tensorflow/tensorflow_4_0 /tensorflow/tensorflow_5_0 /tensorflow/tensorflow_6_0 /tensorflow/tensorflow_7_0 /tensorflow/tensorflow_8_0 /tensorflow/tensorflow_9_0 &> 2C_1M_10T
+ 1968  ls
+ 1969  cd gam/test/
+ 1970  ls
+ 1971  cat prlimit_history 
+ 1972  pgrep gam
+ 1973  sudo prlimit --nofile=1000000:1000000 --pid 2063
+ 1974  htop
+ 1975  ls
+ 1976  vi 1C_1M_10T 
+ 1977  htop
+ 1978  pgrep gam
+ 1979  htop
+ 1980  vi 1C_1M_10T 
+ 1981  git status | more
+ 1982  sudo ../scripts/set-ulimit.sh 
+ 1983  ../scripts/set-ulimit.sh 
+ 1984  cat ../scripts/set-ulimit.sh 
+ 1985  vi ../scripts/set-ulimit.sh 
+ 1986  ../scripts/set-ulimit.sh 
+ 1987  vi ../scripts/set-ulimit.sh 
+ 1988  git add ../scripts/set-ulimit.sh 
+ 1989  git commit -m "Add script for extending number of open files"
+ 1990  git push origin master
+ 1991  htop
+ 1992  cd gam/test/
+ 1993  watch tail 2C_1M_10T 
+ 1994  git status
+ 1995  git status | more
+ 1996  watch tail 2C_1M_10T 
+ 1997  vi 2C_1M_10T 
+ 1998  cat prlimit_history 
+ 1999  watch tail 2C_1M_10T 
+ 2000  sudo mount 192.168.122.1:/media/data_ssds/tf_logs_test /tensorflow/
+ 2001  cd gam/test/
+ 2002  ls
+ 2003  history > gam_command_history
