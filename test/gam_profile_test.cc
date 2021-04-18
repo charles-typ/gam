@@ -109,9 +109,9 @@ struct trace_t {
   int tid;
   long time;
   long read_time;
-  long read_ops;
+  long long read_ops;
   long write_time;
-  long write_ops;
+  long long write_ops;
   long total_interval;
   long total_fence;
   unsigned long benchmark_size;
@@ -120,6 +120,7 @@ struct trace_t {
   bool is_compute;
   int num_threads;
   int pass;
+  long long control_ops;
   GAlloc *alloc;
 };
 
@@ -226,7 +227,7 @@ void do_log(void *arg) {
 	    //printf("Read time is: %lu\n", read_end - read_start);
 	    //fflush(stdout);
         //trace->read_time += read_end - read_start;
-        //trace->read_ops += 1;
+        trace->read_ops += 1;
         assert(ret == 1);
         old_ts = log->usec;
 
@@ -241,13 +242,13 @@ void do_log(void *arg) {
         size_t cache_line_block = (addr) / (BLOCK_SIZE * resize_ratio);
         size_t cache_line_offset = (addr) % (BLOCK_SIZE * resize_ratio);
         //long write_start = get_time();
-        alloc->MFence();
         ret = alloc->Write(remote[cache_line_block] + cache_line_offset, &buf, 1);
+        //alloc->MFence();
         //long write_end = get_time();
 	    //printf("Write time is: %ld\n", write_end - write_start);
 	    //fflush(stdout);
         //trace->write_time += write_end - write_start;
-        //trace->write_ops += 1;
+        trace->write_ops += 1;
         assert(ret == 1);
         old_ts = log->usec;
 
@@ -258,6 +259,7 @@ void do_log(void *arg) {
         }
         interval_between_access(log->hdr.usec);
         unsigned int len = log->len;
+        trace->control_ops += 1;
         //GAddr ret_addr = alloc->Malloc(len, REMOTE);
         //len2addr.insert(pair<unsigned int, GAddr>(len, ret_addr));
         old_ts += log->hdr.usec;
@@ -267,6 +269,7 @@ void do_log(void *arg) {
         if(log->usec - old_ts <= 999999999) {
           trace->total_interval += log->usec - old_ts;
         }
+        trace->control_ops += 1;
         old_ts = log->usec;
       } else if (op == 'U') {
         struct Ulog *log = (struct Ulog *) cur;
@@ -274,6 +277,7 @@ void do_log(void *arg) {
         if(log->hdr.usec <= 999999999) {
           trace->total_interval += log->hdr.usec;
         }
+        trace->control_ops += 1;
         //auto itr = len2addr.find(log->len);
         //if (itr == len2addr.end()) {
           //printf("no memory to free\n");
@@ -299,6 +303,7 @@ void do_log(void *arg) {
     //trace->total_fence += pass_end - fence_start;
     //printf("total run time is %ld ns, fence_time is %ld, sleep time is %ld, thread: %d, pass: %d\n", trace->time, trace->total_fence, trace->total_interval, trace->tid, trace->pass);
     printf("total run time is %ld ns, thread: %d, pass: %d\n", trace->time, trace->tid, trace->pass);
+    printf("Number of read: %lld write: %lld control: %lld\n", trace->read_ops, trace->write_ops, trace->control_ops);
     //if(trace->read_ops)
     //  printf("total read time is %ld ns, thread: %d, pass: %d\n", trace->read_time, trace->tid, trace->pass);
     //if(trace->write_ops)
