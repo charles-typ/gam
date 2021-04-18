@@ -109,9 +109,9 @@ struct trace_t {
   int tid;
   long time;
   long read_time;
-  long read_ops;
+  long long read_ops;
   long write_time;
-  long write_ops;
+  long long write_ops;
   long total_interval;
   long total_fence;
   unsigned long benchmark_size;
@@ -120,7 +120,7 @@ struct trace_t {
   bool is_compute;
   int num_threads;
   int pass;
-  int control_ops;
+  long long control_ops;
   GAlloc *alloc;
 };
 
@@ -303,7 +303,7 @@ void do_log(void *arg) {
     //trace->total_fence += pass_end - fence_start;
     //printf("total run time is %ld ns, fence_time is %ld, sleep time is %ld, thread: %d, pass: %d\n", trace->time, trace->total_fence, trace->total_interval, trace->tid, trace->pass);
     printf("total run time is %ld ns, thread: %d, pass: %d\n", trace->time, trace->tid, trace->pass);
-    printf("Number of read: %d write: %d control: %d\n", trace->read_ops, trace->write_ops, trace->control_ops);
+    printf("Number of read: %lld write: %lld control: %lld\n", trace->read_ops, trace->write_ops, trace->control_ops);
     //if(trace->read_ops)
     //  printf("total read time is %ld ns, thread: %d, pass: %d\n", trace->read_time, trace->tid, trace->pass);
     //if(trace->write_ops)
