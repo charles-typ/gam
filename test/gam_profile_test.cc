@@ -298,7 +298,7 @@ void do_log(void *arg) {
 #ifdef PROFILE_LATENCY
     alloc->CollectCacheStatistics();
 #endif
-    alloc->CollectEvictStatistics()
+    alloc->CollectEvictStatistics();
     printf("done in %ld ns, thread: %d, pass: %d\n", pass_end - pass_start, trace->tid, trace->pass);
     trace->time += pass_end - pass_start;
     //trace->total_fence += pass_end - fence_start;
