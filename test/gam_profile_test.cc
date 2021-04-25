@@ -318,15 +318,11 @@ void do_log(void *arg) {
     //printf("total run time is %ld ns, fence_time is %ld, sleep time is %ld, thread: %d, pass: %d\n", trace->time, trace->total_fence, trace->total_interval, trace->tid, trace->pass);
     printf("total run time is %ld ns, thread: %d, pass: %d\n", trace->time, trace->tid, trace->pass);
     printf("Number of read: %lld write: %lld control: %lld\n", trace->read_ops, trace->write_ops, trace->control_ops);
-    for (i = 0; i < CDF_BUCKET_NUM; i++)
-      fprintf(trace->cdf_fp, "%lu\n", trace->cdf_cnt_r[i]);
     // write
-    fprintf(trace->cdf_fp, "Write:\n");
     for (i = 0; i < CDF_BUCKET_NUM; i++)
       printf("CDF WRITE: thread: %d pass: %d count: %lu\n", trace->cdf_cnt_w[i]);
     for (i = 0; i < CDF_BUCKET_NUM; i++)
       printf("CDF READ: thread: %d pass: %d count: %lu\n", trace->cdf_cnt_r[i]);
-    fprintf(trace->cdf_fp, "\n");
     //if(trace->read_ops)
     //  printf("total read time is %ld ns, thread: %d, pass: %d\n", trace->read_time, trace->tid, trace->pass);
     //if(trace->write_ops)
