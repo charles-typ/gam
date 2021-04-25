@@ -714,7 +714,7 @@ void Cache::Evict() {
       "used_bytes = %ld, max_cache_mem = %ld,  BLOCK_SIZE = %ld, th = %lf, to_evicted = %ld",
       used_bytes.load(), max_cache_mem, BLOCK_SIZE, worker->conf->cache_th, to_evicted.load());
   long long used = used_bytes - to_evicted * BLOCK_SIZE;
-  double evict_th = 0.8;
+  double evict_th = 0.9;
   if (used > 0 && used > max_cache_mem * evict_th) {
     int n = (used - max_cache_mem * evict_th) / BLOCK_SIZE;
     epicLog(LOG_DEBUG,
@@ -724,6 +724,7 @@ void Cache::Evict() {
     if (ret < n) {
       epicLog(LOG_WARNING, "only able to evict %d, but expect to evict %d", ret, n);
     }
+    num_evict += ret;
   }
 }
 

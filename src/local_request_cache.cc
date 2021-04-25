@@ -132,6 +132,7 @@ int Worker::ProcessLocalRead(WorkRequest* wr) {
     int ret = new_ret.original_ret;
 #else
     int ret = cache.Read(wr);
+    num_evict_ = cache.get_evict();
 #endif
     //long time_stamp_3 = get_time();
     //epicLog(LOG_WARNING, "This level read takes time: %ld 1:%ld 2:%ld\n", time_stamp_3 - time_stamp_2, time_stamp_1 - init_time, time_stamp_2 - time_stamp_1);

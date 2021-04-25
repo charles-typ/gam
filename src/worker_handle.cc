@@ -256,6 +256,13 @@ void WorkerHandle::CollectCacheStatistics() {
       , worker->cache_write_miss_time_.load());
 }
 
+void WorkerHandle::CollectEvictStatistics() {
+  epicLog(LOG_WARNING, "Evict Statistics");
+  fprintf(stdout, "Eviction\n");
+  fprintf(stdout, "%lld\n"
+      , worker->num_evict_.load());
+}
+
 void WorkerHandle::ResetCacheStatistics() {
 
     worker->no_local_reads_ = 0;

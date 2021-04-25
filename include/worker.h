@@ -193,6 +193,7 @@ class Worker : public Server {
   atomic<Size> cache_read_miss_time_;
   atomic<Size> cache_write_miss_;
   atomic<Size> cache_write_miss_time_;
+  atomic<Size> num_evict_;
 
   // logging
   void logWrite(GAddr addr, Size sz, const void* content) {

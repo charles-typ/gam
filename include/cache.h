@@ -87,6 +87,7 @@ class Cache {
   atomic<long> read_miss;
   atomic<long> write_miss;
   atomic<Size> used_bytes;
+  atomic<long> num_evict;
   Size max_cache_mem = 0;
 
 #ifdef USE_LRU
@@ -374,6 +375,10 @@ class Cache {
 #ifdef SELECTIVE_CACHING
   void ToNotCache(CacheLine* cline, bool write = false);
 #endif
+  long get_evict() {
+    return num_evict.load();
+  }
+
 };
 
 #endif /* INCLUDE_CACHE_H_ */
