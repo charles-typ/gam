@@ -41,12 +41,13 @@
 #define SYNC_KEY (unsigned long)10 * 1024 * 1024 * 1024 // default: 10 GB
 //#define num_comp_nodes 4
 //#define NUM_MEM_NODES 2
+#define CDF_BUCKET_NUM	512
 
 int addr_size = sizeof(GAddr);
 
 // Test configuration
 //#define single_thread_test
-//#define meta_data_testg
+//#define meta_data_test
 
 using namespace std;
 
@@ -99,6 +100,21 @@ struct Ulog {
   }__attribute__((__packed__));
 }__attribute__((__packed__));
 
+static int latency_to_bkt(unsigned long lat_in_us)
+{
+  if (lat_in_us < 100)
+    return (int)lat_in_us;
+  else if (lat_in_us < 1000)
+    return 100 + ((lat_in_us - 100) / 10);
+  else if (lat_in_us < 10000)
+    return 190 + ((lat_in_us - 1000) / 100);
+  else if (lat_in_us < 100000)
+    return 280 + ((lat_in_us - 10000) / 1000);
+  else if (lat_in_us < 1000000)
+    return 370 + ((lat_in_us - 100000) / 10000);
+  return CDF_BUCKET_NUM - 1;	// over 1 sec
+}
+
 struct trace_t {
   char *logs;
   unsigned long len;
@@ -122,6 +138,8 @@ struct trace_t {
   int pass;
   long long control_ops;
   GAlloc *alloc;
+  unsigned long cdf_cnt_r[CDF_BUCKET_NUM] = {0};
+  unsigned long cdf_cnt_w[CDF_BUCKET_NUM] = {0};
 };
 
 struct memory_config_t {
@@ -183,13 +201,7 @@ inline void interval_between_access(long delta_time_usec) {
 
 void do_log(void *arg) {
   struct trace_t *trace = (struct trace_t *) arg;
-
-  //long allocator_start = get_time();
-  //GAlloc *alloc = GAllocFactory::CreateAllocator();
-  //long allocator_end = get_time();
   GAlloc *alloc = trace->alloc;
-  //printf("Allocator created in %ld ns\n", allocator_end - allocator_start);
-
 
   int ret;
 
@@ -204,7 +216,6 @@ void do_log(void *arg) {
   unsigned long i = 0;
 
   long pass_start = get_time();
-  //long total_interval = 0;
   char *cur;
 
   if (trace->is_compute) {
@@ -224,7 +235,8 @@ void do_log(void *arg) {
         long read_start = get_time();
         ret = alloc->Read(remote[cache_line_block] + cache_line_offset, &buf, 1);
         long read_end = get_time();
-	    printf("Read time is: %lu\n", read_end - read_start);
+        trace->cdf_cnt_w[latency_to_bkt(read_end - read_start)]++
+	    //printf("Read time is: %lu\n", read_end - read_start);
 	    //fflush(stdout);
         //trace->read_time += read_end - read_start;
         trace->read_ops += 1;
@@ -245,7 +257,8 @@ void do_log(void *arg) {
         ret = alloc->Write(remote[cache_line_block] + cache_line_offset, &buf, 1);
         //alloc->MFence();
         long write_end = get_time();
-	    printf("Write time is: %ld\n", write_end - write_start);
+        trace->cdf_cnt_r[latency_to_bkt(write_end - write_start)]++
+	    //printf("Write time is: %ld\n", write_end - write_start);
 	    //fflush(stdout);
         //trace->write_time += write_end - write_start;
         trace->write_ops += 1;
@@ -298,13 +311,22 @@ void do_log(void *arg) {
 #ifdef PROFILE_LATENCY
     alloc->CollectCacheStatistics();
 #endif
-    alloc->CollectEvictStatistics();
+    //alloc->CollectEvictStatistics();
     printf("done in %ld ns, thread: %d, pass: %d\n", pass_end - pass_start, trace->tid, trace->pass);
     trace->time += pass_end - pass_start;
     //trace->total_fence += pass_end - fence_start;
     //printf("total run time is %ld ns, fence_time is %ld, sleep time is %ld, thread: %d, pass: %d\n", trace->time, trace->total_fence, trace->total_interval, trace->tid, trace->pass);
     printf("total run time is %ld ns, thread: %d, pass: %d\n", trace->time, trace->tid, trace->pass);
     printf("Number of read: %lld write: %lld control: %lld\n", trace->read_ops, trace->write_ops, trace->control_ops);
+    for (i = 0; i < CDF_BUCKET_NUM; i++)
+      fprintf(trace->cdf_fp, "%lu\n", trace->cdf_cnt_r[i]);
+    // write
+    fprintf(trace->cdf_fp, "Write:\n");
+    for (i = 0; i < CDF_BUCKET_NUM; i++)
+      printf("CDF WRITE: thread: %d pass: %d count: %lu\n", trace->cdf_cnt_w[i]);
+    for (i = 0; i < CDF_BUCKET_NUM; i++)
+      printf("CDF READ: thread: %d pass: %d count: %lu\n", trace->cdf_cnt_r[i]);
+    fprintf(trace->cdf_fp, "\n");
     //if(trace->read_ops)
     //  printf("total read time is %ld ns, thread: %d, pass: %d\n", trace->read_time, trace->tid, trace->pass);
     //if(trace->write_ops)
