@@ -235,7 +235,7 @@ void do_log(void *arg) {
         long read_start = get_time();
         ret = alloc->Read(remote[cache_line_block] + cache_line_offset, &buf, 1);
         long read_end = get_time();
-        trace->cdf_cnt_w[latency_to_bkt(read_end - read_start)]++;
+        trace->cdf_cnt_w[latency_to_bkt((read_end - read_start) / 1000)]++;
 	    //printf("Read time is: %lu\n", read_end - read_start);
 	    //fflush(stdout);
         //trace->read_time += read_end - read_start;
@@ -257,7 +257,7 @@ void do_log(void *arg) {
         ret = alloc->Write(remote[cache_line_block] + cache_line_offset, &buf, 1);
         //alloc->MFence();
         long write_end = get_time();
-        trace->cdf_cnt_r[latency_to_bkt(write_end - write_start)]++;
+        trace->cdf_cnt_r[latency_to_bkt((write_end - write_start)) / 1000]++;
 	    //printf("Write time is: %ld\n", write_end - write_start);
 	    //fflush(stdout);
         //trace->write_time += write_end - write_start;
