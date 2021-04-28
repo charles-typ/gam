@@ -100,20 +100,21 @@ struct Ulog {
   }__attribute__((__packed__));
 }__attribute__((__packed__));
 
-static int latency_to_bkt(unsigned long lat_in_us)
-{
-  if (lat_in_us < 100)
-    return (int)lat_in_us;
-  else if (lat_in_us < 1000)
-    return 100 + ((lat_in_us - 100) / 10);
-  else if (lat_in_us < 10000)
-    return 190 + ((lat_in_us - 1000) / 100);
-  else if (lat_in_us < 100000)
-    return 280 + ((lat_in_us - 10000) / 1000);
-  else if (lat_in_us < 1000000)
-    return 370 + ((lat_in_us - 100000) / 10000);
-  return CDF_BUCKET_NUM - 1;	// over 1 sec
-}
+// Defined in server.h
+//static int latency_to_bkt(unsigned long lat_in_us)
+//{
+//  if (lat_in_us < 100)
+//    return (int)lat_in_us;
+//  else if (lat_in_us < 1000)
+//    return 100 + ((lat_in_us - 100) / 10);
+//  else if (lat_in_us < 10000)
+//    return 190 + ((lat_in_us - 1000) / 100);
+//  else if (lat_in_us < 100000)
+//    return 280 + ((lat_in_us - 10000) / 1000);
+//  else if (lat_in_us < 1000000)
+//    return 370 + ((lat_in_us - 100000) / 10000);
+//  return CDF_BUCKET_NUM - 1;	// over 1 sec
+//}
 
 struct trace_t {
   char *logs;
