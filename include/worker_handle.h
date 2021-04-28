@@ -43,7 +43,8 @@ class WorkerHandle {
 
   void ReportCacheStatistics();
   void CollectCacheStatistics();
-  void CollectEvictStatistics();
+  void CollectEvictStatistics(int thread_num, int pass_num);
+  void CollectInvalidStatistics(int thread_num, int pass_num);
   void CollectNetworkCdf(int thread_num, int pass_num);
   void ResetCacheStatistics();
 

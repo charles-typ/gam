@@ -256,11 +256,12 @@ void WorkerHandle::CollectCacheStatistics() {
       , worker->cache_write_miss_time_.load());
 }
 
-void WorkerHandle::CollectEvictStatistics() {
-  epicLog(LOG_WARNING, "Evict Statistics");
-  fprintf(stdout, "Eviction\n");
-  fprintf(stdout, "%lld\n"
-      , worker->num_evict_.load());
+void WorkerHandle::CollectEvictStatistics(int thread_num, int pass_num) {
+  fprintf(stdout, "Eviction: thread: %d pass: %d count: %lld\n", thread_num, pass_num, worker->num_evict_.load());
+}
+
+void WorkerHandle::CollectInvalidStatistics(int thread_num, int pass_num) {
+  fprintf(stdout, "Invalidation: thread: %d pass: %d count: %lld\n", thread_num, pass_num, worker->num_invalid_.load());
 }
 
 void WorkerHandle::CollectNetworkCdf(int thread_num, int pass_num) {

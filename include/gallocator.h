@@ -108,8 +108,11 @@ class GAlloc {
   void CollectCacheStatistics() {
     wh->CollectCacheStatistics();
   }
-  void CollectEvictStatistics() {
-    wh->CollectEvictStatistics();
+  void CollectEvictStatistics(int thread_num, int pass_num) {
+    wh->CollectEvictStatistics(thread_num, pass_num);
+  }
+  void CollectInvalidStatistics(int thread_num, int pass_num) {
+    wh->CollectInvalidStatistics(thread_num, pass_num);
   }
   void CollectNetworkCdf(int thread_num, int pass_num) {
     wh->CollectNetworkCdf(thread_num, pass_num);

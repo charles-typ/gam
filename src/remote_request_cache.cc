@@ -616,6 +616,7 @@ void Worker::ProcessRemoteWriteCache(Client* client, WorkRequest* wr) {
 
     } else if (wr->op == INVALIDATE) {  //INVALIDATE
       // FIXME epicLog(LOG_WARNING, "Invalidate");
+      num_invalid_ += 1;
       epicAssert(!cache.IsDirty(cline));
       client->WriteWithImm(nullptr, nullptr, 0, wr->id);
       //TOOD: add below to the callback function
@@ -625,6 +626,7 @@ void Worker::ProcessRemoteWriteCache(Client* client, WorkRequest* wr) {
       wr = nullptr;
     } else if (wr->op == INVALIDATE_FORWARD) {  //INVALIDATE_FORWARD
       // FIXME epicLog(LOG_WARNING, "Invalidate forward");
+      num_invalid_ += 1;
       epicAssert(!cache.IsDirty(cline));
       //		Client* cli = FindClientWid(wr->pwid);
       //		cli->WriteWithImm(nullptr, nullptr, 0, wr->pid); //reply the new owner
