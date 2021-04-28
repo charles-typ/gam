@@ -750,7 +750,7 @@ ssize_t RdmaContext::Rdma(ibv_wr_opcode op, const void* src, size_t len,
   return ret;
 }
 
-profile_return RdmaContext::Rdma_profile(ibv_wr_opcode op, const void* src, size_t len,
+struct profile_return RdmaContext::Rdma_profile(ibv_wr_opcode op, const void* src, size_t len,
                           unsigned int id, bool signaled, void* dest,
                           uint32_t imm, uint64_t oldval, uint64_t newval) {
   epicLog(LOG_DEBUG, "op = %d, src = %lx, len = %d, id = %d, signaled = %d, dest = %lx, imm = %u, oldval = %lu, newval = %lu\nsrc = %s",
