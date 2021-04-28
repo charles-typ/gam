@@ -312,7 +312,6 @@ void do_log(void *arg) {
 #ifdef PROFILE_LATENCY
     alloc->CollectCacheStatistics();
 #endif
-    //alloc->CollectEvictStatistics();
     printf("done in %ld ns, thread: %d, pass: %d\n", pass_end - pass_start, trace->tid, trace->pass);
     trace->time += pass_end - pass_start;
     //trace->total_fence += pass_end - fence_start;
@@ -325,6 +324,7 @@ void do_log(void *arg) {
       for (i = 0; i < CDF_BUCKET_NUM; i++)
         printf("CDF READ: thread: %d pass: %d count: %lu\n", trace->tid, trace->pass, trace->cdf_cnt_r[i]);
       alloc->CollectNetworkCdf(trace->tid, trace->pass);
+      alloc->CollectEvictStatistics(trace->tid, trace->pass);
     }
     //if(trace->read_ops)
     //  printf("total read time is %ld ns, thread: %d, pass: %d\n", trace->read_time, trace->tid, trace->pass);
