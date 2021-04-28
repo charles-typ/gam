@@ -195,6 +195,7 @@ class Worker : public Server {
   atomic<Size> cache_write_miss_;
   atomic<Size> cache_write_miss_time_;
   atomic<Size> num_evict_;
+  atomic<Size> num_request_send_;
   atomic<Size> num_invalid_;
 
   // logging

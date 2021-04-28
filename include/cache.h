@@ -88,6 +88,7 @@ class Cache {
   atomic<long> write_miss;
   atomic<Size> used_bytes;
   atomic<long> num_evict;
+  atomic<long> num_request_send;
   Size max_cache_mem = 0;
 
 #ifdef USE_LRU
@@ -377,6 +378,9 @@ class Cache {
 #endif
   long get_evict() {
     return num_evict.load();
+  }
+  long get_request_send() {
+    return num_request_send.load();
   }
 
 };

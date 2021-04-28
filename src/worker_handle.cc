@@ -264,6 +264,10 @@ void WorkerHandle::CollectInvalidStatistics(int thread_num, int pass_num) {
   fprintf(stdout, "Invalidation: thread: %d pass: %d count: %lld\n", thread_num, pass_num, worker->num_invalid_.load());
 }
 
+void WorkerHandle::CollectRemoteStatistics(int thread_num, int pass_num) {
+  fprintf(stdout, "Remote request send: thread: %d pass: %d count: %lld\n", thread_num, pass_num, worker->num_request_send_.load());
+}
+
 void WorkerHandle::CollectNetworkCdf(int thread_num, int pass_num) {
   int i = 0;
   for (i = 0; i < CDF_BUCKET_NUM; i++)

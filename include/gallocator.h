@@ -114,6 +114,9 @@ class GAlloc {
   void CollectInvalidStatistics(int thread_num, int pass_num) {
     wh->CollectInvalidStatistics(thread_num, pass_num);
   }
+  void CollectRemoteStatistics(int thread_num, int pass_num) {
+    wh->CollectRemoteStatistics(thread_num, pass_num);
+  }
   void CollectNetworkCdf(int thread_num, int pass_num) {
     wh->CollectNetworkCdf(thread_num, pass_num);
   }

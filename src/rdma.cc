@@ -765,6 +765,7 @@ struct profile_return RdmaContext::Rdma_profile(ibv_wr_opcode op, const void* sr
   if (pending_msg >= max_pending_msg) {
     //add the send request to the waiting queue
     epicLog(LOG_INFO, "Rdma device is busy; will try later");
+    epicLog(LOG_WARNING, " Pending messages here");
     pending_requests.push(RdmaRequest { op, src, len, id, signaled, dest, imm, oldval, newval });
     epicAssert(
         pending_requests.back().op == op && pending_requests.back().src == src
