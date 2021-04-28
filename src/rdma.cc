@@ -891,7 +891,7 @@ ssize_t RdmaContext::Send(const void* ptr, size_t len, unsigned int id,
   return ret;
 }
 
-profile_return RdmaContext::Send_profile(const void* ptr, size_t len, unsigned int id,
+struct profile_return RdmaContext::Send_profile(const void* ptr, size_t len, unsigned int id,
                           bool signaled) {
 #ifdef ASYNC_RDMA_SEND
   lock();

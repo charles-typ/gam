@@ -264,8 +264,9 @@ void WorkerHandle::CollectEvictStatistics() {
 }
 
 void WorkerHandle::CollectNetworkCdf(int thread_num, int pass_num) {
-    for (i = 0; i < CDF_BUCKET_NUM; i++)
-      printf("CDF Network: thread: %d pass: %d count: %lu\n", thread_num, pass_num, worker->cdf_cnt_network[i]);
+  int i = 0;
+  for (i = 0; i < CDF_BUCKET_NUM; i++)
+    printf("CDF Network: thread: %d pass: %d count: %lu\n", thread_num, pass_num, worker->cdf_cnt_network[i]);
 }
 
 void WorkerHandle::ResetCacheStatistics() {

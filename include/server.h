@@ -42,7 +42,6 @@ class Server {
     HashTable<int, Client*> widCliMap { "widCliMap" };  //store all the wid -> Client map
     UnorderedMap<int, Client*> widCliMapWorker { "widCliMapWorker" };  //only store the wid -> Client map excluding ClientServer
     HashTable<uint64_t, long> networkLatencyMap { "networkLatencyMap" };
-    unsigned long cdf_cnt_network[CDF_BUCKET_NUM] = {0};
     RdmaResource* resource;
     aeEventLoop* el;
     int sockfd;
@@ -54,6 +53,7 @@ class Server {
     friend class Cache;
 
   public:
+    unsigned long cdf_cnt_network[CDF_BUCKET_NUM] = {0};
     Client* NewClient(bool isMaster, const char* rdmaConn = nullptr);
     Client* NewClient(const char*);
     Client* NewClient();
