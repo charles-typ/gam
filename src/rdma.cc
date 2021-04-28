@@ -897,7 +897,7 @@ struct profile_return RdmaContext::Send_profile(const void* ptr, size_t len, uns
   lock();
 #endif
   //lock(); //we already lock when getting the send buf
-  struct profile_return ret = Rdma(IBV_WR_SEND, ptr, len, id, signaled);
+  struct profile_return ret = Rdma_profile(IBV_WR_SEND, ptr, len, id, signaled);
   unlock();
   return ret;
 }
