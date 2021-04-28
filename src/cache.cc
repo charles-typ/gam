@@ -213,7 +213,9 @@ int Cache::ReadWrite(WorkRequest* wr) {
 
           //put submit request at last in case reply comes before we process afterwards works
           //long submit_start_time = get_time();
+
           worker->SubmitRequest(cli, lwr, ADD_TO_PENDING | REQUEST_SEND | PROFILE_NETWORK);
+          num_request_send += 1;
           //long submit_end_time = get_time();
           //epicLog(LOG_WARNING, "Write hit case 1 at time: %ld %ld \n", submit_start_time - init_time, submit_end_time - submit_start_time);
         } else {
@@ -324,6 +326,7 @@ int Cache::ReadWrite(WorkRequest* wr) {
       //long start_time = get_time();
       //long submit_start_time = get_time();
       worker->SubmitRequest(cli, lwr, ADD_TO_PENDING | REQUEST_SEND | PROFILE_NETWORK); // FIXME: Guess: this pending is for serializing requests on same address
+      num_request_send += 1;
       //long submit_end_time = get_time();
       //if (WRITE == wr->op) {
       //  epicLog(LOG_WARNING,
@@ -470,7 +473,7 @@ int Cache::Lock(WorkRequest* wr) {
         epicAssert(state != CACHE_TO_DIRTY);
         ToToDirty(cline);
         worker->SubmitRequest(cli, lwr, ADD_TO_PENDING | REQUEST_SEND | PROFILE_NETWORK);
-
+        num_request_send += 1;
 #ifdef USE_LRU
         //we unlink the cache to avoid it is evicted before
         //the reply comes back
@@ -545,6 +548,7 @@ int Cache::Lock(WorkRequest* wr) {
       ToToDirty(cline);
     }
     worker->SubmitRequest(cli, lwr, ADD_TO_PENDING | REQUEST_SEND | PROFILE_NETWORK);
+    num_request_send += 1;
   }
   int ret = wr->counter;
   unlock(i);
