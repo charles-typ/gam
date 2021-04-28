@@ -257,7 +257,7 @@ void do_log(void *arg) {
         ret = alloc->Write(remote[cache_line_block] + cache_line_offset, &buf, 1);
         //alloc->MFence();
         long write_end = get_time();
-        trace->cdf_cnt_r[latency_to_bkt((write_end - write_start)) / 1000]++;
+        trace->cdf_cnt_r[latency_to_bkt((write_end - write_start) / 1000)]++;
 	    //printf("Write time is: %ld\n", write_end - write_start);
 	    //fflush(stdout);
         //trace->write_time += write_end - write_start;
