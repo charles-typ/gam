@@ -325,6 +325,7 @@ void do_log(void *arg) {
         printf("CDF READ: thread: %d pass: %d count: %lu\n", trace->tid, trace->pass, trace->cdf_cnt_r[i]);
       alloc->CollectNetworkCdf(trace->tid, trace->pass);
       alloc->CollectEvictStatistics(trace->tid, trace->pass);
+      alloc->CollectInvalidStatistics(trace->tid, trace->pass);
     }
     //if(trace->read_ops)
     //  printf("total read time is %ld ns, thread: %d, pass: %d\n", trace->read_time, trace->tid, trace->pass);
