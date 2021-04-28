@@ -323,6 +323,7 @@ void do_log(void *arg) {
         printf("CDF WRITE: thread: %d pass: %d count: %lu\n", trace->tid, trace->pass, trace->cdf_cnt_w[i]);
       for (i = 0; i < CDF_BUCKET_NUM; i++)
         printf("CDF READ: thread: %d pass: %d count: %lu\n", trace->tid, trace->pass, trace->cdf_cnt_r[i]);
+      alloc->CollectNetworkCdf(trace->tid, trace->pass);
     }
     //if(trace->read_ops)
     //  printf("total read time is %ld ns, thread: %d, pass: %d\n", trace->read_time, trace->tid, trace->pass);

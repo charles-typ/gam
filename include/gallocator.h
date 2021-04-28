@@ -111,6 +111,9 @@ class GAlloc {
   void CollectEvictStatistics() {
     wh->CollectEvictStatistics();
   }
+  void CollectNetworkCdf(int thread_num, int pass_num) {
+    wh->CollectNetworkCdf(thread_num, pass_num);
+  }
 
   void ResetCacheStatistics() {
     wh->ResetCacheStatistics();

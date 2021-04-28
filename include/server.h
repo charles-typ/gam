@@ -14,10 +14,25 @@
 #include "hashtable.h"
 #include "locked_unordered_map.h"
 #include "map.h"
-
+#define CDF_BUCKET_NUM 512
 class ServerFactory;
 class Server;
 class Client;
+
+static int latency_to_bkt(unsigned long lat_in_us)
+{
+  if (lat_in_us < 100)
+    return (int)lat_in_us;
+  else if (lat_in_us < 1000)
+    return 100 + ((lat_in_us - 100) / 10);
+  else if (lat_in_us < 10000)
+    return 190 + ((lat_in_us - 1000) / 100);
+  else if (lat_in_us < 100000)
+    return 280 + ((lat_in_us - 10000) / 1000);
+  else if (lat_in_us < 1000000)
+    return 370 + ((lat_in_us - 100000) / 10000);
+  return CDF_BUCKET_NUM - 1;	// over 1 sec
+}
 
 class Server {
   private:
@@ -26,6 +41,8 @@ class Server {
     HashTable<uint32_t, Client*> qpCliMap { "qpCliMap" };  //thread-safe as it is dynamic
     HashTable<int, Client*> widCliMap { "widCliMap" };  //store all the wid -> Client map
     UnorderedMap<int, Client*> widCliMapWorker { "widCliMapWorker" };  //only store the wid -> Client map excluding ClientServer
+    HashTable<uint64_t, long> networkLatencyMap { "networkLatencyMap" };
+    unsigned long cdf_cnt_network[CDF_BUCKET_NUM] = {0};
     RdmaResource* resource;
     aeEventLoop* el;
     int sockfd;

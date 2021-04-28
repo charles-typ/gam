@@ -555,9 +555,18 @@ unsigned long long Worker::SubmitRequest(Client* cli, WorkRequest* wr, int flag,
     epicLog(LOG_DEBUG, "Start serialize");
     int ret = wr->Ser(sbuf, len);
     epicAssert(!ret);
-    if ((ret = cli->Send(sbuf, len)) != len) {
-      epicAssert(ret == -1);
-      epicLog(LOG_INFO, "sent failed: slots are busy");
+    if(flag & PROFILE_NETWORK) {
+      struct profile_return new_ret = cli->Send_profile(sbuf, len);
+      if (new_ret.original_ret != len) {
+        epicAssert(new_ret.original_ret == -1);
+        epicLog(LOG_INFO, "sent failed: slots are busy");
+      }
+      networkLatencyMap[new_ret.wr_id] = new_ret.time_stamp;
+    } else {
+      if ((ret = cli->Send(sbuf, len)) != len) {
+        epicAssert(ret == -1);
+        epicLog(LOG_INFO, "sent failed: slots are busy");
+      }
     }
     epicLog(LOG_DEBUG, "Finish sending");
 #endif

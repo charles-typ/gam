@@ -44,6 +44,7 @@ class WorkerHandle {
   void ReportCacheStatistics();
   void CollectCacheStatistics();
   void CollectEvictStatistics();
+  void CollectNetworkCdf(int thread_num, int pass_num);
   void ResetCacheStatistics();
 
   ~WorkerHandle();

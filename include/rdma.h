@@ -131,6 +131,12 @@ struct RdmaRequest {
   uint64_t newval;
 };
 
+struct profile_return {
+  ssize_t original_ret;
+  uint64_t wr_id;
+  long time_stamp;
+};
+
 class RdmaContext {
  private:
   ibv_qp *qp;
@@ -154,6 +160,12 @@ class RdmaContext {
 
   ssize_t Rdma(ibv_wr_opcode op, const void* src, size_t len, unsigned int id =
                    0,
+               bool signaled =
+               false,
+               void* dest = nullptr, uint32_t imm = 0, uint64_t oldval = 0,
+               uint64_t newval = 0);
+  ssize_t Rdma_profile(ibv_wr_opcode op, const void* src, size_t len, unsigned int id =
+  0,
                bool signaled =
                false,
                void* dest = nullptr, uint32_t imm = 0, uint64_t oldval = 0,
@@ -203,6 +215,8 @@ class RdmaContext {
 
   ssize_t Send(const void* ptr, size_t len, unsigned int id = 0, bool signaled =
                    false);
+  ssize_t Send_profile(const void* ptr, size_t len, unsigned int id = 0, bool signaled =
+  false);
   inline int PostRecv(int n) {
     return resource->PostRecv(n);
   }

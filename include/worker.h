@@ -38,6 +38,7 @@
 #define REQUEST_NO_ID 1 << 4
 #define ADD_TO_PENDING 1 << 5
 #define REQUEST_ASYNC 1 << 6
+#define PROFILE_NETWORK 1 << 7
 
 class Cache;
 
@@ -194,6 +195,7 @@ class Worker : public Server {
   atomic<Size> cache_write_miss_;
   atomic<Size> cache_write_miss_time_;
   atomic<Size> num_evict_;
+  atomic<Size> num_invalid_;
 
   // logging
   void logWrite(GAddr addr, Size sz, const void* content) {

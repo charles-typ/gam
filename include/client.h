@@ -74,6 +74,12 @@ class Client {
         bool signaled = false) {
       return ctx->Send(buf, len, id, signaled);
     }
+
+    inline ssize_t Send_profile(const void* buf, size_t len, unsigned int id = 0,
+                      bool signaled = false) {
+      return ctx->Send(buf, len, id, signaled);
+    }
+
     inline ssize_t Write(raddr dest, raddr src, size_t len, unsigned int id = 0,
         bool signaled = false) {
       return ctx->Write(dest, src, len, id, signaled);
