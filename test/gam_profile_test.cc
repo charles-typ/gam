@@ -329,7 +329,7 @@ void do_log(void *arg) {
         alloc->CollectCacheStatistics();
       }
 #endif
-      printf("Number of read: %lld write: %lld control: %lld\n", trace->read_ops, trace->write_ops, trace->control_ops);
+      printf("thread: %d Number of read: %lld write: %lld control: %lld\n", trace->tid, trace->read_ops, trace->write_ops, trace->control_ops);
 
 #ifdef COLLECT_CDF
       for (i = 0; i < CDF_BUCKET_NUM; i++)
