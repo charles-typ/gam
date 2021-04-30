@@ -1186,8 +1186,9 @@ Cache_return_t Cache::ReadWriteCollect(WorkRequest* wr) {
   if (end_blk != start_blk) {
     epicLog(LOG_INFO, "read/write split to multiple blocks");
   }
-  long tmp_time = get_time();
+
   Client* cli = worker->GetClient(wr->addr);
+  long tmp_time = get_time();
   GAddr start = wr->addr;
 
   wr->lock();
