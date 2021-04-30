@@ -1305,6 +1305,7 @@ Cache_return_t Cache::ReadWriteCollect(WorkRequest* wr) {
         memcpy(ls, cs, len);
         //long end_time = get_time();
         //long time_stamp_5 = get_time();
+        long tmp_time = get_time();
 #ifdef USE_LRU
         UnLinkLRU(cline);
         LinkLRU(cline);
@@ -1312,7 +1313,7 @@ Cache_return_t Cache::ReadWriteCollect(WorkRequest* wr) {
         //epicLog(LOG_WARNING, "Actual read hit takes time: %ld 1:%ld 2:%ld 3:%ld 4:%ld 5:%ld 6:%ld\n", end_time - start_time, time_stamp_1 - init_time, time_stamp_2 - time_stamp_1, time_stamp_3 - time_stamp_2, time_stamp_4 - time_stamp_3, time_stamp_5 - time_stamp_4, time_stamp_6 - time_stamp_5);
         new_ret.op = CACHE_READ_HIT;
         new_ret.mode = 4;
-        new_ret.time = get_time() - init_time;
+        new_ret.time = tmp_time - init_time;
         //epicLog(LOG_DEBUG, "Read hit case 4 at time: %ld\n", get_time() - init_time);
 #endif
       } else if (WRITE == wr->op) {

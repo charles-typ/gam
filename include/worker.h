@@ -42,6 +42,12 @@
 
 class Cache;
 
+typedef struct {
+  int original ret;
+  Cache_op op;
+  int mode;
+} profile_return_cache_t;
+
 struct Fence {
   bool sfenced = false;bool mfenced = false;
   atomic<int> pending_writes;
