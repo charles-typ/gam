@@ -58,6 +58,7 @@ void Server::ProcessRdmaRequest(ibv_wc& wc) {
   switch (wc.opcode) {
     case IBV_WC_SEND:
       epicLog(LOG_DEBUG, "get send completion event");
+#ifdef COLLECT_NETWORK_LATENCY
       try {
         long start_time = networkLatencyMap.at(wc.wr_id);
         cdf_cnt_network[latency_to_bkt((get_time() - start_time) / 1000)]++;
@@ -66,6 +67,7 @@ void Server::ProcessRdmaRequest(ibv_wc& wc) {
        // epicLog(LOG_WARNING, "cannot find the client for qpn %d (%s)", qpn,
        //         oor.what());
       }
+#endif
       id = cli->SendComp(wc);
       //send check initiated locally
       CompletionCheck(id);

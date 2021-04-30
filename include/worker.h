@@ -198,6 +198,9 @@ class Worker : public Server {
   atomic<Size> num_request_send_;
   atomic<Size> num_invalid_;
 
+  void CollectEvictCdf(int thread_num, int pass_num) {
+    cache.CollectEvictCdf(thread_num, pass_num);
+  }
   // logging
   void logWrite(GAddr addr, Size sz, const void* content) {
     //log->logWrite(addr, sz, content);

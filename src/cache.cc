@@ -213,8 +213,11 @@ int Cache::ReadWrite(WorkRequest* wr) {
 
           //put submit request at last in case reply comes before we process afterwards works
           //long submit_start_time = get_time();
-
+#ifdef COLLECT_NETWORK_LATENCY
           worker->SubmitRequest(cli, lwr, ADD_TO_PENDING | REQUEST_SEND | PROFILE_NETWORK);
+#else
+          worker->SubmitRequest(cli, lwr, ADD_TO_PENDING | REQUEST_SEND);
+#endif
           num_request_send += 1;
           //long submit_end_time = get_time();
           //epicLog(LOG_WARNING, "Write hit case 1 at time: %ld %ld \n", submit_start_time - init_time, submit_end_time - submit_start_time);
@@ -325,7 +328,11 @@ int Cache::ReadWrite(WorkRequest* wr) {
       }
       //long start_time = get_time();
       //long submit_start_time = get_time();
-      worker->SubmitRequest(cli, lwr, ADD_TO_PENDING | REQUEST_SEND | PROFILE_NETWORK); // FIXME: Guess: this pending is for serializing requests on same address
+#ifdef COLLECT_NETWORK_LATENCY
+      worker->SubmitRequest(cli, lwr, ADD_TO_PENDING | REQUEST_SEND | PROFILE_NETWORK);
+#else
+      worker->SubmitRequest(cli, lwr, ADD_TO_PENDING | REQUEST_SEND);
+#endif
       num_request_send += 1;
       //long submit_end_time = get_time();
       //if (WRITE == wr->op) {
@@ -472,7 +479,11 @@ int Cache::Lock(WorkRequest* wr) {
         //to intermediate state
         epicAssert(state != CACHE_TO_DIRTY);
         ToToDirty(cline);
+#ifdef COLLECT_NETWORK_LATENCY
         worker->SubmitRequest(cli, lwr, ADD_TO_PENDING | REQUEST_SEND | PROFILE_NETWORK);
+#else
+        worker->SubmitRequest(cli, lwr, ADD_TO_PENDING | REQUEST_SEND);
+#endif
         num_request_send += 1;
 #ifdef USE_LRU
         //we unlink the cache to avoid it is evicted before
@@ -547,7 +558,11 @@ int Cache::Lock(WorkRequest* wr) {
       epicAssert(cline->state != CACHE_TO_DIRTY);
       ToToDirty(cline);
     }
+#ifdef COLLECT_NETWORK_LATENCY
     worker->SubmitRequest(cli, lwr, ADD_TO_PENDING | REQUEST_SEND | PROFILE_NETWORK);
+#else
+    worker->SubmitRequest(cli, lwr, ADD_TO_PENDING | REQUEST_SEND);
+#endif
     num_request_send += 1;
   }
   int ret = wr->counter;
@@ -1257,7 +1272,11 @@ Cache_return_t Cache::ReadWriteCollect(WorkRequest* wr) {
         worker->AddToServeLocalRequest(i, wr);
         unlock(i);
         //wr->unlock();
-        new_ret.op = CACHE_READ_HIT;
+        if(READ == wr->op) {
+          new_ret.op = CACHE_READ_HIT;
+        } else {
+          new_ret.op = CACHE_WRITE_HIT;
+        }
         new_ret.mode = 3;
         new_ret.time = get_time() - init_time;
         new_ret.original_ret = 1;
@@ -1280,9 +1299,9 @@ Cache_return_t Cache::ReadWriteCollect(WorkRequest* wr) {
         cline->nread++;
         nread++;
 #endif
-        long start_time = get_time();
+        //long start_time = get_time();
         memcpy(ls, cs, len);
-        long end_time = get_time();
+        //long end_time = get_time();
         //long time_stamp_5 = get_time();
 #ifdef USE_LRU
         UnLinkLRU(cline);
@@ -1376,7 +1395,7 @@ Cache_return_t Cache::ReadWriteCollect(WorkRequest* wr) {
           worker->SubmitRequest(cli, lwr, ADD_TO_PENDING | REQUEST_SEND);
           //epicLog(LOG_DEBUG, "Write hit case 1 at time: %ld\n", get_time() - init_time);
           new_ret.op = CACHE_WRITE_HIT;
-          new_ret.mode = 1;
+          new_ret.mode = 1; // WRITE_PERMISSION_ONLY
           new_ret.time = get_time() - init_time;
         } else {
 #ifdef GFUNC_SUPPORT
@@ -1512,9 +1531,10 @@ Cache_return_t Cache::ReadWriteCollect(WorkRequest* wr) {
 #ifdef USE_LRU
   if (newcline) {
   //if (newcline && !(wr->flag & ASYNC)) {
-    //long start_time = get_time();
+    long start_time = get_time();
     Evict(newcline);
-    //long end_time = get_time();
+    long end_time = get_time();
+    cdf_cnt_evict[latency_to_bkt((end_time - start_time) / 1000)]++;
     //epicLog(LOG_WARNING, "Eviction takes time %ld\n", end_time - start_time);
   }
 #endif

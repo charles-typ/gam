@@ -233,10 +233,10 @@ void do_log(void *arg) {
         unsigned long addr = log->addr & MMAP_ADDR_MASK;
         size_t cache_line_block = (addr) / (BLOCK_SIZE * resize_ratio);
         size_t cache_line_offset = (addr) % (BLOCK_SIZE * resize_ratio);
-        long read_start = get_time();
+        //long read_start = get_time();
         ret = alloc->Read(remote[cache_line_block] + cache_line_offset, &buf, 1);
-        long read_end = get_time();
-        trace->cdf_cnt_r[latency_to_bkt((read_end - read_start) / 1000)]++;
+        //long read_end = get_time();
+        //trace->cdf_cnt_r[latency_to_bkt((read_end - read_start) / 1000)]++;
 	    //printf("Read time is: %lu\n", read_end - read_start);
 	    //fflush(stdout);
         //trace->read_time += read_end - read_start;
@@ -254,11 +254,11 @@ void do_log(void *arg) {
         unsigned long addr = log->addr & MMAP_ADDR_MASK;
         size_t cache_line_block = (addr) / (BLOCK_SIZE * resize_ratio);
         size_t cache_line_offset = (addr) % (BLOCK_SIZE * resize_ratio);
-        long write_start = get_time();
+        //long write_start = get_time();
         ret = alloc->Write(remote[cache_line_block] + cache_line_offset, &buf, 1);
         //alloc->MFence();
-        long write_end = get_time();
-        trace->cdf_cnt_w[latency_to_bkt((write_end - write_start) / 1000)]++;
+        //long write_end = get_time();
+        //trace->cdf_cnt_w[latency_to_bkt((write_end - write_start) / 1000)]++;
 	    //printf("Write time is: %ld\n", write_end - write_start);
 	    //fflush(stdout);
         //trace->write_time += write_end - write_start;
@@ -309,21 +309,22 @@ void do_log(void *arg) {
     alloc->WLock(remote[0], BLOCK_SIZE * resize_ratio);
     alloc->UnLock(remote[0], BLOCK_SIZE * resize_ratio);
     long pass_end = get_time();
-#ifdef PROFILE_LATENCY
-    alloc->CollectCacheStatistics();
-#endif
     printf("done in %ld ns, thread: %d, pass: %d\n", pass_end - pass_start, trace->tid, trace->pass);
     trace->time += pass_end - pass_start;
     //trace->total_fence += pass_end - fence_start;
     //printf("total run time is %ld ns, fence_time is %ld, sleep time is %ld, thread: %d, pass: %d\n", trace->time, trace->total_fence, trace->total_interval, trace->tid, trace->pass);
     printf("total run time is %ld ns, thread: %d, pass: %d\n", trace->time, trace->tid, trace->pass);
     if(trace->pass % 1000 == 0) {
+#ifdef PROFILE_LATENCY
+      alloc->CollectCacheStatistics();
+#endif
       printf("Number of read: %lld write: %lld control: %lld\n", trace->read_ops, trace->write_ops, trace->control_ops);
       for (i = 0; i < CDF_BUCKET_NUM; i++)
         printf("CDF WRITE: thread: %d pass: %d count: %lu\n", trace->tid, trace->pass, trace->cdf_cnt_w[i]);
       for (i = 0; i < CDF_BUCKET_NUM; i++)
         printf("CDF READ: thread: %d pass: %d count: %lu\n", trace->tid, trace->pass, trace->cdf_cnt_r[i]);
       alloc->CollectNetworkCdf(trace->tid, trace->pass);
+      alloc->CollectEvictCdf(trace->tid, trace->pass);
       alloc->CollectEvictStatistics(trace->tid, trace->pass);
       alloc->CollectInvalidStatistics(trace->tid, trace->pass);
       alloc->CollectRemoteStatistics(trace->tid, trace->pass);

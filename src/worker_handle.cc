@@ -274,6 +274,10 @@ void WorkerHandle::CollectNetworkCdf(int thread_num, int pass_num) {
     printf("CDF Network: thread: %d pass: %d count: %lu\n", thread_num, pass_num, worker->cdf_cnt_network[i]);
 }
 
+void WorkerHandle::CollectEvictCdf(int thread_num, int pass_num) {
+  worker->CollectEvictCdf(thread_num, pass_num);
+}
+
 void WorkerHandle::ResetCacheStatistics() {
 
     worker->no_local_reads_ = 0;

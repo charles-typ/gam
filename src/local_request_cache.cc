@@ -130,6 +130,8 @@ int Worker::ProcessLocalRead(WorkRequest* wr) {
         break;
     }
     int ret = new_ret.original_ret;
+    num_evict_ = cache.get_evict();
+    num_request_send_ = cache.get_request_send();
 #else
     int ret = cache.Read(wr);
     num_evict_ = cache.get_evict();
