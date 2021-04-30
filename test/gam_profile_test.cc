@@ -328,10 +328,14 @@ void do_log(void *arg) {
       alloc->CollectCacheStatistics();
 #endif
       printf("Number of read: %lld write: %lld control: %lld\n", trace->read_ops, trace->write_ops, trace->control_ops);
+
+#ifdef COLLECT_CDF
       for (i = 0; i < CDF_BUCKET_NUM; i++)
         printf("CDF WRITE: thread: %d pass: %d count: %lu\n", trace->tid, trace->pass, trace->cdf_cnt_w[i]);
       for (i = 0; i < CDF_BUCKET_NUM; i++)
         printf("CDF READ: thread: %d pass: %d count: %lu\n", trace->tid, trace->pass, trace->cdf_cnt_r[i]);
+#endif
+
 #ifdef COLLECT_NETWORK_LATENCY
       alloc->CollectNetworkCdf(trace->tid, trace->pass);
 #endif
