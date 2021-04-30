@@ -190,6 +190,8 @@ class Worker : public Server {
   atomic<Size> cache_write_hit_case1_time_;
   atomic<Size> cache_write_hit_case2_;
   atomic<Size> cache_write_hit_case2_time_;
+  atomic<Size> cache_write_hit_case3_;
+  atomic<Size> cache_write_hit_case3_time_;
   atomic<Size> cache_read_miss_;
   atomic<Size> cache_read_miss_time_;
   atomic<Size> cache_write_miss_;
