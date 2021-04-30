@@ -112,7 +112,7 @@ using namespace std;
  */
 #define PROFILE_LATENCY
 //#define COLLECT_NETWORK_LATENCY
-//#define COLLECT_CDF
+#define COLLECT_CDF
 //#define GAM_SC
 
 

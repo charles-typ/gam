@@ -126,6 +126,10 @@ int Worker::ProcessLocalRead(WorkRequest* wr) {
             ++cache_write_hit_case2_;
             cache_write_hit_case2_time_ += new_ret.time;
             break;
+          case 3:
+            ++cache_write_hit_case3_;
+            cache_write_hit_case3_time_ += new_ret.time;
+            break;
         }
         break;
     }
@@ -349,6 +353,10 @@ int Worker::ProcessLocalWrite(WorkRequest* wr) {
           case 2:
             ++cache_write_hit_case2_;
             cache_write_hit_case2_time_ += new_ret.time;
+            break;
+          case 3:
+            ++cache_write_hit_case3_;
+            cache_write_hit_case3_time_ += new_ret.time;
             break;
         }
         break;
