@@ -479,6 +479,7 @@ int Cache::Lock(WorkRequest* wr) {
         //to intermediate state
         epicAssert(state != CACHE_TO_DIRTY);
         ToToDirty(cline);
+        //FIXME should not be used currently
 #ifdef COLLECT_NETWORK_LATENCY
         worker->SubmitRequest(cli, lwr, ADD_TO_PENDING | REQUEST_SEND | PROFILE_NETWORK);
 #else
@@ -558,6 +559,7 @@ int Cache::Lock(WorkRequest* wr) {
       epicAssert(cline->state != CACHE_TO_DIRTY);
       ToToDirty(cline);
     }
+    //FIXME should not be used currently
 #ifdef COLLECT_NETWORK_LATENCY
     worker->SubmitRequest(cli, lwr, ADD_TO_PENDING | REQUEST_SEND | PROFILE_NETWORK);
 #else
@@ -1393,6 +1395,7 @@ Cache_return_t Cache::ReadWriteCollect(WorkRequest* wr) {
 
           //put submit request at last in case reply comes before we process afterwards works
           worker->SubmitRequest(cli, lwr, ADD_TO_PENDING | REQUEST_SEND);
+          num_request_send += 1;
           //epicLog(LOG_DEBUG, "Write hit case 1 at time: %ld\n", get_time() - init_time);
           new_ret.op = CACHE_WRITE_HIT;
           new_ret.mode = 1; // WRITE_PERMISSION_ONLY
@@ -1506,7 +1509,8 @@ Cache_return_t Cache::ReadWriteCollect(WorkRequest* wr) {
         ToToDirty(cline);
       }
       //long start_time = get_time();
-      worker->SubmitRequest(cli, lwr, ADD_TO_PENDING | REQUEST_SEND); // FIXME: Guess: this pending is for serializing requests on same address
+      worker->SubmitRequest(cli, lwr, ADD_TO_PENDING | REQUEST_SEND);
+      num_request_send += 1;
       if (READ == wr->op) {
         new_ret.op = CACHE_READ_MISS;
         new_ret.mode = 0;
