@@ -43,7 +43,7 @@
 class Cache;
 
 typedef struct {
-  int original ret;
+  int original_ret;
   Cache_op op;
   int mode;
 } profile_return_cache_t;
