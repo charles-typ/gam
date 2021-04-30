@@ -1174,7 +1174,6 @@ Cache_return_t Cache::ReadWriteCollect(WorkRequest* wr) {
 
   Cache_return_t new_ret;
   long init_time = get_time();
-  long tmp_time = get_time();
 #ifdef NOCACHE
   epicLog(LOG_WARNING, "shouldn't come here");
   return 0;
@@ -1187,6 +1186,7 @@ Cache_return_t Cache::ReadWriteCollect(WorkRequest* wr) {
   if (end_blk != start_blk) {
     epicLog(LOG_INFO, "read/write split to multiple blocks");
   }
+  long tmp_time = get_time();
   Client* cli = worker->GetClient(wr->addr);
   GAddr start = wr->addr;
 
