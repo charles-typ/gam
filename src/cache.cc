@@ -1202,6 +1202,7 @@ Cache_return_t Cache::ReadWriteCollect(WorkRequest* wr) {
     epicAssert(!(wr->flag & COPY) || ((wr->flag & COPY) && (wr->flag & ASYNC)));
 
     GAddr nextb = BADD(i, 1);
+    long tmp_time = get_time();
     lock(i);
     CacheLine* cline = nullptr;
     //long time_stamp_2 = get_time();
@@ -1212,7 +1213,6 @@ Cache_return_t Cache::ReadWriteCollect(WorkRequest* wr) {
       epicLog(LOG_DEBUG, "Cache hit here!!!!! %lld , %lld, %lld", wr->addr, start_blk, end_blk);
 
 #endif
-      long tmp_time = get_time();
       CacheState state = cline->state;
       //FIXME: may violate the ordering guarantee of single thread
       //special processing when cache is in process of eviction
