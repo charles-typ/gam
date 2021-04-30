@@ -1174,6 +1174,7 @@ Cache_return_t Cache::ReadWriteCollect(WorkRequest* wr) {
 
   Cache_return_t new_ret;
   long init_time = get_time();
+  long tmp_time = get_time();
 #ifdef NOCACHE
   epicLog(LOG_WARNING, "shouldn't come here");
   return 0;
@@ -1188,7 +1189,7 @@ Cache_return_t Cache::ReadWriteCollect(WorkRequest* wr) {
   }
   Client* cli = worker->GetClient(wr->addr);
   GAddr start = wr->addr;
-  long tmp_time = get_time();
+
   wr->lock();
   //long time_stamp_1 = get_time();
   /*
