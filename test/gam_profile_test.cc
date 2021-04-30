@@ -325,7 +325,9 @@ void do_log(void *arg) {
     printf("total run time is %ld ns, thread: %d, pass: %d\n", trace->time, trace->tid, trace->pass);
     if(trace->pass % 1000 == 0) {
 #ifdef PROFILE_LATENCY
-      alloc->CollectCacheStatistics();
+      if(trace->tid == 0) {
+        alloc->CollectCacheStatistics();
+      }
 #endif
       printf("Number of read: %lld write: %lld control: %lld\n", trace->read_ops, trace->write_ops, trace->control_ops);
 
@@ -337,12 +339,16 @@ void do_log(void *arg) {
 #endif
 
 #ifdef COLLECT_NETWORK_LATENCY
-      alloc->CollectNetworkCdf(trace->tid, trace->pass);
+      if(trace->tid == 0) {
+        alloc->CollectNetworkCdf(trace->tid, trace->pass);
+      }
 #endif
-      alloc->CollectEvictCdf(trace->tid, trace->pass);
-      alloc->CollectEvictStatistics(trace->tid, trace->pass);
-      alloc->CollectInvalidStatistics(trace->tid, trace->pass);
-      alloc->CollectRemoteStatistics(trace->tid, trace->pass);
+      if(trace->tid == 0) {
+        alloc->CollectEvictCdf(trace->tid, trace->pass);
+        alloc->CollectEvictStatistics(trace->tid, trace->pass);
+        alloc->CollectInvalidStatistics(trace->tid, trace->pass);
+        alloc->CollectRemoteStatistics(trace->tid, trace->pass);
+      }
     }
     //if(trace->read_ops)
     //  printf("total read time is %ld ns, thread: %d, pass: %d\n", trace->read_time, trace->tid, trace->pass);
