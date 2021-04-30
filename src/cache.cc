@@ -1188,7 +1188,7 @@ Cache_return_t Cache::ReadWriteCollect(WorkRequest* wr) {
   }
   Client* cli = worker->GetClient(wr->addr);
   GAddr start = wr->addr;
-
+  long tmp_time = get_time();
   wr->lock();
   //long time_stamp_1 = get_time();
   /*
@@ -1202,7 +1202,7 @@ Cache_return_t Cache::ReadWriteCollect(WorkRequest* wr) {
     epicAssert(!(wr->flag & COPY) || ((wr->flag & COPY) && (wr->flag & ASYNC)));
 
     GAddr nextb = BADD(i, 1);
-    long tmp_time = get_time();
+
     lock(i);
     CacheLine* cline = nullptr;
     //long time_stamp_2 = get_time();
