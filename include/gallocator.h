@@ -120,6 +120,9 @@ class GAlloc {
   void CollectNetworkCdf(int thread_num, int pass_num) {
     wh->CollectNetworkCdf(thread_num, pass_num);
   }
+  void CollectEvictCdf(int thread_num, int pass_num) {
+    wh->CollectEvictCdf(thread_num, pass_num);
+  }
 
   void ResetCacheStatistics() {
     wh->ResetCacheStatistics();
