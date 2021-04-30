@@ -12,6 +12,7 @@
 #include "workrequest.h"
 #include "hashtable.h"
 #include "lockwrapper.h"
+#include "server.h"
 #include "map.h"
 #include "util.h"
 

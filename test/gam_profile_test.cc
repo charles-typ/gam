@@ -233,12 +233,14 @@ void do_log(void *arg) {
         unsigned long addr = log->addr & MMAP_ADDR_MASK;
         size_t cache_line_block = (addr) / (BLOCK_SIZE * resize_ratio);
         size_t cache_line_offset = (addr) % (BLOCK_SIZE * resize_ratio);
-        //long read_start = get_time();
+#ifdef COLLECT_CDF
+        long read_start = get_time();
+#endif
         ret = alloc->Read(remote[cache_line_block] + cache_line_offset, &buf, 1);
-        //long read_end = get_time();
-        //trace->cdf_cnt_r[latency_to_bkt((read_end - read_start) / 1000)]++;
-	    //printf("Read time is: %lu\n", read_end - read_start);
-	    //fflush(stdout);
+#ifdef COLLECT_CDF
+        long read_end = get_time();
+        trace->cdf_cnt_r[latency_to_bkt((read_end - read_start) / 1000)]++;
+#endif
         //trace->read_time += read_end - read_start;
         trace->read_ops += 1;
         assert(ret == 1);
@@ -254,13 +256,20 @@ void do_log(void *arg) {
         unsigned long addr = log->addr & MMAP_ADDR_MASK;
         size_t cache_line_block = (addr) / (BLOCK_SIZE * resize_ratio);
         size_t cache_line_offset = (addr) % (BLOCK_SIZE * resize_ratio);
-        //long write_start = get_time();
+#ifdef COLLECT_CDF
+        long write_start = get_time();
+#endif
+
         ret = alloc->Write(remote[cache_line_block] + cache_line_offset, &buf, 1);
+
+#ifdef GAM_SC
         //alloc->MFence();
-        //long write_end = get_time();
-        //trace->cdf_cnt_w[latency_to_bkt((write_end - write_start) / 1000)]++;
-	    //printf("Write time is: %ld\n", write_end - write_start);
-	    //fflush(stdout);
+#endif
+
+#ifdef COLLECT_CDF
+        long write_end = get_time();
+        trace->cdf_cnt_w[latency_to_bkt((write_end - write_start) / 1000)]++;
+#endif
         //trace->write_time += write_end - write_start;
         trace->write_ops += 1;
         assert(ret == 1);
@@ -323,7 +332,9 @@ void do_log(void *arg) {
         printf("CDF WRITE: thread: %d pass: %d count: %lu\n", trace->tid, trace->pass, trace->cdf_cnt_w[i]);
       for (i = 0; i < CDF_BUCKET_NUM; i++)
         printf("CDF READ: thread: %d pass: %d count: %lu\n", trace->tid, trace->pass, trace->cdf_cnt_r[i]);
+#ifdef COLLECT_NETWORK_LATENCY
       alloc->CollectNetworkCdf(trace->tid, trace->pass);
+#endif
       alloc->CollectEvictCdf(trace->tid, trace->pass);
       alloc->CollectEvictStatistics(trace->tid, trace->pass);
       alloc->CollectInvalidStatistics(trace->tid, trace->pass);
