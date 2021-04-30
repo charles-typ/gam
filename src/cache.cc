@@ -1212,6 +1212,7 @@ Cache_return_t Cache::ReadWriteCollect(WorkRequest* wr) {
       epicLog(LOG_DEBUG, "Cache hit here!!!!! %lld , %lld, %lld", wr->addr, start_blk, end_blk);
 
 #endif
+      long tmp_time = get_time();
       CacheState state = cline->state;
       //FIXME: may violate the ordering guarantee of single thread
       //special processing when cache is in process of eviction
@@ -1305,7 +1306,6 @@ Cache_return_t Cache::ReadWriteCollect(WorkRequest* wr) {
         memcpy(ls, cs, len);
         //long end_time = get_time();
         //long time_stamp_5 = get_time();
-        long tmp_time = get_time();
 #ifdef USE_LRU
         UnLinkLRU(cline);
         LinkLRU(cline);
