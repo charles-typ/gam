@@ -173,7 +173,7 @@ class Cache {
 #endif
 
   public:
-  atomic<unsigned long> cdf_cnt_evict[CDF_BUCKET_NUM] = {0};
+  atomic<unsigned long> cdf_cnt_evict[CDF_BUCKET_NUM];
   atomic<long> to_evicted;
   Cache(Worker* w);
   Cache() {} ;
