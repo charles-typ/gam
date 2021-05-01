@@ -348,6 +348,7 @@ void do_log(void *arg) {
         alloc->CollectEvictStatistics(trace->tid, trace->pass);
         alloc->CollectInvalidStatistics(trace->tid, trace->pass);
         alloc->CollectRemoteStatistics(trace->tid, trace->pass);
+        alloc->CollectLocalRemoteCdf(trace->tid, trace->pass);
       }
     }
     //if(trace->read_ops)
