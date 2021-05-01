@@ -480,7 +480,6 @@ Client* Worker::GetClient(GAddr addr) {
       epicAssert(!IsLocal(addr));
       wid = WID(addr);
       try {
-        epicLog(LOG_WARNING, "Watch here");
         cli = widCliMap.at(wid);
       } catch (const std::out_of_range& oor) {
         epicLog(LOG_WARNING, "cannot find the client for worker %d (%s)", wid,
