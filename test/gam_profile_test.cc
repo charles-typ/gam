@@ -323,7 +323,7 @@ void do_log(void *arg) {
     //trace->total_fence += pass_end - fence_start;
     //printf("total run time is %ld ns, fence_time is %ld, sleep time is %ld, thread: %d, pass: %d\n", trace->time, trace->total_fence, trace->total_interval, trace->tid, trace->pass);
     printf("total run time is %ld ns, thread: %d, pass: %d\n", trace->time, trace->tid, trace->pass);
-    if(trace->pass % 500 == 0) {
+    if(trace->pass % 1000 == 0) {
 #ifdef PROFILE_LATENCY
       if(trace->tid == 0) {
         alloc->CollectCacheStatistics();
