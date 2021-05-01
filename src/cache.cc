@@ -1188,7 +1188,7 @@ Cache_return_t Cache::ReadWriteCollect(WorkRequest* wr) {
   }
 
   Client* cli = worker->GetClient(wr->addr);
-  long tmp_time = get_time();
+  //long tmp_time = get_time();
   GAddr start = wr->addr;
 
   wr->lock();
@@ -1313,6 +1313,7 @@ Cache_return_t Cache::ReadWriteCollect(WorkRequest* wr) {
         LinkLRU(cline);
         //long time_stamp_6 = get_time();
         //epicLog(LOG_WARNING, "Actual read hit takes time: %ld 1:%ld 2:%ld 3:%ld 4:%ld 5:%ld 6:%ld\n", end_time - start_time, time_stamp_1 - init_time, time_stamp_2 - time_stamp_1, time_stamp_3 - time_stamp_2, time_stamp_4 - time_stamp_3, time_stamp_5 - time_stamp_4, time_stamp_6 - time_stamp_5);
+        long tmp_time = get_time();
         new_ret.op = CACHE_READ_HIT;
         new_ret.mode = 4;
         new_ret.time = tmp_time - init_time;
