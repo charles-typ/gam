@@ -48,6 +48,7 @@ class WorkerHandle {
   void CollectRemoteStatistics(int thread_num, int pass_num);
   void CollectNetworkCdf(int thread_num, int pass_num);
   void CollectEvictCdf(int thread_num, int pass_num);
+  void CollectLocalRemoteCdf(int thread_num, int pass_num);
   void ResetCacheStatistics();
 
   ~WorkerHandle();

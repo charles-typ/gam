@@ -91,8 +91,8 @@ int WorkerHandle::SendRequest(WorkRequest* wr) {
       "workid = %d, wr->notify_buf = %d, wr->op = %d, wr->flag = %d, wr->status = %d, wr->addr = %lx, wr->size = %d, wr->fd = %d",
       worker->GetWorkerId(), *wr->notify_buf, wr->op, wr->flag, wr->status,
       wr->addr, wr->size, wr->fd);
-  int ret = worker->ProcessLocalRequest(wr);  //not complete due to remote or previously-sent similar requests
   long start_time = get_time();
+  int ret = worker->ProcessLocalRequest(wr);  //not complete due to remote or previously-sent similar requests
   if (ret) {  //not complete due to remote or previously-sent similar requests
     if (wr->flag & ASYNC) {
       return SUCCESS;
@@ -114,16 +114,19 @@ int WorkerHandle::SendRequest(WorkRequest* wr) {
       epicLog(LOG_DEBUG, "Waiting for remote reply");
       while (*notify_buf != 2);
       long end_time = get_time();
-      if(wr->op == READ) {
-        worker->cache_read_miss_time_ += end_time - start_time;
-      } else if (wr->op == WRITE) {
-        worker->cache_write_miss_time_ += end_time - start_time;
-      }
+      worker->cdf_cnt_remote[latency_to_bkt((end_time - start_time) / 1000)]++;
+      //if(wr->op == READ) {
+      //  worker->cache_read_miss_time_ += end_time - start_time;
+      //} else if (wr->op == WRITE) {
+      //  worker->cache_write_miss_time_ += end_time - start_time;
+      //}
       epicLog(LOG_DEBUG, "get notified via buf");
 #endif
       return wr->status;
     }
   } else {
+    long end_time = get_time();
+    worker->cdf_cnt_local[latency_to_bkt((end_time - start_time) / 1000)]++;
     return wr->status;
   }
 #else //if not MULTITHREAD
@@ -273,11 +276,19 @@ void WorkerHandle::CollectRemoteStatistics(int thread_num, int pass_num) {
 void WorkerHandle::CollectNetworkCdf(int thread_num, int pass_num) {
   int i = 0;
   for (i = 0; i < CDF_BUCKET_NUM; i++)
-    printf("CDF Network: thread: %d pass: %d count: %lu\n", thread_num, pass_num, worker->cdf_cnt_network[i]);
+    printf("CDF Network: thread: %d pass: %d count: %lu\n", thread_num, pass_num, worker->cdf_cnt_network[i].load());
 }
 
 void WorkerHandle::CollectEvictCdf(int thread_num, int pass_num) {
   worker->CollectEvictCdf(thread_num, pass_num);
+}
+
+void WorkerHandle::CollectLocalRemoteCdf(int thread_num, int pass_num) {
+  int i = 0;
+  for (i = 0; i < CDF_BUCKET_NUM; i++)
+    printf("CDF LOCAL: thread: %d pass: %d count: %lu\n", thread_num, pass_num, worker->cdf_cnt_local[i].load());
+  for (i = 0; i < CDF_BUCKET_NUM; i++)
+    printf("CDF REMOTE: thread: %d pass: %d count: %lu\n", thread_num, pass_num, worker->cdf_cnt_remote[i].load());
 }
 
 void WorkerHandle::ResetCacheStatistics() {

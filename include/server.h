@@ -53,7 +53,7 @@ class Server {
     friend class Cache;
 
   public:
-    unsigned long cdf_cnt_network[CDF_BUCKET_NUM] = {0};
+    atomic<unsigned long> cdf_cnt_network[CDF_BUCKET_NUM] = {0};
     Client* NewClient(bool isMaster, const char* rdmaConn = nullptr);
     Client* NewClient(const char*);
     Client* NewClient();

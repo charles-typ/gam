@@ -123,6 +123,9 @@ class GAlloc {
   void CollectEvictCdf(int thread_num, int pass_num) {
     wh->CollectEvictCdf(thread_num, pass_num);
   }
+  void CollectLocalRemoteCdf(int thread_num, int pass_num) {
+    wh->CollectLocalRemoteCdf(thread_num, pass_num);
+  }
 
   void ResetCacheStatistics() {
     wh->ResetCacheStatistics();

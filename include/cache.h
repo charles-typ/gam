@@ -173,7 +173,7 @@ class Cache {
 #endif
 
   public:
-  unsigned long cdf_cnt_evict[CDF_BUCKET_NUM] = {0};
+  atomic<unsigned long> cdf_cnt_evict[CDF_BUCKET_NUM] = {0};
   atomic<long> to_evicted;
   Cache(Worker* w);
   Cache() {} ;
@@ -387,7 +387,7 @@ class Cache {
   void CollectEvictCdf(int thread_num, int pass_num) {
     int i = 0;
     for (i = 0; i < CDF_BUCKET_NUM; i++)
-      printf("CDF Evict: thread: %d pass: %d count: %lu\n", thread_num, pass_num, cdf_cnt_evict[i]);
+      printf("CDF Evict: thread: %d pass: %d count: %lu\n", thread_num, pass_num, cdf_cnt_evict[i].load());
   }
 };
 

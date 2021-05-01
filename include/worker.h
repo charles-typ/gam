@@ -206,6 +206,9 @@ class Worker : public Server {
   atomic<Size> num_request_send_;
   atomic<Size> num_invalid_;
 
+  atomic<unsigned long> cdf_cnt_local[CDF_BUCKET_NUM] = {0};
+  atomic<unsigned long> cdf_cnt_remote[CDF_BUCKET_NUM] = {0};
+
   void CollectEvictCdf(int thread_num, int pass_num) {
     cache.CollectEvictCdf(thread_num, pass_num);
   }
