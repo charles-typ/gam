@@ -110,7 +110,7 @@ using namespace std;
 /**
  * Profile test configuration
  */
-#define PROFILE_LATENCY
+//#define PROFILE_LATENCY
 //#define COLLECT_NETWORK_LATENCY
 #define COLLECT_CDF
 //#define GAM_SC
